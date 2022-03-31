@@ -1,0 +1,168 @@
+* Learning OCaml - notes
+** Goals
++ Learning OCaml.
++ Literate programming in org-mode.
+** Notes on OCaml in org-mode
+
+These variables control something about the way ocaml input gets
+passed to and retrieved from the ocaml toplevel that emacs runs in the background
+
+#+begin_example emacs-lisp
+  ;; (setq org-babel-ocaml-eoe-output "org-babel-ocaml-eoe")
+  ;; (setq org-babel-ocaml-eoe-indicator "\"org-babel-ocaml-eoe\";;")
+
+  (setq org-babel-ocaml-eoe-output "org-babel-ocaml-eoe")
+  (setq org-babel-ocaml-eoe-indicator "\"org-babel-ocaml-eoe\";;")
+#+end_example
+
+The default behavior of source blocks may not be adequate for printing
+results. For example the following source block shows its result, but
+does not show the type of the result:
+
+#+begin_src ocaml :results verbatim
+    let x = [42;41;40];;
+    x
+#+end_src
+
+#+RESULTS:
+: - : int list = [42; 41; 40]
+
+And in this source block, when a string printing function is called,
+the printed string doesn't manage to make it to the results line.
+
+#+begin_src ocaml
+print_string "hello"
+#+end_src
+
+#+RESULTS:
+: ()
+
+If you open the actual ocaml buffer with ~M-x tuareg-run-ocaml~, you
+can see that the results of these evaluations are actually
+present. They're just not making it back to the org buffer (there's
+also the strange "org-babel-ocaml-eoe" string that gets appended to
+each source block as it's passed to the running ocaml toplevel. I
+wonder if there's a way to hide or suppress that?).
+
+The results as the OCaml toplevel would display them can be seen by
+adding the :results verbatim tag to the source blocks
+
+#+begin_src ocaml :results verbatim
+  let x = 42;;
+  x
+#+end_src
+
+#+RESULTS:
+: - : int = 42
+
+#+begin_src ocaml :results verbatim
+print_string "hello,\n\n\nworld!"
+#+end_src
+
+#+RESULTS:
+: hello,
+: 
+: 
+: world!- : unit = ()
+
+The ~:results output~ tag is similar, though it doesn't seem to handle
+multi-line output strings the way ~:results verbatim~ does.
+
+#+begin_src ocaml :results output
+  print_string "hello\n\nnewlines!";;
+#+end_src
+
+#+RESULTS:
+: hello
+: 
+
+** Basics
+
+
+
+#+begin_src ocaml
+  let x = 42;;
+#+end_src
+
+#+RESULTS:
+val x : int = 42
+
+#+begin_src ocaml
+  (fun x -> x + 3) 4;;
+#+end_src
+
+#+RESULTS:
+: 7
+
+* Learning OCaml - problems
+** 99 OCaml Problems
+** Advent of Code 2021
+*** Day 1 - Sonar Sweep
+**** Part 1:
+Given a ~tally~ of the number of increases already seen, the
+~previous~ integer from the file, and the ~in_channel~ ready to spit
+out the next integer in the file:
+
+If you're done reading the file, then ~tally~ is the
+answer. Otherwise, check whether the ~next~ integer in the file is
+bigger than the ~previous~ one, and recursively call ~count_increases~
+with appropriately updated ~tally~ and ~previous~ parameters.
+
+#+begin_src ocaml
+    let count_increases filename =
+      let input = open_in filename in
+      let rec count_increases tally previous f =
+        try (let next = f
+                        |> input_line
+                        |> int_of_string in
+             match next with
+             | a when a > previous -> count_increases (tally + 1) next f
+             | _ -> count_increases tally next f
+            ) with End_of_file -> tally in
+      let first = input
+                |> input_line
+                |> int_of_string in
+      count_increases 0 first input;;
+#+end_src
+
+#+begin_src ocaml
+  count_increases "input1-1.txt"
+#+end_src
+
+#+RESULTS:
+: 1215
+**** Part 2:
+
+
+#+begin_src ocaml
+    let count_window_increases filename =
+      let input = open_in filename in
+      let rec window_increases tally prev1 prev2 prev3 f =
+        try ( let next = f
+                         |> input_line
+                         |> int_of_string in
+              match next - prev1 with
+              | d when d > 0 -> window_increases (tally+1) prev2 prev3 next f
+              | _ -> window_increases tally prev2 prev3 next f
+            ) with End_of_file -> tally in
+    let first = input
+                |> input_line
+                |> int_of_string in
+    let second = input
+                |> input_line
+                |> int_of_string in
+    let third = input
+                |> input_line
+                |> int_of_string in
+    window_increases 0 first second third input;;
+#+end_src
+
+#+RESULTS:
+: <fun>
+
+#+begin_src ocaml
+  count_window_increases "input1-2.txt"
+#+end_src
+
+#+RESULTS:
+: 1150
