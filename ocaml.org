@@ -115,12 +115,15 @@ with appropriately updated ~tally~ and ~previous~ parameters.
       count_increases 0 first input;;
 #+end_src
 
+#+RESULTS:
+: <fun>
+
 #+begin_src ocaml :results verbatim
   count_increases "input1-1.txt"
 #+end_src
 
 #+RESULTS:
-: 1215
+: - : int = 1215
 **** Part 2:
 
 Give a ~tally~ of how many increases you've seen so far, and also
@@ -159,3 +162,30 @@ then all that matters for updating the tally is whether the ~next~ input is bigg
 
 #+RESULTS:
 : - : int = 1150
+*** Day 2 - Dive
+**** Part 1
+
+#+begin_src ocaml
+  let dive filename =
+    let input = open_in filename in
+    let rec dive horizontal depth f =
+      try (let nextline = input_line f in
+           let [direction; value_str] = split_on_char ' ' nextline in
+           let value = int_of_string value_str in
+           match direction with
+           | "forward" -> dive (horizontal + value) depth f
+           | "up" -> dive horizontal (depth - value) f
+           | "down" -> dive horizontal (depth + value) f)
+      with End_of_file -> (horizontal * depth) in
+  dive 0 0 input;;
+#+end_src
+
+#+RESULTS:
+: <fun>
+
+#+begin_src ocaml
+  dive "input2-1.txt"
+#+end_src
+
+#+RESULTS:
+: 2073315
