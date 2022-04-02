@@ -189,3 +189,66 @@ then all that matters for updating the tally is whether the ~next~ input is bigg
 
 #+RESULTS:
 : 2073315
+
+*** Day 6 - Lanternfish
+
+Given a countdown ~c~ and a number of days ~d~, write a recursive
+function for the number of lanternfish there will be after ~d~
+days. Keep a cache of values to avoid exponential-time blowups.
+
+#+begin_src ocaml
+      let rec lf c d =
+        let cache = Hashtbl.create 100 in
+        let rec lf_mem x y =
+          try
+            Hashtbl.find cache [x;y]
+          with
+            Not_found ->
+             match y with
+             | 0 -> (Hashtbl.add cache [x;y] 1; 1)
+             | _ -> match x with
+                    | x when x > 0 -> let ans = lf_mem (x-1) (y-1) in
+                                      (Hashtbl.add cache [x;y] ans; ans)
+                    | _ -> (let ans = lf_mem 6 (y-1) + lf_mem 8 (y-1) in
+                           (Hashtbl.add cache [x;y] ans; ans))
+        in lf_mem c d;;
+#+end_src
+
+#+RESULTS:
+: <fun>
+
+#+begin_src ocaml
+  let lanternfish filename days =
+    let rec sum = function
+      | [] -> 0
+      | head::tail -> head + (sum tail) in
+    filename
+    |> open_in
+    |> input_line
+    |> String.split_on_char ','
+    |> List.map int_of_string
+    |> List.map (fun c -> lf c days)
+    |> sum;;
+#+end_src
+ 
+#+RESULTS:
+: <fun>
+
+#+begin_src ocaml
+  lanternfish "input6-1.txt" 80
+#+end_src
+
+#+RESULTS:
+: 354564
+
+**** Part 2
+
+The memoization was probably not necessary for part 1, but would have
+been for part 2.
+
+#+begin_src ocaml
+  lanternfish "input6-1.txt" 256
+#+end_src
+
+*** Day 7 - Treachery of Whales
+**** Part 1
