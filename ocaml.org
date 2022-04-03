@@ -170,7 +170,7 @@ then all that matters for updating the tally is whether the ~next~ input is bigg
     let input = open_in filename in
     let rec dive horizontal depth f =
       try (let nextline = input_line f in
-           let [direction; value_str] = split_on_char ' ' nextline in
+           let [direction; value_str] = String.split_on_char ' ' nextline in
            let value = int_of_string value_str in
            match direction with
            | "forward" -> dive (horizontal + value) depth f
@@ -189,6 +189,27 @@ then all that matters for updating the tally is whether the ~next~ input is bigg
 
 #+RESULTS:
 : 2073315
+
+**** Part 2
+
+#+begin_src ocaml
+  let dive2 filename =
+    let input = open_in filename in
+    let rec dive h d a f =
+      try (let nextline = input_line f in
+           let [direction; x_str] = String.split_on_char ' ' nextline in
+           let x = int_of_string x_str in
+           match direction with
+          | "up" -> dive h d (a - x) f
+          | "down" -> dive h d (a + x) f
+          | "forward" -> dive (h + x) (d + a*x) a f)
+      with End_of_file -> (h*d) in
+    dive 0 0 0 input;;
+#+end_src
+
+#+RESULTS:
+: <fun>
+
 
 *** Day 6 - Lanternfish
 
@@ -249,6 +270,9 @@ been for part 2.
 #+begin_src ocaml
   lanternfish "input6-1.txt" 256
 #+end_src
+
+#+RESULTS:
+: 1609058859115
 
 *** Day 7 - Treachery of Whales
 **** Part 1
