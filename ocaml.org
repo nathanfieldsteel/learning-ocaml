@@ -162,7 +162,7 @@ then all that matters for updating the tally is whether the ~next~ input is bigg
 
 #+RESULTS:
 : - : int = 1150
-*** Day 2 - Dive
+*** Day 2 - Dive!
 **** Part 1
 
 #+begin_src ocaml
@@ -210,6 +210,12 @@ then all that matters for updating the tally is whether the ~next~ input is bigg
 #+RESULTS:
 : <fun>
 
+#+begin_src ocaml
+  dive2 "input2-1.txt"
+#+end_src
+
+#+RESULTS:
+: 1840311528
 
 *** Day 6 - Lanternfish
 
@@ -274,5 +280,48 @@ been for part 2.
 #+RESULTS:
 : 1609058859115
 
-*** Day 7 - Treachery of Whales
+*** Day 7 - The Treachery of Whales
 **** Part 1
+
+If ~h~ is chosen horizontal position to align to, then the total fuel
+consumed is the sum of ~abs(x-h)~ as ~x~ ranges over all the initial
+positions specified in the input.
+
+If you increase ~h~ by ~a~, this sum will increase by ~a~ times the number of positions
+~x~ that are less than ~h~, and it will decrease by ~a~ times the
+number of positions ~x~ that are greater than ~h~.
+
+In other words, the values of ~h~ that minimized the total fuel
+function is one with the same number of position values ~x~ greater
+than it and less than it. This is the median of the input list if it
+has odd length, and is any number between the two middle values if
+the input list has even length.
+
+So all we have to do is take the input list, find its median ~h~, and
+sum ~|x-h|~ for all ~x~ in the input list
+
+Finding the median of an unsorted list can be done in linear time, so
+sorting is not optimal here.
+
+#+begin_src ocaml
+
+  let minimize_fuel filename =
+    let f = open_in filename in
+    let input_string = input_line f in
+    let input_list = input_string
+                     |> String.split_on_char ','
+                     |> List.map int_of_string
+                     |> List.sort (fun a b -> a - b) in
+    let median_idx = (List.length input_list)/2 in
+    let median = List.nth input_list median_idx in
+    let rec fuelsum list h partial =
+      match list with
+      | [] -> partial
+      | x::t -> fuelsum t h (partial + abs(x - h)) in
+    fuelsum input_list median 0;;
+
+  minimize_fuel "input7-1.txt"
+#+end_src
+
+#+RESULTS:
+: 323647
