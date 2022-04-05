@@ -305,22 +305,22 @@ sorting is not optimal here.
 
 #+begin_src ocaml
 
-  let minimize_fuel filename =
-    let f = open_in filename in
-    let input_string = input_line f in
-    let input_list = input_string
-                     |> String.split_on_char ','
-                     |> List.map int_of_string
-                     |> List.sort (fun a b -> a - b) in
-    let median_idx = (List.length input_list)/2 in
-    let median = List.nth input_list median_idx in
-    let rec fuelsum list h partial =
-      match list with
-      | [] -> partial
-      | x::t -> fuelsum t h (partial + abs(x - h)) in
-    fuelsum input_list median 0;;
+    let minimize_fuel filename =
+      let input_list = filename
+                       |> open_in
+                       |> input_line
+                       |> String.split_on_char ','
+                       |> List.map int_of_string
+                       |> List.sort (fun a b -> a - b) in
+      let median_idx = (List.length input_list)/2 in
+      let median = List.nth input_list median_idx in
+      let rec fuelsum list h partial =
+        match list with
+        | [] -> partial
+        | x::t -> fuelsum t h (partial + abs(x - h)) in
+      fuelsum input_list median 0;;
 
-  minimize_fuel "input7-1.txt"
+    minimize_fuel "input7-1.txt"
 #+end_src
 
 #+RESULTS:
