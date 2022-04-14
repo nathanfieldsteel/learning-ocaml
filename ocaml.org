@@ -217,6 +217,57 @@ then all that matters for updating the tally is whether the ~next~ input is bigg
 #+RESULTS:
 : 1840311528
 
+*** Day 3 - Binary Diagnostics
+
+#+begin_src ocaml
+
+  let consumption filename =
+    let len = filename
+              |> open_in
+              |> input_line
+              |> String.length in
+    let input = filename
+                |> open_in in
+    let rec zero_list l = match l with
+      | 0 -> []
+      | _ -> 0 :: zero_list (l-1) in
+    let initial_tally = zero_list len in
+    let rec update_tally tally bitline =
+      match String.length bitline with
+      | 0 -> []
+      | b -> match (String.sub bitline 0 1) with
+             | "1" -> (match tally with
+                       | h::tl -> (h+1) :: (update_tally tl (String.sub bitline 1 (b-1))))
+             | "0" -> (match tally with
+                       | h::tl -> h :: (update_tally tl (String.sub bitline 1 (b-1)))) in
+    let rec full_tally tl in_ch = try
+        (let next_line = input_line in_ch in
+         full_tally (update_tally tl next_line) in_ch)
+      with End_of_file -> tl in
+    let final_tally = full_tally initial_tally input in
+    let rec number_of_entries count in_ch =
+      try (let trash = (input_line in_ch) in number_of_entries (count+1) in_ch)
+      with End_of_file -> count in 
+    let entry_count = number_of_entries 0 (open_in filename) in
+    let exp a p = match p with
+      | 0 -> 1
+      | _ -> a * exp a (p-1) in
+    let rec gamma g c tally = match tally with
+      | [] -> g
+      | h :: tl -> match h with
+                   | a when a > (entry_count/2) -> gamma (g + exp 2 (c-1)) (c-1) tl
+                   | a when a < (entry_count/2) -> gamma g (c-1) tl in
+    let gam = gamma 0 len final_tally in
+    let eps = (exp 2 (len)) - gam - 1 in
+    (gam, eps, gam*eps);;
+
+  consumption "input3-1.txt"
+
+#+end_src
+
+#+RESULTS:
+| 493 | 499 | 493 | 513 | 473 | 483 | 488 | 505 | 517 | 505 | 492 | 471 |
+
 *** Day 6 - Lanternfish
 
 Given a countdown ~c~ and a number of days ~d~, write a recursive
@@ -323,4 +374,20 @@ sorting is not optimal here.
 #+end_src
 
 #+RESULTS:
-: Exception: Failure "nth".
+: 323647
+
+*** Day 10 - Syntax Scoring
+**** Part 1
+
+To check whether a string is balanced or not, use a stack. Push
+opening characters onto the stack. When closing characters are
+encountered, pop the stack if it matches. Otherwise, that's the first
+incorrect character. If you get to the end of the string and the stack
+is empty, it's a balanced expression. But if you get to the end of the
+string and the stack still has characters, it's incomplete
+
+*** Day 18 - Snailfish numbers
+
+**** Part 1
+
+Use a custom type.
