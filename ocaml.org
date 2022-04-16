@@ -88,6 +88,112 @@ val x : int = 42
 
 * Learning OCaml - problems
 ** 99 OCaml Problems
+*** Checklist
+| Nummber | Description            | Status |
+|---------+------------------------+--------|
+|       1 | last_element           | done   |
+|       2 | last_two               | done   |
+|       3 | kth_element            | done   |
+|       4 | list length            | done   |
+|       5 | reverse                | done   |
+|       6 | palindrome             | done   |
+|       7 | flatten                |        |
+|       8 | delete duplicates      |        |
+|       9 | pack                   |        |
+|      10 | run-length             |        |
+|      11 | run-length mod         |        |
+|      12 | run-length decode      |        |
+|      13 | run-length direct      |        |
+|      14 | duplicate elts         |        |
+|      15 | replicate elts         |        |
+|      16 | drop every nth         |        |
+|      17 | split list             |        |
+|      18 | list slice             |        |
+|      19 | rotate n left          |        |
+|      20 | remove kth             |        |
+|      21 | insert                 |        |
+|      22 | create range           |        |
+|      23 | extract random         |        |
+|      24 | lotto                  |        |
+|      25 | random permutation     |        |
+|      26 | k choose n             |        |
+|      27 | partitions             |        |
+|      28 | sort by length         |        |
+|      29 | -                      |        |
+|      30 | -                      |        |
+|      31 | prime                  |        |
+|      32 | gcd                    |        |
+|      33 | coprime                |        |
+|      34 | euler phi              |        |
+|      35 | prime factors          |        |
+|      36 | prime factors 2        |        |
+|      37 | euler phi 2            |        |
+|      38 | compare euler phis     |        |
+|      39 | prime list             |        |
+|      40 | goldbach               |        |
+|      41 | goldbach list          |        |
+|      42 | -                      |        |
+|      43 | -                      |        |
+|      44 | -                      |        |
+|      45 | -                      |        |
+|      46 | truth tables 1         |        |
+|      47 | truth tables 2         |        |
+|      48 | truth tables 3         |        |
+|      49 | gray code              |        |
+|      50 | huffman code           |        |
+|      51 | -                      |        |
+|      52 | -                      |        |
+|      53 | -                      |        |
+|      54 | -                      |        |
+|      55 | balanced binary tree   |        |
+|      56 | symmetric binary tree  |        |
+|      57 | binary search tree     |        |
+|      58 | generate and test      |        |
+|      59 | height balanced tree   |        |
+|      60 | height balanced tree 2 |        |
+|      61 | count leaves           |        |
+|     61A | collect leaves in list |        |
+|      62 | collect internal nodes |        |
+|     62B | collect nodes at level |        |
+|      63 | complete binary tree   |        |
+|      64 | layout binary tree     |        |
+|      65 | layout binary tree 2   |        |
+|      66 | layout binary tree 3   |        |
+|      67 | string rep tree        |        |
+|      68 | seqeuences of trees    |        |
+|      69 | dotstring of tree      |        |
+|     70C | nodes of multiway tree |        |
+|      70 | tree from node string  |        |
+|      71 | internal path length   |        |
+|      72 | bottom up order        |        |
+|      73 | lisp tree rep          |        |
+|      74 | -                      |        |
+|      75 | -                      |        |
+|      76 | -                      |        |
+|      77 | -                      |        |
+|      78 | -                      |        |
+|      79 | -                      |        |
+|      80 | conversions            |        |
+|      81 | paths                  |        |
+|      82 | cycles                 |        |
+|      83 | all spanning           |        |
+|      84 | min spanning           |        |
+|      85 | graph isomorphism      |        |
+|      86 | node degree + color    |        |
+|      87 | depth first traverse   |        |
+|      88 | connected components   |        |
+|      89 | bipartite              |        |
+|      90 | k regular n node       |        |
+|      91 | eight queens           |        |
+|      92 | knights tour           |        |
+|      93 | von koch               |        |
+|      94 | arithmetic puzzle      |        |
+|      95 | number words           |        |
+|      96 | syntax checker         |        |
+|      97 | sudoku                 |        |
+|      98 | nonograms              |        |
+|      99 | crossword              |        |
+
 *** 1
 Write a function ~last : 'a list -> 'a option~ that returns the last
 element of a list.
@@ -150,7 +256,8 @@ expressions. Otherwise, it thinks ~m~ is of type ~'a list~.
 #+RESULTS:
 : Some 3
 
-*** 4 Find the number of elements of a list
+*** 4
+Find the number of elements of a list
 
 #+begin_src ocaml
 
