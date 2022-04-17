@@ -320,6 +320,88 @@ Find out whether a list is a palindrom
 #+RESULTS:
 | true | true | true | true | false | false |
 
+*** 7
+
+Flatten a nested list structure
+
+#+begin_src ocaml :results verbatim
+    (* type definition for nested list *)
+    type 'a node =
+      | One of 'a 
+      | Many of 'a node list;;
+
+    let rec flatten nl = match nl with
+      | [] -> []
+      | (One x) :: xs -> x :: flatten xs
+      | (Many xs) :: xss -> (flatten xs) @ (flatten xss);;
+
+    flatten [One "a"; Many [One "b"; Many [One "c" ;One "d"]; One "e"]]
+#+end_src
+
+#+RESULTS:
+: - : string list = ["a"; "b"; "c"; "d"; "e"]
+
+*** 8
+
+Eliminate consecutive duplicates of list elements.
+
+#+begin_src ocaml
+
+    let rec compress l = match l with
+      | [] -> []
+      | x :: [] -> x :: []
+      | x :: y :: xs when x = y -> compress (y :: xs)
+      | x :: y :: xs when x <> y -> x :: compress (y :: xs);;
+
+    compress [1;1;1;1;2;2;2;2;3;3;4;4;5;5;6;5;4]
+#+end_src
+
+#+RESULTS:
+| 1 | 2 | 3 | 4 | 5 | 6 | 5 | 4 |
+
+*** 9
+
+Pack consecutive duplicates of list elements into sublists
+
+#+begin_src ocaml
+
+  let pack l =
+    let rec pack_help h l = match h with
+      | [] -> (match l with
+               | [] -> []
+               | x :: xs -> pack_help [x] xs)
+      | y :: ys -> (match l with
+                    | [] -> [h]
+                    | x :: xs -> match x with
+                                      | x when x = y -> pack_help (x :: h) xs 
+                                      | _ -> h :: (pack_help [x] xs)) in
+    pack_help [] l;;
+
+  pack [1;1;1;2;2;3;3;3;3;3;4;5;6;4]
+#+end_src
+
+*** 10
+
+Run-length encoding of a list
+
+#+begin_src ocaml
+
+  let encode l =
+    let rle x = (List.length x, List.hd x) in
+    l |> pack |> List.map rle;;
+
+  encode [1;1;1;1;2;3;4;4;4;4;4;4;4;4;3;3;2]
+#+end_src
+
+#+RESULTS:
+| 4 | 1 |
+| 1 | 2 |
+| 1 | 3 |
+| 8 | 4 |
+| 2 | 3 |
+| 1 | 2 |
+
+
 ** Advent of Code 2021
 *** Day 1 - Sonar Sweep
 **** Part 1:
