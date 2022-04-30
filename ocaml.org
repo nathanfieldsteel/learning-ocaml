@@ -346,7 +346,193 @@ the nth number in the Fibonacci sequence, which is 1, 1, 2, 3, 5, 8,
   #+RESULTS:
   | 1 | 1 | 2 | 3 | 5 | 8 | 13 | 21 | 34 | 55 |
 
-**** 
+**** fib fast
+
+How quickly does your implementation of fib compute the 50th Fibonacci
+number? If it computes nearly instantaneously, congratulations! But
+the recursive solution most people come up with at first will seem to
+hang indefinitely. The problem is that the obvious solution computes
+subproblems repeatedly. For example, computing fib 5 requires
+computing both fib 3 and fib 4, and if those are computed separately,
+a lot of work (an exponential amount, in fact) is being redone.
+
+#+begin_src ocaml results: verbatim
+    let fibtimer n = 
+      let t1 = Sys.time() in
+      let fn = fib n in
+      let t2 = Sys.time() in
+      let output = "found fib "
+                   ^ (string_of_int n)
+                   ^ " = "
+                   ^ (string_of_int fn)
+                   ^ " in "
+                   ^ (string_of_float (t2 -. t1))
+                   ^ " seconds." in
+      print_endline output;;
+
+    fibtimer 50;;
+#+end_src
+
+#+RESULTS:
+: ()
+
+Prints ~found fib 50 = 12586269025 in 257.446328 seconds~. Slow.
+
+#+begin_src ocaml
+
+    let fib_fast n =
+      let rec fibhelp a b n = match n with
+        | 1 -> a
+        | n -> fibhelp b (a+b) (n-1) in
+      fibhelp 1 1 n;;
+
+  let fibfasttimer n = 
+    let t1 = Sys.time() in
+    let fn = fib_fast n in
+    let t2 = Sys.time() in
+    let output = "found fib_fast "
+                 ^ (string_of_int n)
+                 ^ " = "
+                 ^ (string_of_int fn)
+                 ^ " in "
+                 ^ (string_of_float (t2 -. t1))
+                 ^ " seconds." in
+    print_endline output;;
+
+  fibfasttimer 50;;
+#+end_src
+
+#+RESULTS:
+: ()
+
+Prints ~found fib_fast 50 = 12586269025 in 4.99999998738e-06
+seconds.~, much faster.
+
+What is the first value of n for which fib_fast n is negative,
+indicating that integer overflow occurred?
+
+#+begin_src ocaml
+  let first_overflow =
+    let rec next_neg_fib n =
+      if (fib_fast n < 0) then (n) else (next_neg_fib (n+1)) in
+    next_neg_fib 1
+#+end_src
+
+#+RESULTS:
+: 91
+
+**** poly types
+
+What is the type of each of the functions below? You can ask the
+toplevel to check your answers
+
++ let f x = if x then x else x
++ let g x y = if y then x else x
++ let h x y z = if x then y else z
++ let i x y z = if x then y else y
+
+  ~let f x = if x then x else x~: Since ~x~ is being passed as the first
+  argument to the ternary if-then-else, it has to be a boolean. Since
+  the output is always ~x~, the output of ~f~ will be boolean. So ~f~
+  is a function ~bool -> bool~.
+
+  ~let g x y = if y then x else x~: Here, ~y~ needs to be boolean. But
+  ~x~ can have arbitrary type ~T~. The output of the function will
+  have the same type as ~x~ (in fact it will be ~x~), so ~g~ is a function
+  that takes an argument of type ~T~ and an argument of type bool and
+  returns an output of type ~T~. i.e. ~g: T -> bool -> T~. Ocaml uses
+  ~'a~ for this type variable.
+
+  ~let h x y z = if x then y else z~: Again, ~x~ needs to have type
+  ~bool~. Since the ~then ()~ and ~else ()~ branches needs to have the
+  same output type, ~y~ and ~z~ need to have the same arbitrary type
+  ~T~. So ~h : bool -> T -> T -> T~
+
+  ~let i x y z = if x then y else y~: Here, ~x~ need to have type
+  ~bool~. ~y~ can have arbitrary type ~T1~, and ~z~ can have arbitrary
+  type ~T2~. The output is always ~y~, which will have type ~T1~. So
+  ~i: bool -> T1 -> T2 -> T1~
+
+**** Divide
+
+Write a function divide : numerator:float -> denominator:float ->
+float. Apply your function.
+
+#+begin_src ocaml
+    let divide num denom =
+      let q = num /. denom in
+      match q with
+      | q when q = infinity -> raise Division_by_zero
+      | q when q = neg_infinity -> raise Division_by_zero
+      | q when compare q nan = 0 -> raise Division_by_zero
+      | q -> q;;
+
+    divide 0. 0.
+#+end_src
+
+#+RESULTS:
+: Exception: Division_by_zero.
+
+(weirdly, ~nan = nan~ is false, so you need to use the compare in that
+case)
+
+**** Associativity
+
+Suppose that we have defined ~let add x y = x + y~. Which of the
+following produces an integer, which produces a function, and which
+produces an error? Decide on an answer, then check your answer in the
+toplevel.
+
++ ~add 5 1~
+  This is ~add~ applied to two arguments. It evaluates to ~~5+1 = 6~. 
++ ~add 5~
+  This is ~add~ applied to one argument. It is the "add five" function.
++ ~(add 5) 1~
+  This is the "add five" function, appled to ~1~. It evaluates to ~6~.
++ ~add (5 1)~
+  This will produce an error. In fact, just (5 1) by itself will
+  produce an error, since ~5~ is not a function, so it can't be
+  applied to ~1~.
+
+**** Average
+
+Define an infix operator ~+/.~ to compute the average of two
+floating-point numbers. For example,
+
++ ~1.0 +/. 2.0 = 1.5~
++ ~0. +/. 0. = 0.~
+
+  #+begin_src ocaml
+    let (+/.) a b = (a +. b) /. 2.;;
+
+     1.0 +/. 2.0;;
+     0. +/. 0. ;;
+  #+end_src
+
+  #+RESULTS:
+  : 0
+
+**** Hello World
+
+Type the following in utop, and notice the difference in output from
+each:
+
++ ~print_endline "Hello world!";;~
+  Prints the string, with a carriage return at the end. Has type
+  ~unit~. Output looks like:
+
+  #+begin_export ascii
+  Hello world!
+  - : unit = ()
+  #+end_export
+  
++ ~print_string "Hello world!";;~
+  Prints the string with no newline. Has type unit. Output looks like:
+
+  #+begin_export ascii
+  Hello world!- : unit = ()
+  #+end_export
+  
 * Learning OCaml - problems
 ** 99 OCaml Problems
 *** Checklist
