@@ -274,7 +274,7 @@ assert (area 1.0 -. Float.pi < 1e-5)
 
 Define a function that computes the root mean square of two
 numbers—i.e.
-\[\sqrt{x^2} + y^2\]
+\[\sqrt{x^2 + y^2}\]
 Test your function with assert.
 
 #+begin_src ocaml
@@ -346,6 +346,7 @@ the nth number in the Fibonacci sequence, which is 1, 1, 2, 3, 5, 8,
   #+RESULTS:
   | 1 | 1 | 2 | 3 | 5 | 8 | 13 | 21 | 34 | 55 |
 
+**** 
 * Learning OCaml - problems
 ** 99 OCaml Problems
 *** Checklist
