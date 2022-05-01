@@ -70,7 +70,7 @@ In the event that source blocks aren't sufficient, you can open the
 actual running toplevel with ~M-x tuareg-run-ocaml~ and interact with
 it directly.
 
-** Basics
+** CS3110 - notes and exercises
 
 #+begin_src ocaml
   let x = 42;;
@@ -567,7 +567,6 @@ each:
   #+RESULTS:
   | 1 | 2 | 3 | 4 | 5 |
 
-  
 **** Product
 
 Write a function that returns the product of all the elements in a
@@ -824,6 +823,240 @@ as is the empty list.
 
 #+RESULTS:
 : true
+
+*** Higher-Order Programming - Exercises
+**** Twice, no arguments
+
+Consider the following definitions. Use the toplevel to determine what the types of quad and fourth are. Explain how it can be that quad is not syntactically written as a function that takes an argument, and yet its type shows that it is in fact a function.
+
+#+begin_src ocaml :results verbatim
+  let double x = 2*x
+#+end_src
+
+#+RESULTS:
+: val double : int -> int = <fun>
+
+#+begin_src ocaml :results verbatim
+  let square x = x*x
+#+end_src
+
+#+RESULTS:
+: val square : int -> int = <fun>
+
+#+begin_src ocaml :results verbatim
+  let twice f x = f (f x)
+#+end_src
+
+#+RESULTS:
+: val twice : ('a -> 'a) -> 'a -> 'a = <fun>
+
+#+begin_src ocaml :results verbatim
+  let quad = twice double
+#+end_src
+
+~double~ is a function of type ~int -> int~, while ~twice~ is
+(polymorphically) a function that takes a function of type ~T -> T~
+and produces a new function of type ~T -> T~. So when applied to
+~double~, it gives a new function ~int -> int~.
+
+Can also think of it in terms of currying: ~twice f x~ means ~f (f
+x)~, so ~twice f~ is a function still waiting for its last argument.
+
+#+RESULTS:
+: val quad : int -> int = <fun>
+
+#+begin_src ocaml :results verbatim
+  let fourth = twice square
+#+end_src
+
+#+RESULTS:
+: val fourth : int -> int = <fun>
+
+The same description of ~twice double~ applies to ~twice square~ as
+well, since ~double~ and ~square~ have the same type.
+**** Mystery Operator 1
+
+What does the following operator do?
+
+#+begin_src ocaml
+    let ( $ ) f x = f x;;
+
+
+
+    double $ 3 + 1;;
+
+    ($) (double) (3 + 1) ;;
+
+#+end_src
+
+#+RESULTS:
+: 8
+
+~$~ is an infix operator that applies its left argument to its right
+argument. So ~f $ x~ evaluates to ~f x~. But because of the precedence
+of operator binding, ~double 3 + 1~ is ~(double 3) + 1~, which is
+~7~. But ~double $ 3 + 1~ is ~($) (double) (3 + 1)~, which is ~8~
+
+**** Mystery Operator 2
+
+What does the following operator do?
+
+#+begin_src ocaml
+  let ( @@ ) f g x = x |> g |> f;;
+
+  (String.length @@ string_of_int) 10;
+#+end_src
+
+#+RESULTS:
+: Line 2, characters 0-35:
+: 2 | (String.length @@ string_of_int) 10;
+:     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+: Warning 10 [non-unit-statement]: this expression should have type unit.
+: Line 3, characters 0-13:
+: 3 | String.length string_of_int 10;;
+:     ^^^^^^^^^^^^^
+: Error: This function has type string -> int
+:        It is applied to too many arguments; maybe you forgot a `;'.
+
+~@@~ is an "infix" (sort of) operator, where ~f @@ g~ is a function
+that, when applied to ~x~, give ~f (g x)~ (as opposed to ~f g
+x~). This is function composition.
+
+**** Repeat
+
+Generalize ~twice~ to a function ~repeat~, such that ~repeat f n x~ applies ~f~ to ~x~ a total of ~n~ times.
+
+#+begin_src ocaml
+    let rec repeat f n x = match n with
+      | 0 -> x
+      | n -> f (repeat f (n-1) x);;
+
+    repeat double 10 1;;
+#+end_src
+
+#+RESULTS:
+: 1024
+
+**** Product
+
+Use ~fold_left~ to write a function ~product_left~ that computes the product of a list of floats. The product of the empty list is ~1.0~. Hint: recall how we implemented sum in just one line of code in lecture.
+
+~fold left~ is defined below. For a specific binary function ~f~, a starting
+"accumulation" value ~a~ and a list like (for example) ~[1;2;3]~, it
+gives ~f (f (f a 1) 2) 3~. If the binary function is multiplication
+and the initial accumulation value is ~1~, you'll get the product of
+the elements in the list.
+
+#+begin_src ocaml
+  let rec fold_left f acc = function
+    | [] -> acc
+    | h :: t -> fold_left f (f acc h) t;;
+
+  let product_left = fold_left ( * ) 1;;
+
+  product_left [1;2;3;4]
+#+end_src
+
+#+RESULTS:
+: 24
+
+Use ~fold_right~ to write a function ~product_right~ that computes the product of a list of floats. Same hint applies
+
+Again, ~fold_right~ is defined below: Given ~f~, ~a~ and ~[1;2;3]~ as
+above, you'd get ~f 1 (f 2 (f 3 a))~.
+
+I think the only difference here is that you "need" (probably a way
+around it though) to specificy the list argument to ~product_right~.
+
+#+begin_src ocaml
+  let rec fold_right f lst acc = match lst with
+    | [] -> acc
+    | h :: t -> f h (fold_right f t acc);;
+
+  let product_right lst = fold_right ( * ) lst 1;;
+
+  product_right [1;2;3;4;5]
+#+end_src
+
+#+RESULTS:
+: <fun>
+
+**** Terse Product
+
+How terse can you make your solutions to the ~product~ exercise?
+Hints: you need only one line of code for each, and you do not need
+the ~fun~ keyword. For ~fold_left~, your function definition does not
+even need to explicitly take a list argument. If you use ~ListLabels~,
+the same is true for ~fold_right~.
+
+I think my product_left is about as terse as possible already. To
+eliminate the argument from the left hand side of product_right, you
+could do:
+
+#+begin_src ocaml
+    let rec fold_right ~fn:f ~list:lst ~a:acc = match lst with
+      | [] -> acc
+      | h :: t -> f h (fold_right ~fn:f ~list:t ~a:acc)
+
+    let product_right_terse = fold_right ~fn:( * ) ~a:1;;
+
+    product_right_terse [1;2;3;4;5;6]
+#+end_src
+
+#+RESULTS:
+: 720
+
+(should figure out exactly the syntax and conventions for labelled
+argument, since I don't feel like I did this exactly the right way.)
+
+**** sum cube odd
+
+Write a function ~sum_cube_odd n~ that computes the sum of the cubes
+of all the odd numbers between ~0~ and ~n~ inclusive. Do not write any
+new recursive functions. Instead, use the functionals ~map~, ~fold~,
+and ~filter~, and the ~( -- )~ operator (defined in the discussion of
+pipelining).
+
+The infix range operator from earlier in the chapter:
+#+begin_src ocaml
+  let rec ( -- ) i j = if i > j then [] else i :: i + 1 -- j;;
+#+end_src
+
+#+begin_src ocaml
+
+  let sum_cube_odd n =
+    let odd m = m mod 2 = 1 in
+    let cube x = x * x * x in
+    (1 -- n)
+    |> List.filter odd
+    |> List.map cube
+    |> List.fold_left (+) 0 ;;
+
+  sum_cube_odd 10
+#+end_src
+
+#+RESULTS:
+: 1225
+
+**** sum cube odd pipeline
+
+Rewrite the previous function with the pipeline ~|>~ operator. (I
+already used it a fair bit in the previous, But I guess with even
+fewer inner ~let~ statements and more pipelininig it could be written:
+
+#+begin_src ocaml
+    let sum_cube_odd_pipeline n =
+      n
+      |> (--) 1
+      |> List.filter (fun m -> m mod 2 = 1)
+      |> List.map (fun x -> x * x * x)
+      |> List.fold_left (+) 0 ;;
+
+  sum_cube_odd_pipeline 10
+#+end_src
+
+#+RESULTS:
+: 1225
 
 * Learning OCaml - problems
 ** 99 OCaml Problems
