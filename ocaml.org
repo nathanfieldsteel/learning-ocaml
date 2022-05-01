@@ -532,7 +532,299 @@ each:
   #+begin_export ascii
   Hello world!- : unit = ()
   #+end_export
+
+*** Data and Types - Exercises
+
+**** List Expressions
++ Construct a list that has the integers 1 through 5 in it. Use the
+  square bracket notation for lists.
   
+  #+begin_src ocaml
+    let l1 = [1;2;3;4;5];;
+  #+end_src
+
+  #+RESULTS:
+  | 1 | 2 | 3 | 4 | 5 |
+  
++ Construct the same list, but do not use the square bracket
+  notation. Instead use ~::~ and ~[]~.
+
+  #+begin_src ocaml
+    let l2 = 1::2::3::4::5::[];;
+  #+end_src
+
+  #+RESULTS:
+  | 1 | 2 | 3 | 4 | 5 |
+
++ Construct the same list again. This time, the following expression
+  must appear in your answer: ~[2; 3; 4]~. Use the @ operator, and do
+  not use ~::~
+
+  #+begin_src ocaml
+    let l3 = [1] @ [2;3;4] @ [5];;
+  #+end_src
+
+  #+RESULTS:
+  | 1 | 2 | 3 | 4 | 5 |
+
+  
+**** Product
+
+Write a function that returns the product of all the elements in a
+list. The product of all the elements of an empty list is ~1~.
+
+#+begin_src ocaml
+
+  let list_product l =
+    let rec list_product_acc p l = match l with
+      | [] -> p
+      | x :: xs -> list_product_acc (p*x) xs in
+    list_product_acc 1 l;;
+
+  list_product (l1 @ l2 @ l3)
+#+end_src
+
+#+RESULTS:
+: 1728000
+
+**** concat
+
+Write a function that concatenates all the strings in a list. The
+concatenation of all the strings in an empty list is the empty string
+"".
+
+#+begin_src ocaml
+
+    let list_concat l =
+      let rec list_concat_acc s l = match l with
+        | [] -> s
+        | x :: xs -> list_concat_acc (s^x) xs in
+      list_concat_acc "" l;;
+
+    list_concat ["Hel"; "lo"; ","; " ";"world";"!"]
+#+end_src
+
+#+RESULTS:
+: Hello, world!
+
+**** TODO product test
+
+Unit test the function product that you wrote in an exercise above.
+
+**** Patterns
+
+Using pattern matching, write three functions, one for each of the following properties. Your functions should return true if the input list has the property and false otherwise.
+
++ the list’s first element is "bigred"
+
+  #+begin_src ocaml
+    let bigred l = match l with
+    | "bigred" :: xs -> true
+    | _ -> false;;
+
+    bigred ["smallred"];;
+    bigred ["bigred";"x";"y";"z"]
+  #+end_src
+
+  #+RESULTS:
+  : true
+
+(I'm not sure how to make this polymorphic: if the first element is an
+integer, I get a type error
+
++ the list has exactly two or four elements; do not use the length
+  function
+
+  #+begin_src ocaml
+        let two_or_four l = match l with
+          | x::y::[] -> true
+          | x::y::z::w::[] -> true
+          | _ -> false;;
+
+        two_or_four [1;2;3;4];;
+        two_or_four ["a";"b"]
+  #+end_src
+
+  #+RESULTS:
+  : true
+  
++ the first two elements of the list are equal
+
+  #+begin_src ocaml
+        let first_two_equal l = match l with
+        | x::y::xs when x = y -> true
+        | _ -> false;;
+
+        first_two_equal [1;2;3];;
+        first_two_equal [[1];[1];[1;2]];;
+        first_two_equal [[];[];[1;2]];;
+        first_two_equal ([[]]::[[]]::[]);;
+  #+end_src
+
+  #+RESULTS:
+  : true
+  
+**** Library
+
+Consult the List standard library to solve these exercises:
+
++ Write a function that takes an int list and returns the fifth
+  element of that list, if such an element exists. If the list has
+  fewer than five elements, return 0. Hint: List.length and List.nth.
+
+  #+begin_src ocaml
+        let fifth_element l =
+          if (List.length l >= 5) then (List.nth l 4) else (0);;
+
+        fifth_element [1;2;3;4;5;6;7;8;9];;
+        fifth_element [8;7;6;5;4];;
+        fifth_element [1]
+  #+end_src
+
+  #+RESULTS:
+  : 0
+
++ Write a function that takes an int list and returns the list sorted
+in descending order. Hint: List.sort with Stdlib.compare as its
+first argument, and List.rev.
+  
+#+begin_src ocaml
+  let descending_sort l = l
+                    |> List.sort Stdlib.compare
+                    |> List.rev;;
+
+  descending_sort [1;4;3;2;3;4;3;1;10;23;14]
+#+end_src
+
+#+RESULTS:
+| 23 | 14 | 10 | 4 | 4 | 3 | 3 | 3 | 2 | 1 | 1 |
+
+**** TODO Library Tests
+
+Write a couple OUnit unit tests for each of the functions you wrote in
+the previous exercise
+
+**** Library Puzzle
+
++ Write a function that returns the last element of a list. Your
+  function may assume that the list is non-empty. Hint: Use two
+  library functions, and do not write any pattern matching code of
+  your own.
+
+#+begin_src ocaml
+  let last_element l = List.nth l (List.length l - 1);;
+
+  last_element [1;4;3;2;3;7];;
+#+end_src
+
+#+RESULTS:
+: 7
+
++ Write a function ~any_zeroes : int list -> bool~ that returns ~true~
+  if and only if the input list contains at least one ~0~. Hint: use
+  one library function, and do not write any pattern matching code
+  of your own.
+
+  #+begin_src ocaml
+        let any_zeroes l = List.exists ((=) 0) l;;
+
+        any_zeroes [1;2;3;4;10];;
+        any_zeroes [1;2;3;-1;-2;-10];;
+        any_zeroes [];;
+        any_zeroes [1;1;1;1;0;1;1;2;2;3;3;4]
+  #+end_src
+
+  #+RESULTS:
+  : true
+
+**** Take Drop
+
++ Write a function take : int -> 'a list -> 'a list such that take n
+  lst returns the first n elements of lst. If lst has fewer than n
+  elements, return all of them.
+
+#+begin_src ocaml
+
+    let rec take n l = match n with
+      | 0 -> []
+      | n -> (match l with
+              | x :: xs -> x::(take (n-1) xs)
+              | [] -> []);;
+
+    take 2 [5;4;3;2;1];;
+    take 3 [1;2];;
+    take 0 [1;2];;
+    take 0 [];;
+#+end_src
+
+#+RESULTS:
+: []
+
++ Write a function drop : int -> 'a list -> 'a list such that drop n
+  lst returns all but the first n elements of lst. If lst has fewer
+  than n elements, return the empty list.
+
+  #+begin_src ocaml
+    let rec drop n l = match n with
+    | 0 -> l
+    | n -> (match l with
+          | x :: xs -> drop (n-1) xs
+          | [] -> []);;
+
+    drop 3 [1;2;3;4;5;6;7;8];;
+    drop 2 [1];;
+    drop 3 [5;4;4];;
+    drop 0 [1;2;3]
+  #+end_src
+
+  #+RESULTS:
+  | 1 | 2 | 3 |
+
+**** TODO Take Drop Tail
+
+Revise your solutions for take and drop to be tail recursive, if they
+aren’t already. Test them on long lists with large values of n to see
+whether they run out of stack space. To construct long lists, use the
+~--~ operator from the lists section.
+
+**** Unimodal
+
+Write a function is_unimodal : int list -> bool that takes an integer
+list and returns whether that list is unimodal. A unimodal list is a
+list that monotonically increases to some maximum value then
+monotonically decreases after that value. Either or both segments
+(increasing or decreasing) may be empty. A constant list is unimodal,
+as is the empty list.
+
+#+begin_src ocaml
+    let rec is_unimodal l =
+      let rec is_nonincreasing l = match l with
+      | [] -> true
+      | x :: [] -> true
+      | a :: b :: tail -> if (a < b)
+                          then (false)
+                          else (is_nonincreasing (b :: tail)) in
+      match l with
+      | [] -> true
+      | x :: [] -> true
+      | a :: b :: [] -> true
+      | a :: b :: tail -> if (a <= b)
+                          then (is_unimodal (b :: tail))
+                          else (is_nonincreasing (b :: tail));;
+
+    is_unimodal [1;2;2;2;3;3;2;2];;
+    is_unimodal [1;2;3;4;4;4;5];;
+    is_unimodal [6;5;4;3;2;1];;
+    is_unimodal [1;2;3;3;2;1;2];;
+    is_unimodal [1;1;1;1;1];;
+    is_unimodal [0;0;0;0;0;0;0;0;1];;
+    is_unimodal [1;0;0;0;0;0;0;0;0;0];;
+    is_unimodal [4]
+#+end_src
+
+#+RESULTS:
+: true
+
 * Learning OCaml - problems
 ** 99 OCaml Problems
 *** Checklist
