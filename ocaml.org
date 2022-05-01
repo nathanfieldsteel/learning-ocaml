@@ -86,8 +86,8 @@ val x : int = 42
 #+RESULTS:
 : 7
 
-*** Basics - Exercises:
-**** Values
+*** TODO Basics - Exercises:
+**** DONE Values
 
 What is the type and value of each of the following OCaml expressions:
 
@@ -109,7 +109,7 @@ The first is ~42 : int~, the second is ~CS 3110 : string~
 
 #+RESULTS:
 : CS 3110
-**** Operators
+**** DONE Operators
 
 + Write an expression that multiplies 42 by 10
 + Write an expression that divides 3.14 by 2.0
@@ -138,7 +138,7 @@ The first is ~42 : int~, the second is ~CS 3110 : string~
 
   #+RESULTS:
   : 23053.933324800008
-**** Equality
+**** DONE Equality
 
 + Write an expression that compares ~42~~ to ~42~ using structural equality
 + Write an expression that compares ~"hi"~ to ~"hi"~ using structural
@@ -174,7 +174,7 @@ Physical equality is compared with ~==~ and ~!=~.
 structural equality is closer to the mathematical notion of equality,
 but physical equality is closer to "are these the same object in
 memory?". Probably usually better to use ~=~.
-**** Assertions
+**** DONE Assertions
 
 + Enter ~assert true;;~ into utop and see what happens.
 + Enter ~assert false;;~ into utop and see what happens.
@@ -190,7 +190,7 @@ memory?". Probably usually better to use ~=~.
 
   #+RESULTS:
   : ()
-**** If
+**** DONE If
 
 Write an if expression that evaluates to 42 if 2 is greater than 1 and
 otherwise evaluates to 7.
@@ -201,8 +201,9 @@ otherwise evaluates to 7.
 
 #+RESULTS:
 : 42
+**** DONE Double fun
 
-**** Double fun
+
 Using the increment function from above as a guide, define a function
 double that multiplies its input by 2. For example, double 7 would
 be 14. Test your function by applying it to a few inputs. Turn those
@@ -223,7 +224,7 @@ test cases into assertions.
 #+RESULTS:
 : ()
 
-**** More fun
+**** DONE More fun
 
 + Define a function that computes the cube of a floating-point number. Test your function by applying it to a few inputs.
 + Define a function that computes the sign (1, 0, or -1) of an integer. Use a nested if expression. Test your function by applying it to a few inputs.
@@ -270,7 +271,7 @@ assert (area 1.0 -. Float.pi < 1e-5)
 #+RESULTS:
 : ()
 
-**** RMS
+**** DONE RMS
 
 Define a function that computes the root mean square of two
 numbers—i.e.
@@ -302,7 +303,7 @@ test with pythagorean triples
 #+RESULTS:
 : ()
 
-**** date fun
+**** DONE date fun
 
 Define a function that takes an integer d and string m as input and returns true just when d and m form a valid date. Here, a valid date has a month that is one of the following abbreviations: Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sept, Oct, Nov, Dec. And the day must be a number that is between 1 and the minimum number of days in that month, inclusive. For example, if the month is Jan, then the day is between 1 and 31, inclusive, whereas if the month is Feb, then the day is between 1 and 28, inclusive.
 
@@ -325,7 +326,7 @@ supposed to to this with a hash table or something?
 #+RESULTS:
 : true
 
-**** fib fun
+**** DONE fib fun
 
 Define a recursive function ~fib : int -> int~, such that ~fib n~ is
 the nth number in the Fibonacci sequence, which is 1, 1, 2, 3, 5, 8,
@@ -346,7 +347,7 @@ the nth number in the Fibonacci sequence, which is 1, 1, 2, 3, 5, 8,
   #+RESULTS:
   | 1 | 1 | 2 | 3 | 5 | 8 | 13 | 21 | 34 | 55 |
 
-**** fib fast
+**** DONE fib fast
 
 How quickly does your implementation of fib compute the 50th Fibonacci
 number? If it computes nearly instantaneously, congratulations! But
@@ -421,7 +422,7 @@ indicating that integer overflow occurred?
 #+RESULTS:
 : 91
 
-**** poly types
+**** DONE poly types
 
 What is the type of each of the functions below? You can ask the
 toplevel to check your answers
@@ -453,7 +454,7 @@ toplevel to check your answers
   type ~T2~. The output is always ~y~, which will have type ~T1~. So
   ~i: bool -> T1 -> T2 -> T1~
 
-**** Divide
+**** DONE Divide
 
 Write a function divide : numerator:float -> denominator:float ->
 float. Apply your function.
@@ -476,7 +477,7 @@ float. Apply your function.
 (weirdly, ~nan = nan~ is false, so you need to use the compare in that
 case)
 
-**** Associativity
+**** DONE Associativity
 
 Suppose that we have defined ~let add x y = x + y~. Which of the
 following produces an integer, which produces a function, and which
@@ -494,7 +495,7 @@ toplevel.
   produce an error, since ~5~ is not a function, so it can't be
   applied to ~1~.
 
-**** Average
+**** DONE Average
 
 Define an infix operator ~+/.~ to compute the average of two
 floating-point numbers. For example,
@@ -512,7 +513,7 @@ floating-point numbers. For example,
   #+RESULTS:
   : 0
 
-**** Hello World
+**** DONE Hello World
 
 Type the following in utop, and notice the difference in output from
 each:
@@ -535,7 +536,7 @@ each:
 
 *** Data and Types - Exercises
 
-**** List Expressions
+**** DONE List Expressions
 + Construct a list that has the integers 1 through 5 in it. Use the
   square bracket notation for lists.
   
@@ -567,7 +568,7 @@ each:
   #+RESULTS:
   | 1 | 2 | 3 | 4 | 5 |
 
-**** Product
+**** DONE Product
 
 Write a function that returns the product of all the elements in a
 list. The product of all the elements of an empty list is ~1~.
@@ -586,7 +587,7 @@ list. The product of all the elements of an empty list is ~1~.
 #+RESULTS:
 : 1728000
 
-**** concat
+**** DONE concat
 
 Write a function that concatenates all the strings in a list. The
 concatenation of all the strings in an empty list is the empty string
@@ -610,7 +611,7 @@ concatenation of all the strings in an empty list is the empty string
 
 Unit test the function product that you wrote in an exercise above.
 
-**** Patterns
+**** DONE Patterns
 
 Using pattern matching, write three functions, one for each of the following properties. Your functions should return true if the input list has the property and false otherwise.
 
@@ -663,7 +664,7 @@ integer, I get a type error
   #+RESULTS:
   : true
   
-**** Library
+**** DONE Library
 
 Consult the List standard library to solve these exercises:
 
@@ -703,7 +704,7 @@ first argument, and List.rev.
 Write a couple OUnit unit tests for each of the functions you wrote in
 the previous exercise
 
-**** Library Puzzle
+**** DONE Library Puzzle
 
 + Write a function that returns the last element of a list. Your
   function may assume that the list is non-empty. Hint: Use two
@@ -736,7 +737,7 @@ the previous exercise
   #+RESULTS:
   : true
 
-**** Take Drop
+**** DONE Take Drop
 
 + Write a function take : int -> 'a list -> 'a list such that take n
   lst returns the first n elements of lst. If lst has fewer than n
@@ -786,7 +787,7 @@ aren’t already. Test them on long lists with large values of n to see
 whether they run out of stack space. To construct long lists, use the
 ~--~ operator from the lists section.
 
-**** Unimodal
+**** DONE Unimodal
 
 Write a function is_unimodal : int list -> bool that takes an integer
 list and returns whether that list is unimodal. A unimodal list is a
@@ -825,7 +826,7 @@ as is the empty list.
 : true
 
 *** Higher-Order Programming - Exercises
-**** Twice, no arguments
+**** DONE Twice, no arguments
 
 Consider the following definitions. Use the toplevel to determine what the types of quad and fourth are. Explain how it can be that quad is not syntactically written as a function that takes an argument, and yet its type shows that it is in fact a function.
 
@@ -874,7 +875,7 @@ x)~, so ~twice f~ is a function still waiting for its last argument.
 
 The same description of ~twice double~ applies to ~twice square~ as
 well, since ~double~ and ~square~ have the same type.
-**** Mystery Operator 1
+**** DONE Mystery Operator 1
 
 What does the following operator do?
 
@@ -897,7 +898,7 @@ argument. So ~f $ x~ evaluates to ~f x~. But because of the precedence
 of operator binding, ~double 3 + 1~ is ~(double 3) + 1~, which is
 ~7~. But ~double $ 3 + 1~ is ~($) (double) (3 + 1)~, which is ~8~
 
-**** Mystery Operator 2
+**** DONE Mystery Operator 2
 
 What does the following operator do?
 
@@ -922,7 +923,7 @@ What does the following operator do?
 that, when applied to ~x~, give ~f (g x)~ (as opposed to ~f g
 x~). This is function composition.
 
-**** Repeat
+**** DONE Repeat
 
 Generalize ~twice~ to a function ~repeat~, such that ~repeat f n x~ applies ~f~ to ~x~ a total of ~n~ times.
 
@@ -937,7 +938,7 @@ Generalize ~twice~ to a function ~repeat~, such that ~repeat f n x~ applies ~f~ 
 #+RESULTS:
 : 1024
 
-**** Product
+**** DONE Product
 
 Use ~fold_left~ to write a function ~product_left~ that computes the product of a list of floats. The product of the empty list is ~1.0~. Hint: recall how we implemented sum in just one line of code in lecture.
 
@@ -981,7 +982,7 @@ around it though) to specificy the list argument to ~product_right~.
 #+RESULTS:
 : <fun>
 
-**** Terse Product
+**** DONE Terse Product
 
 How terse can you make your solutions to the ~product~ exercise?
 Hints: you need only one line of code for each, and you do not need
@@ -1009,7 +1010,7 @@ could do:
 (should figure out exactly the syntax and conventions for labelled
 argument, since I don't feel like I did this exactly the right way.)
 
-**** sum cube odd
+**** DONE sum cube odd
 
 Write a function ~sum_cube_odd n~ that computes the sum of the cubes
 of all the odd numbers between ~0~ and ~n~ inclusive. Do not write any
@@ -1038,7 +1039,7 @@ The infix range operator from earlier in the chapter:
 #+RESULTS:
 : 1225
 
-**** sum cube odd pipeline
+**** DONE sum cube odd pipeline
 
 Rewrite the previous function with the pipeline ~|>~ operator. (I
 already used it a fair bit in the previous, But I guess with even
