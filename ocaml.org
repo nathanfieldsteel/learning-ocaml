@@ -1070,20 +1070,20 @@ fewer inner ~let~ statements and more pipelininig it could be written:
 |       4 | list length            | done   |
 |       5 | reverse                | done   |
 |       6 | palindrome             | done   |
-|       7 | flatten                |        |
-|       8 | delete duplicates      |        |
-|       9 | pack                   |        |
-|      10 | run-length             |        |
-|      11 | run-length mod         |        |
-|      12 | run-length decode      |        |
-|      13 | run-length direct      |        |
-|      14 | duplicate elts         |        |
-|      15 | replicate elts         |        |
-|      16 | drop every nth         |        |
-|      17 | split list             |        |
-|      18 | list slice             |        |
-|      19 | rotate n left          |        |
-|      20 | remove kth             |        |
+|       7 | flatten                | done   |
+|       8 | delete duplicates      | done   |
+|       9 | pack                   | done   |
+|      10 | run-length             | done   |
+|      11 | run-length mod         | done   |
+|      12 | run-length decode      | done   |
+|      13 | run-length direct      | done   |
+|      14 | duplicate elts         | done   |
+|      15 | replicate elts         | done   |
+|      16 | drop every nth         | done   |
+|      17 | split list             | done   |
+|      18 | list slice             | done   |
+|      19 | rotate n left          | done   |
+|      20 | remove kth             | done   |
 |      21 | insert                 |        |
 |      22 | create range           |        |
 |      23 | extract random         |        |
@@ -1167,7 +1167,7 @@ fewer inner ~let~ statements and more pipelininig it could be written:
 |      98 | nonograms              |        |
 |      99 | crossword              |        |
 
-*** 1
+*** DONE 1 Tail of a list
 Write a function ~last : 'a list -> 'a option~ that returns the last
 element of a list.
 
@@ -1185,7 +1185,7 @@ element of a list.
 
 #+RESULTS:
 : None
-*** 2
+*** DONE 2 Last two elements of a list
 
 Find the last but one (last and penultimate) elements of a list.
 
@@ -1206,7 +1206,7 @@ Find the last but one (last and penultimate) elements of a list.
 #+RESULTS:
 : None
 
-*** 3
+*** DONE 3 Nth element of a list
 
 Find the K^{th} element of a list.
 
@@ -1229,7 +1229,7 @@ expressions. Otherwise, it thinks ~m~ is of type ~'a list~.
 #+RESULTS:
 : Some 3
 
-*** 4
+*** DONE 4 length of a list
 Find the number of elements of a list
 
 #+begin_src ocaml
@@ -1247,7 +1247,7 @@ Find the number of elements of a list
 #+RESULTS:
 : 0
 
-*** 5
+*** DONE 5 Reverse a list
 
 Reverse a list
 
@@ -1263,7 +1263,7 @@ Reverse a list
 #+RESULTS:
 | 3 | 4 | 5 | 2 | 1 |
 
-*** 6
+*** DONE 6 Palindrome
 Find out whether a list is a palindrom
 
 #+begin_src ocaml
@@ -1293,7 +1293,7 @@ Find out whether a list is a palindrom
 #+RESULTS:
 | true | true | true | true | false | false |
 
-*** 7
+*** DONE 7 Flatten a list
 
 Flatten a nested list structure
 
@@ -1314,7 +1314,7 @@ Flatten a nested list structure
 #+RESULTS:
 : - : string list = ["a"; "b"; "c"; "d"; "e"]
 
-*** 8
+*** DONE 8 Eliminate duplicates
 
 Eliminate consecutive duplicates of list elements.
 
@@ -1332,7 +1332,7 @@ Eliminate consecutive duplicates of list elements.
 #+RESULTS:
 | 1 | 2 | 3 | 4 | 5 | 6 | 5 | 4 |
 
-*** 9
+*** DONE 9 Pack consecutive duplicates
 
 Pack consecutive duplicates of list elements into sublists
 
@@ -1353,11 +1353,20 @@ Pack consecutive duplicates of list elements into sublists
   pack [1;1;1;2;2;3;3;3;3;3;4;5;6;4]
 #+end_src
 
-*** 10
+#+RESULTS:
+| 1 | 1 | 1 |   |   |
+| 2 | 2 |   |   |   |
+| 3 | 3 | 3 | 3 | 3 |
+| 4 |   |   |   |   |
+| 5 |   |   |   |   |
+| 6 |   |   |   |   |
+| 4 |   |   |   |   |
+
+*** DONE 10 Run length encoding
 
 Run-length encoding of a list
 
-#+begin_src ocaml
+#+begin_src ocaml :results verbatim
 
   let encode l =
     let rle x = (List.length x, List.hd x) in
@@ -1367,13 +1376,246 @@ Run-length encoding of a list
 #+end_src
 
 #+RESULTS:
-| 4 | 1 |
-| 1 | 2 |
-| 1 | 3 |
-| 8 | 4 |
-| 2 | 3 |
-| 1 | 2 |
+: - : (int * int) list = [(4, 1); (1, 2); (1, 3); (8, 4); (2, 3); (1, 2)]
 
+*** DONE 11 Modified Run-length encoding
+
+Modify the result of the previous problem in such a way that if an
+element has no duplicates it is simply copied into the result
+list. Only elements with duplicates are transferred as (N E) lists.
+
+Since OCaml lists are homogeneous, one needs to define a type to hold
+both single elements and sub-lists.
+
+#+begin_src ocaml
+type 'a rle =
+  | One of 'a
+  | Many of int * 'a
+#+end_src
+
+#+RESULTS:
+: type 'a rle = One of 'a | Many of int * 'a
+
+#+begin_src ocaml :results verbatim
+  let encode lst =
+    let rle_of_packed l = match l with
+      | x :: [] -> One x
+      | x :: xs -> Many (List.length l, x) in
+    lst |> pack |> List.map rle_of_packed;;
+
+  encode [1;1;2;2;3;3;3;4;5;5;5;5;5];;
+#+end_src
+
+#+RESULTS:
+: - : int rle list =
+: [Many (2, 1); Many (2, 2); Many (3, 3); One 4; Many (5, 5)]
+
+*** DONE 12 Decode a run-length encoded list
+
+Given a run-length code list generated as specified in the previous
+problem, construct its uncompressed version.
+
+#+begin_src ocaml :results verbatim
+    let decode lst =
+      let rec unpack e = match e with
+        | One x -> [x]
+        | Many (n,x) -> (match n with
+                          | 2 -> x :: x :: []
+                          | _ -> x :: unpack (Many (n-1,x))) in
+      lst |> List.map unpack |> List.fold_left (@) [];;
+
+  decode [Many (2, 1); Many (2, 2); Many (3, 3); One 4; Many (5, 5)]
+#+end_src
+
+#+RESULTS:
+: - : int list = [1; 1; 2; 2; 3; 3; 3; 4; 5; 5; 5; 5; 5]
+
+can this be done without the fold?
+
+*** DONE 13 Run-length encoding of a list (direct solution)
+
+Implement the so-called run-length encoding data compression method
+directly. I.e. don't explicitly create the sublists containing the
+duplicates, as in problem "Pack consecutive duplicates of list
+elements into sublists", but only count them. As in problem "Modified
+run-length encoding", simplify the result list by replacing the
+singleton lists (1 X) by X.
+
+#+begin_src ocaml :results verbatim
+    let encode lst =
+      let rec encode_acc ct e lst = match lst with
+        | [] -> (match ct with
+                | 1 -> [One e]
+                | n -> [Many (n,e)])
+        | x :: [] when x = e -> [Many (ct + 1, e)]
+        | x :: [] -> (match ct with
+                     | 1 -> [One e; One x]
+                     | n -> [Many (ct, e); One x])
+        | x :: xs when x = e -> encode_acc (ct + 1) e xs 
+        | x :: xs -> (match ct with
+                     | 1 -> (One e) :: encode_acc 1 x xs
+                     | n -> (Many (n,e)) :: encode_acc 1 x xs) in
+      match lst with
+      | [] -> []
+      | x :: xs -> encode_acc 1 x xs;;
+
+    encode [1;1;1;1;2;2;3;3;3;3;4;5;6;5;4;4;4;4;5;5;5;5;5;5;5;5;5;0];;
+#+end_src
+
+#+RESULTS:
+: - : int rle list =
+: [Many (4, 1); Many (2, 2); Many (4, 3); One 4; One 5; One 6; One 5;
+:  Many (4, 4); Many (9, 5); One 0]
+
+*** DONE 14 Duplicate the elements of a list
+
+Duplicate the elements of a list
+
+#+begin_src ocaml :results verbatim
+    let rec duplicate lst = match lst with
+      | [] -> []
+      | x :: xs -> x :: x :: duplicate xs;;
+
+    duplicate ["a";"b";"c";"c";"d"]
+#+end_src
+
+#+RESULTS:
+: - : string list = ["a"; "a"; "b"; "b"; "c"; "c"; "c"; "c"; "d"; "d"]
+
+*** DONE 15 Replicate the elements of a list a given number of times
+
+Replicate the elements of a list a given number of times
+
+#+begin_src ocaml :results verbatim
+    let rec replicate lst n =
+      let rec repeated n e = match n with
+        | 0 -> []
+        | n -> e :: repeated (n-1) e in
+      lst |> List.map (repeated n) |> List.fold_left (@) [];;
+
+    replicate [1;2;3;3;4] 4
+#+end_src
+
+#+RESULTS:
+: - : int list = [1; 1; 1; 1; 2; 2; 2; 2; 3; 3; 3; 3; 3; 3; 3; 3; 4; 4; 4; 4]
+
+*** DONE 16 Drop every N'th element from a list
+
+Drop every N'th element from a list
+
+#+begin_src ocaml :results verbatim
+  let drop lst n =
+    let rec drop_help lst n m = match m with
+      | 1 -> (match lst with
+              | [] -> []
+              | x :: xs -> drop_help xs n n)
+      | m -> (match lst with
+              | [] -> []
+              | x :: xs -> x :: (drop_help xs n (m-1))) in
+    drop_help lst n n;;
+
+  drop [1;2;3;4;5;6;7;8;9;10] 3
+#+end_src
+
+#+RESULTS:
+: - : int list = [1; 2; 4; 5; 7; 8; 10]
+
+*** DONE 17 Split a list into two parts; the length of the first part is given
+
+Split a list into two parts; the length of the first part is given
+
+If the length of the first part is longer than the entire list, then
+the first part is the list and the second part is empty.
+
+#+begin_src ocaml :results verbatim
+    let split lst n =
+      let rec split_help lst partial n = match n with
+        | 0 -> [List.rev partial; lst]
+        | n -> (match lst with
+                | [] -> [List.rev partial;lst]
+                | x :: xs -> split_help xs (x :: partial) (n-1)) in
+      split_help lst [] n;;
+
+    split [1;2;3;4;5;6;7] 4;;
+
+#+end_src
+
+#+RESULTS:
+: - : int list list = [[1; 2; 3; 4]; [5; 6; 7]]
+
+*** DONE 18 Extract a slice from a list
+
+Given two indices, ~i~ and ~k~, the slice is the list containing the
+elements between the ~ith~ and ~kth~ element of the original list
+(both limits included). Start counting the elements with ~0~ (this is
+the way the List module numbers elements).
+
+#+begin_src ocaml :results verbatim
+  let rec slice lst i j = match i with
+    | 0 -> (match j with
+           | 0 -> (match lst with
+                  | [] -> []
+                  | x :: xs -> [x])
+           | j when j > 0 -> (match lst with
+                             | [] -> []
+                             | x :: xs -> x :: (slice xs 0 (j-1)))
+           | j -> [])
+    | i -> (match lst with
+            | [] -> []
+            | x :: xs -> slice xs (i-1) (j-1));;
+
+  slice [1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17] 5 7
+#+end_src
+
+#+RESULTS:
+: - : int list = [6; 7; 8]
+
+*** DONE 19 Rotate a list N places to the left
+
+Rotate a list N places to the left
+
+#+begin_src ocaml :results verbatim
+    let rotate lst n =
+      let l = List.length lst in
+      let m = if (n mod l >= 0) then (n mod l) else ((n mod l) + l) in
+      let rec rotate_help lst part n = match n with
+        | 0 -> lst @ part
+        | n -> (match lst with
+                | [] -> part
+                | x :: xs -> rotate_help xs (part @ [x]) (n-1)) in
+      rotate_help lst [] m;;
+
+    rotate [1;2;3;4;5;6;7] (-8);;
+    rotate [1;2;3;4;5;6;7] (1000);;
+    rotate [1] (100000);;
+    rotate [1;2;3;4;5;6;7] (-12367)
+
+#+end_src
+
+#+RESULTS:
+: - : int list = [3; 4; 5; 6; 7; 1; 2]
+
+*** DONE 20 Remove the K'th element from a list
+Remove the K'th element from a list
+
+The first element of the list is numbered 0, the second 1,...
+
+#+begin_src ocaml :results verbatim
+    let remove_at k lst =
+      let rec remove_at_help k lst partial = match k with
+        | 0 -> (match lst with
+                | [] -> partial
+                | x :: xs -> partial @ xs)
+        | k -> (match lst with
+               | [] -> partial
+               | x :: xs -> remove_at_help (k-1) xs (partial @ [x]))  in
+      remove_at_help k lst [];;
+
+    remove_at 3 [1;2;3;4;5;6;7];;
+#+end_src
+
+#+RESULTS:
+: - : int list = [1; 2; 3; 5; 6; 7]
 
 ** Advent of Code 2021
 *** Day 1 - Sonar Sweep
