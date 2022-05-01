@@ -86,7 +86,7 @@ val x : int = 42
 #+RESULTS:
 : 7
 
-*** TODO Basics - Exercises:
+*** TODO 2.9 Basics - Exercises:
 **** DONE Values
 
 What is the type and value of each of the following OCaml expressions:
@@ -534,7 +534,7 @@ each:
   Hello world!- : unit = ()
   #+end_export
 
-*** Data and Types - Exercises
+*** 3.14 Data and Types - Exercises
 
 **** DONE List Expressions
 + Construct a list that has the integers 1 through 5 in it. Use the
@@ -825,7 +825,7 @@ as is the empty list.
 #+RESULTS:
 : true
 
-*** Higher-Order Programming - Exercises
+*** 4.9 Higher-Order Programming - Exercises
 **** DONE Twice, no arguments
 
 Consider the following definitions. Use the toplevel to determine what the types of quad and fourth are. Explain how it can be that quad is not syntactically written as a function that takes an argument, and yet its type shows that it is in fact a function.
@@ -1059,6 +1059,75 @@ fewer inner ~let~ statements and more pipelininig it could be written:
 #+RESULTS:
 : 1225
 
+**** DONE exists
+Consider writing a function ~exists: ('a -> bool) -> 'a list -> bool~, such that ~exists p [a1; ...; an]~ returns whether at least one element of the list satisfies the predicate ~p~. That is, it evaluates the same as ~(p a1) || (p a2) || ... || (p an)~. When applied to an empty list, it evaluates to false.
+
+Write three solutions to this problem, as we did above:
+
++ ~exists_rec~, which must be a recursive function that does not use the
+  ~List~ module.
+
+  #+begin_src ocaml :results verbatim
+        let rec exists_rec p lst = match lst with
+          | [] -> false
+          | x :: xs -> if p x then true else exists_rec p xs;;
+
+        let even n = n mod 2 = 0;;
+        let odd n = n mod 2 = 1 || n mod 2 < 0;;
+
+        exists_rec even [1;2;3;4;5;6;7];;
+        exists_rec odd [-2;-4;-6;-8]
+  #+end_src
+
+  #+RESULTS:
+  : - : bool = false
+  
++ ~exists_fold~, which uses either ~List.fold_left~ or ~List.fold_right~,
+  but not any other ~List~ module functions nor the ~rec~ keyword.
+
+  #+begin_src ocaml :results verbatim
+        let exists_fold p lst =
+          lst |> List.fold_left (fun x y -> x || p y) false;;
+
+        exists_fold even [1;3;5;7];;
+        exists_fold odd [-2;0;2;6];;
+        exists_fold even [1;2;3;4;5];;
+        exists_fold even []
+  #+end_src
+
+  #+RESULTS:
+  : - : bool = false
+
++ ~exists_lib~, which uses any combination of ~List~ module functions
+  other than ~fold_left~ or ~fold_right~, and does not use the ~rec~
+  keyword.
+
+  #+begin_src ocaml
+    let exists_lib p lst =
+      match lst
+            |> List.find_map (fun x -> if (p x)
+                                       then (Some x)
+                                       else (None)) with
+    | Some x -> true
+    | None -> false;;
+
+    exists_lib even [1;3;5;8]
+  #+end_src
+
+  #+RESULTS:
+  : true
+
+(There are probably lots of ways to do this one)
+
+**** TODO account balance
+**** TODO library uncurried
+**** TODO map composition
+**** TODO more list fun
+**** TODO association list keys
+**** TODO valid matrix
+**** TODO row vector add
+**** TODO matrix add
+**** TODO matrix multiply
 * Learning OCaml - problems
 ** 99 OCaml Problems
 *** Checklist
