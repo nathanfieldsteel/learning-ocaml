@@ -1324,24 +1324,27 @@ unspecified. Unit test the function. Hint: define functions for matrix
 transposition and row vector dot product.
 
 #+begin_src ocaml :results verbatim
+  let rec multiply_matrices m1 m2 =
+    let dot r1 r2 = List.fold_left (+) 0 (List.map2 ( * ) r1 r2) in
+    let rec row_to_column r = match r with
+      | [] -> []
+      | e :: es -> [e] :: row_to_column es in
+    let rec transpose m = match m with
+      | [] -> []
+      | r :: [] -> row_to_column r
+      | r :: rs -> List.map2 (@) (row_to_column r) (transpose rs) in
+    let rec row_of_r_m r m = match m with
+      | [] -> []
+      | t :: ts -> (dot r t) :: (row_of_r_m r ts) in
+    match m1 with
+    | [] -> []
+    | r :: rs -> (row_of_r_m r (transpose m2)) :: multiply_matrices rs m2;;
 
-        let multiply_matrices m1 m2 =
-          let dot r1 r2 = List.fold_left (+) 0 (List.map2 ( * ) r1 r2) in
-          let rec row_to_column r = match r with
-            | [] -> []
-            | e :: es -> [e] :: row_to_column es in
-          let rec transpose m = match m with
-            | [] -> []
-            | r :: [] -> row_to_column r
-            | r :: rs -> List.map2 (@) (row_to_column r) (transpose rs) in
-          (* have m1 and transposed m2. Need to take the (outer) product of these lists with dot and put the results in an output matrix. Work on this later*)
-          m1 (transpose m2);;
-
-        multiply_matrices [[0;1];[2;3]] [[4;5];[6;7]]
+  multiply_matrices [[6;41];[1;7]] [[7;-41];[-1;6]]
 #+end_src
 
 #+RESULTS:
-: - : int list = [6; 31]
+: - : int list list = [[1; 0]; [0; 1]]
 
 * Learning OCaml - problems
 ** 99 OCaml Problems
