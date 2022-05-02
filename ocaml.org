@@ -1371,12 +1371,12 @@ transposition and row vector dot product.
 |      18 | list slice             | done   |
 |      19 | rotate n left          | done   |
 |      20 | remove kth             | done   |
-|      21 | insert                 |        |
-|      22 | create range           |        |
-|      23 | extract random         |        |
-|      24 | lotto                  |        |
-|      25 | random permutation     |        |
-|      26 | k choose n             |        |
+|      21 | insert                 | done   |
+|      22 | create range           | done   |
+|      23 | extract random         | done   |
+|      24 | lotto                  | done   |
+|      25 | random permutation     | done   |
+|      26 | k choose n             | done   |
 |      27 | partitions             |        |
 |      28 | sort by length         |        |
 |      29 | -                      |        |
@@ -2060,32 +2060,67 @@ we want to really generate all the possibilities in a list.
 #+RESULTS:
 : - : int list list = [[1; 2; 3; 4; 5; 6]]
 
-*** TODO 27
-*** TODO 28
+*** TODO 27 
+*** TODO 28 Sorting a list of lists according to length of sublists
+
+Sorting a list of lists according to length of sublists.
+
++ We suppose that a list contains elements that are lists
+  themselves. The objective is to sort the elements of this list
+  according to their length. E.g. short lists first, longer lists
+  later, or vice versa.
+  
++ Again, we suppose that a list contains elements that are lists
+  themselves. But this time the objective is to sort the elements of
+  this list according to their length frequency; i.e., in the default,
+  where sorting is done ascendingly, lists with rare lengths are
+  placed first, others with a more frequent length come later.
+
+#+begin_src ocaml :results verbatim
+    let length_sort lst =
+      let ( <<< ) l1 l2 = List.length l1 < List.length l2 in
+      let rec qs lst comparison = match lst with
+        | [] -> []
+        | x :: xs -> (let in_left l = l <<< x in
+                     let (left, right) = List.partition in_left xs in
+                     (qs left (<<<)) @ [x] @ (qs right (<<<))) in
+      qs lst (<<<);;
+
+    length_sort [[1;2;3];[4];[5;6];[7;7];[]]
+#+end_src
+
+#+RESULTS:
+: - : int list list = [[]; [4]; [5; 6]; [7; 7]; [1; 2; 3]]
+
 *** TODO 29 Primality test
 
 Determine whether a given integer is prime
 
 #+begin_src ocaml :results verbatim
-  let is_prime n =
-      let witnesses = [2;3;5;7;11;13;17;19;23;29;31;37] in
-      match n with
-      | n when n < 2 -> false
-      | 2 -> true
-      | n when n mod 2 = 0 -> false
-      | n -> (let rec twos_exponent m =
-                match m with
-                | m when m mod 2 = 1 -> 0
-                | m -> 1 + twos_exponent (m / 2) in
-              let rec pow a b = match b with
-                | 0 -> 1
-                | b -> a * pow a (b-1) in
-              let s = twos_exponent (n-1) in
-              let d = (n-1) / (pow 2 s) in
-              (
-              (* miller rabin goes here*)
-              )
-             );;
+  let is_prime n = match n with
+    | n when n < 2 -> false
+    | 2 -> true
+    | n when n mod 2 = 0 -> false
+    | n -> (let witnesses = [2;3;5;7;11;13;17;19;23;29;31;37] in
+            let rec twos_exponent m =
+              match m with
+              | m when m mod 2 = 1 -> 0
+              | m -> 1 + twos_exponent (m / 2) in
+            let rec power a b = match b with
+              | 0 -> 1
+              | b -> a * pow a (b-1) in
+            let rec powermod a b n = match b with
+              | 0 -> 1
+              | b -> (a * powermod a (b-1) n) mod n in
+            let fermat_test a d n =
+              powermod a d n = 1 in
+            let rec root_test a r s n = () in
+            let s = twos_exponent (n-1) in
+            let d = (n-1) / (pow 2 s) in
+            (
+            (* miller-rabin goes here*)
+            )
+           );;
   is_prime 1001
 #+end_src
 
