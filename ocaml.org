@@ -1378,12 +1378,12 @@ transposition and row vector dot product.
 |      25 | random permutation     | done   |
 |      26 | k choose n             | done   |
 |      27 | partitions             |        |
-|      28 | sort by length         |        |
+|      28 | sort by length         | done   |
 |      29 | -                      |        |
 |      30 | -                      |        |
-|      31 | prime                  |        |
-|      32 | gcd                    |        |
-|      33 | coprime                |        |
+|      31 | prime                  | done*  |
+|      32 | gcd                    | done   |
+|      33 | coprime                | done   |
 |      34 | euler phi              |        |
 |      35 | prime factors          |        |
 |      36 | prime factors 2        |        |
@@ -2194,7 +2194,80 @@ Miller-Rabin:
 : 125
 : - : bool = true
 
-*** TODO 30
+*** DONE 30 - Determine the greatest common divisor of two positive integer numbers
+
+Determine the greatest common divisor of two positive integer numbers.
+
+Use Euclid's algorithm.
+
+#+begin_src ocaml
+  let rec gcd a b =
+    if (a < b)
+    then (gcd b a)
+    else let q = a / b in
+         let r = a - q*b in
+         match r with
+         | 0 -> b
+         | r -> gcd b r;;
+
+  gcd (324*17*11*13) (324*2*5*101);;
+#+end_src
+
+#+RESULTS:
+: 324
+
+*** DONE 31 - Determine whether two positive integer numbers are coprime
+
+Determine whether two positive integer numbers are coprime.
+
+Two numbers are coprime if their greatest common divisor equals 1.
+
+(seems trivial)
+
+#+begin_src ocaml
+  let rec coprime a b = gcd a b = 1;;
+#+end_src
+
+#+RESULTS:
+: <fun>
+
+*** DONE 31 - Calculate Euler's totient function \(\phi(m)\)
+
+Euler's so-called totient function φ(m) is defined as the number of
+positive integers r (1 ≤ r < m) that are coprime to m. We let φ(1)
+= 1.
+
+
+Find out what the value of φ(m) is if m is a prime number. Euler's
+totient function plays an important role in one of the most widely
+used public key cryptography methods (RSA). In this exercise you
+should use the most primitive method to calculate this function (there
+are smarter ways that we shall discuss later).
+
+(doing it the naive way:)
+
+#+begin_src ocaml
+  let phi m = match m with
+    | 1 -> 1
+    | m -> (let range a b =
+              let s = b - a in
+              match s with
+              | s when s < 0 -> []
+              | 0 -> [a]
+              | s -> a :: range (a+1) b in
+            let rec count_coprimes acc lst n =
+              match lst with
+              | [] -> acc
+              | d :: ds -> if (gcd n d = 1)
+                           then (count_coprimes (acc+1) ds n)
+                           else (count_coprimes acc ds n) in
+            count_coprimes 0 (range 1 m) m);;
+
+  phi 12321
+#+end_src
+
+#+RESULTS:
+: 7992
 
 ** Advent of Code 2021
 *** Day 1 - Sonar Sweep
