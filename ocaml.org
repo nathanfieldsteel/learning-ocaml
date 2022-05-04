@@ -1384,12 +1384,12 @@ transposition and row vector dot product.
 |      31 | prime                  | done*  |
 |      32 | gcd                    | done   |
 |      33 | coprime                | done   |
-|      34 | euler phi              |        |
+|      34 | euler phi              | done   |
 |      35 | prime factors          |        |
 |      36 | prime factors 2        |        |
 |      37 | euler phi 2            |        |
 |      38 | compare euler phis     |        |
-|      39 | prime list             |        |
+|      39 | prime list             | done   |
 |      40 | goldbach               |        |
 |      41 | goldbach list          |        |
 |      42 | -                      |        |
@@ -2350,8 +2350,7 @@ doing it the naive way for now:
 : Stack overflow during evaluation (looping recursion?).
 
 *** TODO 35 Compare the two methods of calculating Euler's totient function
-
-*** TODO 36 A list of prime numbers
+*** DONE 36 A list of prime numbers
 
 Given a range of integers by its lower and upper limit, construct a
 list of all prime numbers in that range.
@@ -2374,8 +2373,38 @@ list of all prime numbers in that range.
 #+end_src
 
 #+RESULTS:
-: <fun>
+: 1000
 
+*** TODO 37 Goldbach's conjecture
+*** TODO 38 A list of Goldbach compositions
+
+*** TODO 46 Truth tables for logical expressions (2 variables)
+*** TODO 47 Truth tables for logical expressions
+*** TODO 48 Gray code
+
+An n-bit Gray code is a sequence of n-bit strings constructed according to certain rules. For example,
+
+n = 1: C(1) = ['0', '1'].
+n = 2: C(2) = ['00', '01', '11', '10'].
+n = 3: C(3) = ['000', '001', '011', '010', '110', '111', '101',
+'100'].
+
+Find out the construction rules and write a function with the following specification: gray n returns the n-bit Gray code.
+
+So vague...
+
+#+begin_src ocaml :results verbatim
+
+  let rec gray n = match n with
+    | 0 -> [""]
+    | n -> (List.map ((^) "0") (gray (n-1))) @
+             (List.map ((^) "1") (gray (n-1) |> List.rev));;
+
+  gray 3
+#+end_src
+
+#+RESULTS:
+: - : string list = ["000"; "001"; "010"; "011"; "100"; "101"; "110"; "111"]
 
 ** Advent of Code 2021
 *** Day 1 - Sonar Sweep
