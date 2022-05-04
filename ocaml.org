@@ -2269,6 +2269,114 @@ are smarter ways that we shall discuss later).
 #+RESULTS:
 : 7992
 
+*** TODO 32 - Determine the prime factors of a given positive integer
+
+BUGGY - check n = 25, it's failing there for some reason
+
+Construct a flat list containing the prime factors in ascending order.
+
+#+begin_src ocaml :results verbatim
+  let rec factors n =
+    if is_prime_seive n
+    then [n]
+    else
+      let bound = n
+                  |> float_of_int
+                  |> Float.sqrt
+                  |> Float.floor
+                  |> int_of_float in
+      let range a b =
+        let s = b - a in
+        match s with
+        | s when s < 0 -> []
+        | 0 -> [a]
+        | s -> a :: range(a+1) b in
+      let potential_divisors = range 2 bound
+                               |> List.filter is_prime_seive in
+      let rec smallest_prime_factor lst m = match lst with
+        | [] -> 1 (* impossible branch since n is composite *)
+        | d :: ds -> if m mod d = 0 then d else smallest_prime_factor ds m in
+      let p = smallest_prime_factor potential_divisors n in
+      p :: factors (n/p);;
+
+  factors (324*72*17*11)
+#+end_src
+
+#+RESULTS:
+: - : int list = [2; 2; 2; 2; 2; 3; 3; 3; 3; 3; 3; 11; 17]
+
+*** DONE 33 - Determine the prime factors of a given positive integer (2)
+
+Construct a list containing the prime factors and their
+multiplicity. Hint: The problem is similar to problem 13
+
+doing it the naive way for now:
+
+#+begin_src ocaml :results verbatim
+    let factors_with_multiplicity n =
+      let rec compress count p lst = match lst with
+        | [] -> [(p,count)]
+        | x :: xs when x = p -> compress (count+1) p xs
+        | x :: xs ->(p,count) :: compress 1 x xs in
+      match factors n with
+      | [] -> []
+      | [p] -> [(p,1)]
+      | p :: ps -> compress 1 p ps;;
+
+    factors_with_multiplicity (324*72*17*11*37)
+#+end_src
+
+#+RESULTS:
+: - : (int * int) list = [(2, 5); (3, 6); (11, 1); (17, 1); (37, 1)]
+
+*** TODO 34 Calculate Euler's totient function (improved)
+
+#+begin_src ocaml
+      let eulerphi m =
+        let facts = factors_with_multiplicity m in
+        let rec exp a b = match b with
+          | 0 -> 1
+          | b -> a * (exp a (b-1)) in
+        let rec phi_list_product lst = match lst with
+          | [] -> 1
+          | (p,e) :: tail -> (p-1) * (exp p (e-1)) * phi_list_product tail in
+        phi_list_product facts;;
+
+    (* check that it agrees w/ the previous *)
+      factors 50
+#+end_src
+
+#+RESULTS:
+: Stack overflow during evaluation (looping recursion?).
+
+*** TODO 35 Compare the two methods of calculating Euler's totient function
+
+*** TODO 36 A list of prime numbers
+
+Given a range of integers by its lower and upper limit, construct a
+list of all prime numbers in that range.
+
+#+begin_src ocaml
+
+    let all_primes a b =
+      let range a b =
+        let s = b - a in
+        match s with
+        | s when s < 0 -> []
+        | 0 -> [a]
+        | s -> a :: range (a+1) b in
+      range a b
+      |> List.filter is_prime_seive;;
+
+    (* could be improved *)
+
+    List.length (all_primes 2 7920)
+#+end_src
+
+#+RESULTS:
+: <fun>
+
+
 ** Advent of Code 2021
 *** Day 1 - Sonar Sweep
 **** Part 1:
