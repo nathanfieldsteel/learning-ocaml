@@ -2377,10 +2377,9 @@ list of all prime numbers in that range.
 
 *** TODO 37 Goldbach's conjecture
 *** TODO 38 A list of Goldbach compositions
-
 *** TODO 46 Truth tables for logical expressions (2 variables)
 *** TODO 47 Truth tables for logical expressions
-*** TODO 48 Gray code
+*** DONE 48 Gray code
 
 An n-bit Gray code is a sequence of n-bit strings constructed according to certain rules. For example,
 
@@ -2404,7 +2403,104 @@ So vague...
 #+end_src
 
 #+RESULTS:
-: - : string list = ["000"; "001"; "010"; "011"; "100"; "101"; "110"; "111"]
+: - : string list = ["000"; "001"; "011"; "010"; "110"; "111"; "101"; "100"]
+*** TODO 49 Huffman code
+*** TODO 50 Completely balanced binary trees
+
+A binary tree is either empty or it is composed of a root element and two successors, which are binary trees themselves.
+
+In OCaml, one can define a new type ~binary_tree~ that carries an
+arbitrary value of type ~'a~ (thus is polymorphic) at each node.
+
+#+begin_src ocaml
+  type 'a binary_tree =
+    | Empty
+    | Node of 'a * 'a binary_tree * 'a binary_tree;;
+  type 'a binary_tree = Empty | Node of 'a * 'a binary_tree * 'a binary_tree
+#+end_src
+
+#+RESULTS:
+: type 'a binary_tree = Empty | Node of 'a * 'a binary_tree * 'a binary_tree
+
+An example of tree carrying ~char~ data is:
+
+#+begin_src ocaml
+  let example_tree =
+    Node ('a', Node ('b', Node ('d', Empty, Empty), Node ('e', Empty, Empty)),
+         Node ('c', Empty, Node ('f', Node ('g', Empty, Empty), Empty)));;
+#+end_src
+
+#+RESULTS:
+: Node ('a', Node ('b', Node ('d', Empty, Empty), Node ('e', Empty, Empty)),
+:    Node ('c', Empty, Node ('f', Node ('g', Empty, Empty), Empty)))
+
+In OCaml, the strict type discipline guarantees that, if you get a value of type ~binary_tree~, then it must have been created with the two constructors ~Empty~ and ~Node~.
+
+In a completely balanced binary tree, the following property holds for every node: The number of nodes in its left subtree and the number of nodes in its right subtree are almost equal, which means their difference is not greater than one.
+
+Write a function ~cbal_tree~ to construct completely balanced binary
+trees for a given number of nodes. The function should generate all
+solutions via backtracking. Put the letter ~'x'~ as information into
+all nodes of the tree.
+
+#+begin_src ocaml :results verbatim
+  let rec cbal_tree n =
+    let rec outer f lst1 lst2 = match lst1 with
+    | [] -> []
+    | x :: xs -> (List.map (fun y -> f x y) lst2)
+                 @ outer f xs lst2 in
+    let join l r = Node ('x', l, r) in
+    let all_joins llist rlist = (outer join llist rlist) in
+    match n with
+    | 0 -> [Empty]
+    | 1 -> [Node('x', Empty, Empty)]
+    | n when n mod 2 = 1 -> (let m = (n - 1)/2 in
+                             let subtrees = cbal_tree m in
+                             all_joins subtrees subtrees)
+    | n -> (let a = (n-2)/2 in
+            let b = a + 1 in
+            let asubtrees = cbal_tree a in
+            let bsubtrees = cbal_tree b in
+            (all_joins asubtrees bsubtrees)
+            @ (all_joins bsubtrees asubtrees));;
+
+  [0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23;24;25]
+  |> List.map cbal_tree
+  |> List.map List.length
+#+end_src
+
+#+RESULTS:
+: - : int list =
+: [1; 1; 2; 1; 4; 4; 4; 1; 8; 16; 32; 16; 32; 16; 8; 1; 16; 64; 256; 256; 1024;
+:  1024; 1024; 256; 1024; 1024]
+
+results agree with https://oeis.org/A110316
+
+*** Symmetric binary trees
+
+Let us call a binary tree symmetric if you can draw a vertical line through the root node and then the right subtree is the mirror image of the left subtree. Write a function ~is_symmetric~ to check whether a given binary tree is symmetric.
+
+Hint: Write a function ~is_mirror~ first to check whether one tree is the mirror image of another. We are only interested in the structure, not in the contents of the nodes.
+
+#+begin_src ocaml
+    let is_symmetric t =
+      let rec is_mirror t1 t2 = match t1 with
+        | Empty -> (match t2 with
+                   | Empty -> true
+                   | _ -> false)
+        | Node (x, l1, r1) -> (match t2 with
+                               | Empty -> false
+                               | Node(y, l2, r2) -> (is_mirror l1 r2)
+                                                    && (is_mirror l2 r1)) in
+      match t with
+      | Empty -> true
+      | Node (x, l, r) -> is_mirror l r;;
+
+    List.map is_symmetric (cbal_tree 9);;
+#+end_src
+
+#+RESULTS:
+| false | false | false | true | false | false | true | false | false | true | false | false | true | false | false | false |
 
 ** Advent of Code 2021
 *** Day 1 - Sonar Sweep
