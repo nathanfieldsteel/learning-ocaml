@@ -1346,6 +1346,312 @@ transposition and row vector dot product.
 #+RESULTS:
 : - : int list list = [[1; 0]; [0; 1]]
 
+*** 5.11 Modular Programming - Exercises
+**** DONE Complex sig [★]
+
+Here is a module type for complex numbers, which have a real and imaginary component:
+
+#+begin_src ocaml
+  module type ComplexSig = sig
+    val zero : float * float
+    val add : float * float -> float * float -> float * float
+  end
+#+end_src
+
+#+RESULTS:
+: module type ComplexSig =
+:   sig
+:     val zero : float * float
+:     val add : float * float -> float * float -> float * float
+:   end
+
+Improve that code by adding ~type t = float * float~. Show how the
+signature can be written more tersely because of the type synonym.
+
+#+begin_src ocaml
+  module type ComplexSig = sig
+    type t = float * float
+    val zero : t
+    val add : t -> t -> t
+  end
+#+end_src
+
+#+RESULTS:
+: module type ComplexSig =
+:   sig type t = float * float val zero : t val add : t -> t -> t end
+
+**** DONE Complex encapsulation [★★]
+
+Here is a module for the module type from the previous exercise:
+
+#+begin_src ocaml
+    module Complex : ComplexSig = struct
+      type t = float * float
+      let zero = (0., 0.)
+      let add (r1, i1) (r2, i2) = r1 +. r2, i1 +. i2
+    end
+#+end_src
+
+Investigate what happens if you make the following changes (each
+independently), and explain why any errors arise:
+
++ remove ~zero~ from the structure
+
+  #+begin_src ocaml
+    module Complex : ComplexSig = struct
+      type t = float * float
+      (*let zero = (0., 0.)*)
+      let add (r1, i1) (r2, i2) = r1 +. r2, i1 +. i2
+    end
+  #+end_src
+
+  #+RESULTS:
+  #+begin_example
+  Lines 1-5, characters 30-3:
+  1 | ..............................struct
+  2 |   type t = float * float
+  3 |   (*let zero = (0., 0.)*)
+  4 |   let add (r1, i1) (r2, i2) = r1 +. r2, i1 +. i2
+  5 | end..
+  Error: Signature mismatch:
+         Modules do not match:
+           sig
+             type t = float * float
+             val add : float * float -> float * float -> float * float
+           end
+         is not included in
+           ComplexSig
+         The value `zero' is required but not provided
+  #+end_example
+
+The ~ComplexSig~ type, defined in the previous problem, requires a
+~zero~ and an ~add~. When zero is missing, the structure defined here
+is not an instance of the ComplexSig type specified. 
+
++ remove ~add~ from the signature
+#+begin_src ocaml
+    module Complex : ComplexSig = struct
+      type t = float * float
+      let zero = (0., 0.)
+      (*let add (r1, i1) (r2, i2) = r1 +. r2, i1 +. i2*)
+    end
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Lines 1-5, characters 30-3:
+1 | ..............................struct
+2 |   type t = float * float
+3 |   let zero = (0., 0.)
+4 |   (*let add (r1, i1) (r2, i2) = r1 +. r2, i1 +. i2*)
+5 | end..
+Error: Signature mismatch:
+       Modules do not match:
+         sig type t = float * float val zero : float * float end
+       is not included in
+         ComplexSig
+       The value `add' is required but not provided
+#+end_example
+
+Same problem as above: the type ~ComplexSig~ needs an ~add~
+function. If it's missing, you don't have an instance of that type
+
++ change ~zero~ in the structure to ~let zero = 0, 0~
+
+  #+begin_src ocaml
+    module Complex : ComplexSig = struct
+      type t = float * float
+      let zero = 0, 0
+      let add (r1, i1) (r2, i2) = r1 +. r2, i1 +. i2
+    end
+  #+end_src
+
+  #+RESULTS:
+  #+begin_example
+  Lines 1-5, characters 30-3:
+  1 | ..............................struct
+  2 |   type t = float * float
+  3 |   let zero = 0, 0
+  4 |   let add (r1, i1) (r2, i2) = r1 +. r2, i1 +. i2
+  5 | end..
+  Error: Signature mismatch:
+         ...
+         Values do not match:
+           val zero : int * int
+         is not included in
+           val zero : t
+  #+end_example
+
+The ~ComplexSig~ type needs ~zero~ to have type ~float * float~. Since
+the ~zero~ in this module has type ~int * int~, it doesn't typecheck
+as being an instance of ~ComplexSig~.
+
+**** TODO Big list queue [★★]
+
+Use the following code to create ~ListQueue~ of exponentially increasing length: 10, 100, 1000, etc. How big of a queue can you create before there is a noticeable delay? How big until there’s a delay of at least 10 seconds? (Note: you can abort utop computations with Ctrl-C.)
+
+Need the ~Queue~ signatur and the ~ListQueue~ type from section
+5.6. Copied here with comments removed, since they were interfering
+with the emacs / tuareg process in some way.
+
+#+begin_src ocaml
+  module type Queue = sig
+    type 'a t
+    exception Empty
+    val empty : 'a t
+    val is_empty : 'a t -> bool
+    val enqueue : 'a -> 'a t -> 'a t
+    val front : 'a t -> 'a
+    val dequeue : 'a t -> 'a t
+    val size : 'a t -> int
+    val to_list : 'a t -> 'a list
+  end
+#+end_src
+
+#+RESULTS:
+#+begin_example
+module type Queue =
+  sig
+    type 'a t
+    exception Empty
+    val empty : 'a t
+    val is_empty : 'a t -> bool
+    val enqueue : 'a -> 'a t -> 'a t
+    val front : 'a t -> 'a
+    val dequeue : 'a t -> 'a t
+    val size : 'a t -> int
+    val to_list : 'a t -> 'a list
+  end
+#+end_example
+
+#+begin_src ocaml
+module ListQueue : Queue = struct
+  type 'a t = 'a list
+  exception Empty
+  let empty = []
+  let is_empty = function [] -> true | _ -> false
+  let enqueue x q = q @ [x]
+  let front = function [] -> raise Empty | x :: _ -> x
+  let dequeue = function [] -> raise Empty | _ :: q -> q
+  let size = List.length
+  let to_list = Fun.id
+end
+#+end_src
+
+#+RESULTS:
+: module ListQueue : Queue
+
+#+begin_src ocaml :results verbatim
+    (** Creates a ListQueue filled with [n] elements. *)
+    let fill_listqueue n =
+      let rec loop n q =
+        if n = 0 then q
+        else loop (n - 1) (ListQueue.enqueue n q) in
+      loop n ListQueue.empty;;
+
+    let timing f x =
+      let t1 = Sys.time() in
+      let result = f x in
+      let t2 = Sys.time() in
+      (result, t2 -. t1);;
+
+    timing fill_listqueue 50000;;
+#+end_src
+
+#+RESULTS:
+: - : int ListQueue.t * float = (<abstr>, 37.58237)
+
+~10000~ took about 1 second, ~50000~ took about 30.
+
+**** TODO Big batched queue
+**** TODO Queue efficiency
+**** TODO Binary search tree map
+**** DONE Fration [★★★]
+
+Write a module that implements the Fraction module type below:
+
+#+begin_src ocaml
+module type Fraction = sig
+  type t
+  val make : int -> int -> t
+  val numerator : t -> int
+  val denominator : t -> int
+  val to_string : t -> string
+  val to_float : t -> float
+  val add : t -> t -> t
+  val mul : t -> t -> t
+end
+#+end_src
+
+#+RESULTS:
+#+begin_example
+module type Fraction =
+  sig
+    type t
+    val make : int -> int -> t
+    val numerator : t -> int
+    val denominator : t -> int
+    val to_string : t -> string
+    val to_float : t -> float
+    val add : t -> t -> t
+    val mul : t -> t -> t
+  end
+#+end_example
+
+#+begin_src ocaml
+  module Frac : Fraction = struct
+    type t = int * int
+    let make a b = (a, b)
+    let numerator (a,b) = a
+    let denominator (a,b) = b
+    let to_string (a,b) = (string_of_int a)
+                          ^ "/"
+                          ^ (string_of_int b)
+    let to_float (a,b) = (float_of_int a)
+                         /. (float_of_int b)
+    let add (a,b) (c,d) = (a*d + b*c, b*d)
+    let mul (a,b) (c,d) = (a*c, b*d)
+  end
+#+end_src
+
+#+RESULTS:
+: module Frac : Fraction
+
+#+begin_src ocaml
+  let q = Frac.make 1 2;;
+  let r = Frac.make 2 7;;
+  let s = Frac.add q r in
+    Frac.to_string s
+#+end_src
+
+#+RESULTS:
+: 11/14
+
+Didn't really think about how to handle / avoid the case where the
+denominator is zero.
+
+**** TODO
+**** TODO
+**** TODO
+**** TODO
+**** TODO
+**** TODO
+**** TODO
+**** TODO
+**** TODO
+**** TODO
+**** TODO
+**** TODO
+**** TODO
+**** TODO
+**** TODO
+**** TODO
+**** TODO
+**** TODO
+**** TODO
+**** TODO
+**** TODO
+**** TODO
 * Learning OCaml - problems
 ** 99 OCaml Problems
 
