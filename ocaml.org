@@ -1414,10 +1414,10 @@ Working through [[https://ocaml.org/problems#1][this list]] of problems
 |      47 | generate and test      |        |
 |      48 | height balanced tree   |        |
 |      49 | height balanced tree 2 |        |
-|      50 | collect leaves in list |        |
-|      51 | count leaves           |        |
-|      52 | collect nodes at level |        |
-|      53 | collect internal nodes |        |
+|      50 | collect leaves in list | done   |
+|      51 | count leaves           | done   |
+|      52 | collect nodes at level | done   |
+|      53 | collect internal nodes | done   |
 |      54 | complete binary tree   |        |
 |      55 | layout binary tree     |        |
 |      56 | layout binary tree 2   |        |
@@ -1461,8 +1461,8 @@ Working through [[https://ocaml.org/problems#1][this list]] of problems
 |      85 | crossword              |        |
 |---------+------------------------+--------|
 
-
-*** DONE 1 Tail of a list
+*** Lists
+**** DONE 1 Tail of a list
 Write a function ~last : 'a list -> 'a option~ that returns the last
 element of a list.
 
@@ -1480,7 +1480,7 @@ element of a list.
 
 #+RESULTS:
 : None
-*** DONE 2 Last two elements of a list
+**** DONE 2 Last two elements of a list
 
 Find the last but one (last and penultimate) elements of a list.
 
@@ -1501,7 +1501,7 @@ Find the last but one (last and penultimate) elements of a list.
 #+RESULTS:
 : None
 
-*** DONE 3 Nth element of a list
+**** DONE 3 Nth element of a list
 
 Find the K^{th} element of a list.
 
@@ -1524,7 +1524,7 @@ expressions. Otherwise, it thinks ~m~ is of type ~'a list~.
 #+RESULTS:
 : Some 3
 
-*** DONE 4 length of a list
+**** DONE 4 length of a list
 Find the number of elements of a list
 
 #+begin_src ocaml
@@ -1542,7 +1542,7 @@ Find the number of elements of a list
 #+RESULTS:
 : 0
 
-*** DONE 5 Reverse a list
+**** DONE 5 Reverse a list
 
 Reverse a list
 
@@ -1558,7 +1558,7 @@ Reverse a list
 #+RESULTS:
 | 3 | 4 | 5 | 2 | 1 |
 
-*** DONE 6 Palindrome
+**** DONE 6 Palindrome
 Find out whether a list is a palindrom
 
 #+begin_src ocaml
@@ -1588,7 +1588,7 @@ Find out whether a list is a palindrom
 #+RESULTS:
 | true | true | true | true | false | false |
 
-*** DONE 7 Flatten a list
+**** DONE 7 Flatten a list
 
 Flatten a nested list structure
 
@@ -1609,7 +1609,7 @@ Flatten a nested list structure
 #+RESULTS:
 : - : string list = ["a"; "b"; "c"; "d"; "e"]
 
-*** DONE 8 Eliminate duplicates
+**** DONE 8 Eliminate duplicates
 
 Eliminate consecutive duplicates of list elements.
 
@@ -1627,7 +1627,7 @@ Eliminate consecutive duplicates of list elements.
 #+RESULTS:
 | 1 | 2 | 3 | 4 | 5 | 6 | 5 | 4 |
 
-*** DONE 9 Pack consecutive duplicates
+**** DONE 9 Pack consecutive duplicates
 
 Pack consecutive duplicates of list elements into sublists
 
@@ -1657,7 +1657,7 @@ Pack consecutive duplicates of list elements into sublists
 | 6 |   |   |   |   |
 | 4 |   |   |   |   |
 
-*** DONE 10 Run length encoding
+**** DONE 10 Run length encoding
 
 Run-length encoding of a list
 
@@ -1673,7 +1673,7 @@ Run-length encoding of a list
 #+RESULTS:
 : - : (int * int) list = [(4, 1); (1, 2); (1, 3); (8, 4); (2, 3); (1, 2)]
 
-*** DONE 11 Modified Run-length encoding
+**** DONE 11 Modified Run-length encoding
 
 Modify the result of the previous problem in such a way that if an
 element has no duplicates it is simply copied into the result
@@ -1705,7 +1705,7 @@ type 'a rle =
 : - : int rle list =
 : [Many (2, 1); Many (2, 2); Many (3, 3); One 4; Many (5, 5)]
 
-*** DONE 12 Decode a run-length encoded list
+**** DONE 12 Decode a run-length encoded list
 
 Given a run-length code list generated as specified in the previous
 problem, construct its uncompressed version.
@@ -1727,7 +1727,7 @@ problem, construct its uncompressed version.
 
 can this be done without the fold?
 
-*** DONE 13 Run-length encoding of a list (direct solution)
+**** DONE 13 Run-length encoding of a list (direct solution)
 
 Implement the so-called run-length encoding data compression method
 directly. I.e. don't explicitly create the sublists containing the
@@ -1762,7 +1762,7 @@ singleton lists (1 X) by X.
 : [Many (4, 1); Many (2, 2); Many (4, 3); One 4; One 5; One 6; One 5;
 :  Many (4, 4); Many (9, 5); One 0]
 
-*** DONE 14 Duplicate the elements of a list
+**** DONE 14 Duplicate the elements of a list
 
 Duplicate the elements of a list
 
@@ -1777,7 +1777,7 @@ Duplicate the elements of a list
 #+RESULTS:
 : - : string list = ["a"; "a"; "b"; "b"; "c"; "c"; "c"; "c"; "d"; "d"]
 
-*** DONE 15 Replicate the elements of a list a given number of times
+**** DONE 15 Replicate the elements of a list a given number of times
 
 Replicate the elements of a list a given number of times
 
@@ -1794,7 +1794,7 @@ Replicate the elements of a list a given number of times
 #+RESULTS:
 : - : int list = [1; 1; 1; 1; 2; 2; 2; 2; 3; 3; 3; 3; 3; 3; 3; 3; 4; 4; 4; 4]
 
-*** DONE 16 Drop every N'th element from a list
+**** DONE 16 Drop every N'th element from a list
 
 Drop every N'th element from a list
 
@@ -1815,7 +1815,7 @@ Drop every N'th element from a list
 #+RESULTS:
 : - : int list = [1; 2; 4; 5; 7; 8; 10]
 
-*** DONE 17 Split a list into two parts; the length of the first part is given
+**** DONE 17 Split a list into two parts; the length of the first part is given
 
 Split a list into two parts; the length of the first part is given
 
@@ -1838,7 +1838,7 @@ the first part is the list and the second part is empty.
 #+RESULTS:
 : - : int list list = [[1; 2; 3; 4]; [5; 6; 7]]
 
-*** DONE 18 Extract a slice from a list
+**** DONE 18 Extract a slice from a list
 
 Given two indices, ~i~ and ~k~, the slice is the list containing the
 elements between the ~ith~ and ~kth~ element of the original list
@@ -1865,7 +1865,7 @@ the way the List module numbers elements).
 #+RESULTS:
 : - : int list = [6; 7; 8]
 
-*** DONE 19 Rotate a list N places to the left
+**** DONE 19 Rotate a list N places to the left
 
 Rotate a list N places to the left
 
@@ -1890,7 +1890,7 @@ Rotate a list N places to the left
 #+RESULTS:
 : - : int list = [3; 4; 5; 6; 7; 1; 2]
 
-*** DONE 20 Remove the K'th element from a list
+**** DONE 20 Remove the K'th element from a list
 Remove the K'th element from a list
 
 The first element of the list is numbered 0, the second 1,...
@@ -1912,7 +1912,7 @@ The first element of the list is numbered 0, the second 1,...
 #+RESULTS:
 : - : int list = [1; 2; 3; 5; 6; 7]
 
-*** DONE 21 Insert element into a list at a given position 
+**** DONE 21 Insert element into a list at a given position 
 
 Start counting list elements with 0. If the position is larger or
 equal to the length of the list, insert the element at the end. (The
@@ -1934,7 +1934,7 @@ behavior is unspecified if the position is negative.)
 
 (not tail recursive. can be re-written to be so, but I can only see a
 way that might overuse the ~@~ operator)
-*** DONE 22 Create a list containing all integers within a given range
+**** DONE 22 Create a list containing all integers within a given range
 
 If first argument is greater than second, produce a list in decreasing
 order
@@ -1956,7 +1956,7 @@ order
 #+RESULTS:
 : - : int list = [10; 9; 8; 7; 6; 5; 4; 3; 2; 1; 0]
 
-*** DONE 23 Extract a given number of randomly selected elements from a list
+**** DONE 23 Extract a given number of randomly selected elements from a list
 
 The selected items shall be returned in a list. We use the Random
 module but do not initialize it with Random.self_init for
@@ -1994,7 +1994,7 @@ element, and instead pick ~k~ elements from the tail of the list.
 seems pretty random. Should probably do actual statistics to be sure,
 but I trust my math.
 
-*** DONE 24 Lotto: Draw N different random numbers from the set 1..M
+**** DONE 24 Lotto: Draw N different random numbers from the set 1..M
 
 Draw N different random numbers from the set 1 ... M
 
@@ -2009,7 +2009,7 @@ The selected numbers shall be returned in a list.
 #+RESULTS:
 | 11 | 14 | 29 | 39 | 49 |
 
-*** DONE 25 Generate a random permutation of the elements of a list
+**** DONE 25 Generate a random permutation of the elements of a list
 
 Generate a random permutation of the elements of a list
 
@@ -2036,7 +2036,7 @@ earlier might be bad)
 :  76; 82; 80; 36; 28; 34; 30; 56; 83; 37; 23; 41; 24; 5; 15; 22; 66; 55; 17;
 :  26; 61; 75; 58; 86; 79; 59; 43; 45; 85; 93; 98; 72; 92; 39; 21; 18]
 
-*** DONE 26 Generate the combinations of K distinct objects chosen from the N elements of a list
+**** DONE 26 Generate the combinations of K distinct objects chosen from the N elements of a list
 
 Generate the combinations of ~K~ distinct objects chosen from the ~N~ elements of a list.
 
@@ -2068,8 +2068,8 @@ we want to really generate all the possibilities in a list.
 #+RESULTS:
 : - : int list list = [[1; 2; 3; 4; 5; 6]]
 
-*** TODO 27 
-*** DONE 28 Sorting a list of lists according to length of sublists
+**** TODO 27 - Group the elements of a list into disjoint subsets 
+**** DONE 28 Sorting a list of lists according to length of sublists
 
 Sorting a list of lists according to length of sublists.
 
@@ -2099,8 +2099,8 @@ Sorting a list of lists according to length of sublists.
 
 #+RESULTS:
 : - : int list list = [[]; [4]; [5; 6]; [7; 7]; [1; 2; 3]]
-
-*** TODO 29 Primality test
+*** Arithmetic
+**** TODO 29 Primality test
 
 Determine whether a given integer is prime
 
@@ -2202,7 +2202,7 @@ Miller-Rabin:
 : 125
 : - : bool = true
 
-*** DONE 30 - Determine the greatest common divisor of two positive integer numbers
+**** DONE 30 - Determine the greatest common divisor of two positive integer numbers
 
 Determine the greatest common divisor of two positive integer numbers.
 
@@ -2224,7 +2224,7 @@ Use Euclid's algorithm.
 #+RESULTS:
 : 324
 
-*** DONE 31 - Determine whether two positive integer numbers are coprime
+**** DONE 31 - Determine whether two positive integer numbers are coprime
 
 Determine whether two positive integer numbers are coprime.
 
@@ -2239,7 +2239,7 @@ Two numbers are coprime if their greatest common divisor equals 1.
 #+RESULTS:
 : <fun>
 
-*** DONE 31 - Calculate Euler's totient function \(\phi(m)\)
+**** DONE 32 - Calculate Euler's totient function \(\phi(m)\)
 
 Euler's so-called totient function φ(m) is defined as the number of
 positive integers r (1 ≤ r < m) that are coprime to m. We let φ(1)
@@ -2277,7 +2277,7 @@ are smarter ways that we shall discuss later).
 #+RESULTS:
 : 7992
 
-*** TODO 32 - Determine the prime factors of a given positive integer
+**** TODO 33 - Determine the prime factors of a given positive integer
 
 BUGGY - check n = 25, it's failing there for some reason
 
@@ -2313,7 +2313,7 @@ Construct a flat list containing the prime factors in ascending order.
 #+RESULTS:
 : - : int list = [2; 2; 2; 2; 2; 3; 3; 3; 3; 3; 3; 11; 17]
 
-*** DONE 33 - Determine the prime factors of a given positive integer (2)
+**** DONE 34 - Determine the prime factors of a given positive integer (2)
 
 Construct a list containing the prime factors and their
 multiplicity. Hint: The problem is similar to problem 13
@@ -2337,7 +2337,7 @@ doing it the naive way for now:
 #+RESULTS:
 : - : (int * int) list = [(2, 5); (3, 6); (11, 1); (17, 1); (37, 1)]
 
-*** TODO 34 Calculate Euler's totient function (improved)
+**** TODO 35 Calculate Euler's totient function (improved)
 
 #+begin_src ocaml
       let eulerphi m =
@@ -2357,8 +2357,8 @@ doing it the naive way for now:
 #+RESULTS:
 : Stack overflow during evaluation (looping recursion?).
 
-*** TODO 35 Compare the two methods of calculating Euler's totient function
-*** DONE 36 A list of prime numbers
+**** TODO 36 Compare the two methods of calculating Euler's totient function
+**** DONE 37 A list of prime numbers
 
 Given a range of integers by its lower and upper limit, construct a
 list of all prime numbers in that range.
@@ -2383,11 +2383,12 @@ list of all prime numbers in that range.
 #+RESULTS:
 : 1000
 
-*** TODO 37 Goldbach's conjecture
-*** TODO 38 A list of Goldbach compositions
-*** TODO 46 Truth tables for logical expressions (2 variables)
-*** TODO 47 Truth tables for logical expressions
-*** DONE 48 Gray code
+**** TODO 38 Goldbach's conjecture
+**** TODO 39 A list of Goldbach compositions
+*** Logic and Codes
+**** TODO 40 Truth tables for logical expressions (2 variables)
+**** TODO 41 Truth tables for logical expressions
+**** DONE 42 Gray code
 
 An n-bit Gray code is a sequence of n-bit strings constructed according to certain rules. For example,
 
@@ -2412,8 +2413,9 @@ So vague...
 
 #+RESULTS:
 : - : string list = ["000"; "001"; "011"; "010"; "110"; "111"; "101"; "100"]
-*** TODO 49 Huffman code
-*** TODO 50 Completely balanced binary trees
+**** TODO 43 Huffman code
+*** Trees
+**** DONE 44 Completely balanced binary trees
 
 A binary tree is either empty or it is composed of a root element and two successors, which are binary trees themselves.
 
@@ -2484,7 +2486,7 @@ all nodes of the tree.
 
 results agree with https://oeis.org/A110316
 
-*** Symmetric binary trees
+**** TODO 45 Symmetric binary trees
 
 Let us call a binary tree symmetric if you can draw a vertical line through the root node and then the right subtree is the mirror image of the left subtree. Write a function ~is_symmetric~ to check whether a given binary tree is symmetric.
 
@@ -2509,6 +2511,161 @@ Hint: Write a function ~is_mirror~ first to check whether one tree is the mirror
 
 #+RESULTS:
 | false | false | false | true | false | false | true | false | false | true | false | false | true | false | false | false |
+
+**** TODO 46
+**** TODO 47
+**** TODO 48
+**** TODO 49
+**** DONE 50 Collect the leaves of a binary tree in a list
+
+A leaf is a node with no successors
+Write a function ~leaves~ to collect
+them in a list.
+
+#+begin_src ocaml
+  let rec leaves t = match t with
+    | Empty -> []
+    | Node (x, Empty, Empty) -> [x]
+    | Node (x,l,r) -> (leaves l) @ (leaves r);;
+
+  let t = Node ('0',
+              Node ('1',
+                    Node ('6',
+                          Empty,
+                          Empty),
+                    Node ('3',
+                      Node ('7',
+                            Empty,
+                            Empty),
+                      Empty)),
+              Node ('2',
+                Node ('4',
+                      Node ('8',
+                            Empty,
+                            Empty),
+                      Node ('5',
+                        Node ('9',
+                              Empty,
+                              Empty),
+                        Empty)),
+                Empty));;
+leaves t;;
+#+end_src
+
+#+RESULTS:
+| 6 | 7 | 8 | 9 |
+
+**** DONE 51 Count the leaves of a binary tree
+
+A leaf is a node with no
+successors. Write a function
+~count_leaves~ to count them.
+
+#+begin_src ocaml
+    let rec count_leaves t = match t with
+      | Empty -> 0
+      | Node(x,Empty,Empty) -> 1
+      | Node(x,left,right) -> (count_leaves right)
+                              + (count_leaves left);;
+
+    count_leaves Empty;;
+    count_leaves (Node('x',Node('y',Empty,Empty),Empty));;
+    count_leaves t
+#+end_src
+
+#+RESULTS:
+: 4
+
+**** DONE 52 Collect the nodes at a given level in a list
+
+A node of a binary tree is at level
+N if the path from the root to the
+node has length N-1. The root node
+is at level 1. Write a function
+~at_level t l~ to collect all nodes
+of the tree ~t~ at level ~l~ in a
+list.
+
+#+begin_src ocaml
+    let rec at_level t l = match l with
+      | l when l < 1 -> []
+      | 1 -> (match t with
+              | Empty -> []
+              | Node (x, l, r) -> [x])
+      | l -> (match t with
+              | Empty -> []
+              | Node (x, left, right) -> (at_level left (l-1)) @
+                                           (at_level right (l-1)));;
+
+    at_level t 0;;
+    at_level t 1;;
+    at_level t 2;;
+    at_level t 3;;
+    at_level t 4;;
+    at_level t 5;;
+    at_level t 6;;
+
+#+end_src
+
+#+RESULTS:
+: []
+
+**** DONE 53 Collect the internal nodes of a binary tree in a list
+
+An internal node of a binary tree
+has either one or two non-empty
+successors. Write a function
+~internals~ to collect them in a list.
+
+#+begin_src ocaml
+        let rec internals t = match t with
+          | Empty -> []
+          | Node (x, Empty, Empty) -> []
+          | Node (x, left, right) -> [x]
+                                     @ (internals left)
+                                     @ (internals right);;
+
+      internals t
+#+end_src
+
+#+RESULTS:
+| 0 | 1 | 3 | 2 | 4 | 5 |
+
+**** TODO 54
+**** TODO 55
+**** TODO 56
+**** TODO 57
+**** TODO 58
+**** TODO 59
+**** TODO 60
+*** Multiway trees
+**** TODO 61
+**** TODO 62
+**** TODO 63
+**** TODO 64
+**** TODO 65
+*** Graphs
+**** TODO 66
+**** TODO 67
+**** TODO 68
+**** TODO 69
+**** TODO 70
+**** TODO 71
+**** TODO 72
+**** TODO 73
+**** TODO 74
+**** TODO 75
+**** TODO 76
+*** Miscellaneous
+**** TODO 77
+**** TODO 78
+**** TODO 79
+**** TODO 80
+**** TODO 81
+**** TODO 82
+**** TODO 83
+**** TODO 84
+**** TODO 85
 
 ** Advent of Code 2021
 *** Day 1 - Sonar Sweep
