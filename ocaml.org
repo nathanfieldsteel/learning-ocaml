@@ -1348,12 +1348,17 @@ transposition and row vector dot product.
 
 * Learning OCaml - problems
 ** 99 OCaml Problems
+
+Working through [[https://ocaml.org/problems#1][this list]] of problems
+
 *** Checklist
 | Nummber | Description            | Status |
 |---------+------------------------+--------|
-|       1 | last_element           | done   |
-|       2 | last_two               | done   |
-|       3 | kth_element            | done   |
+|         | Miscellaneous          |        |
+|---------+------------------------+--------|
+|       1 | tail of a list         | done   |
+|       2 | last two elements      | done   |
+|       3 | nth_element            | done   |
 |       4 | list length            | done   |
 |       5 | reverse                | done   |
 |       6 | palindrome             | done   |
@@ -1372,87 +1377,90 @@ transposition and row vector dot product.
 |      19 | rotate n left          | done   |
 |      20 | remove kth             | done   |
 |      21 | insert                 | done   |
-|      22 | create range           | done   |
+|      22 | range                  | done   |
 |      23 | extract random         | done   |
 |      24 | lotto                  | done   |
 |      25 | random permutation     | done   |
 |      26 | k choose n             | done   |
 |      27 | partitions             |        |
 |      28 | sort by length         | done   |
-|      29 | -                      |        |
-|      30 | -                      |        |
-|      31 | prime                  | done*  |
-|      32 | gcd                    | done   |
-|      33 | coprime                | done   |
-|      34 | euler phi              | done   |
-|      35 | prime factors          |        |
-|      36 | prime factors 2        |        |
-|      37 | euler phi 2            |        |
-|      38 | compare euler phis     |        |
-|      39 | prime list             | done   |
-|      40 | goldbach               |        |
-|      41 | goldbach list          |        |
-|      42 | -                      |        |
-|      43 | -                      |        |
-|      44 | -                      |        |
-|      45 | -                      |        |
-|      46 | truth tables 1         |        |
-|      47 | truth tables 2         |        |
-|      48 | truth tables 3         |        |
-|      49 | gray code              |        |
-|      50 | huffman code           |        |
-|      51 | -                      |        |
-|      52 | -                      |        |
-|      53 | -                      |        |
-|      54 | -                      |        |
-|      55 | balanced binary tree   |        |
-|      56 | symmetric binary tree  |        |
-|      57 | binary search tree     |        |
-|      58 | generate and test      |        |
-|      59 | height balanced tree   |        |
-|      60 | height balanced tree 2 |        |
-|      61 | count leaves           |        |
-|     61A | collect leaves in list |        |
-|      62 | collect internal nodes |        |
-|     62B | collect nodes at level |        |
-|      63 | complete binary tree   |        |
-|      64 | layout binary tree     |        |
-|      65 | layout binary tree 2   |        |
-|      66 | layout binary tree 3   |        |
-|      67 | string rep tree        |        |
-|      68 | seqeuences of trees    |        |
-|      69 | dotstring of tree      |        |
-|     70C | nodes of multiway tree |        |
-|      70 | tree from node string  |        |
-|      71 | internal path length   |        |
-|      72 | bottom up order        |        |
-|      73 | lisp tree rep          |        |
-|      74 | -                      |        |
-|      75 | -                      |        |
-|      76 | -                      |        |
-|      77 | -                      |        |
-|      78 | -                      |        |
-|      79 | -                      |        |
-|      80 | conversions            |        |
-|      81 | paths                  |        |
-|      82 | cycles                 |        |
-|      83 | all spanning           |        |
-|      84 | min spanning           |        |
-|      85 | graph isomorphism      |        |
-|      86 | node degree + color    |        |
-|      87 | depth first traverse   |        |
-|      88 | connected components   |        |
-|      89 | bipartite              |        |
-|      90 | k regular n node       |        |
-|      91 | eight queens           |        |
-|      92 | knights tour           |        |
-|      93 | von koch               |        |
-|      94 | arithmetic puzzle      |        |
-|      95 | number words           |        |
-|      96 | syntax checker         |        |
-|      97 | sudoku                 |        |
-|      98 | nonograms              |        |
-|      99 | crossword              |        |
+|---------+------------------------+--------|
+|         | Arithmetic             |        |
+|---------+------------------------+--------|
+|      29 | prime                  | done*  |
+|      30 | gcd                    | done   |
+|      31 | coprime                | done   |
+|      32 | euler phi              | done   |
+|      33 | prime factors          |        |
+|      34 | prime factors 2        |        |
+|      35 | euler phi 2            |        |
+|      36 | compare euler phis     |        |
+|      37 | prime list             | done   |
+|      38 | goldbach               |        |
+|      39 | goldbach list          |        |
+|---------+------------------------+--------|
+|         | Logic and Codes        |        |
+|---------+------------------------+--------|
+|      40 | truth tables 1         |        |
+|      41 | truth tables 2         |        |
+|      42 | gray code              | done   |
+|      43 | huffman code           |        |
+|---------+------------------------+--------|
+|         | Trees                  |        |
+|---------+------------------------+--------|
+|      44 | balanced binary tree   | done   |
+|      45 | symmetric binary tree  | done   |
+|      46 | binary search tree     |        |
+|      47 | generate and test      |        |
+|      48 | height balanced tree   |        |
+|      49 | height balanced tree 2 |        |
+|      50 | collect leaves in list |        |
+|      51 | count leaves           |        |
+|      52 | collect nodes at level |        |
+|      53 | collect internal nodes |        |
+|      54 | complete binary tree   |        |
+|      55 | layout binary tree     |        |
+|      56 | layout binary tree 2   |        |
+|      57 | layout binary tree 3   |        |
+|      58 | string rep tree        |        |
+|      59 | seqeuences of trees    |        |
+|      60 | dotstring of tree      |        |
+|---------+------------------------+--------|
+|         | Multiway trees         |        |
+|---------+------------------------+--------|
+|      61 | nodes of multiway tree |        |
+|      62 | tree from node string  |        |
+|      63 | internal path length   |        |
+|      64 | bottom up order        |        |
+|      65 | lisp-like tree rep     |        |
+|---------+------------------------+--------|
+|         | Graphs                 |        |
+|---------+------------------------+--------|
+|      66 | conversions            |        |
+|      67 | paths                  |        |
+|      68 | cycles                 |        |
+|      69 | all spanning           |        |
+|      70 | min spanning           |        |
+|      71 | graph isomorphism      |        |
+|      72 | node degree + color    |        |
+|      73 | depth first traverse   |        |
+|      74 | connected components   |        |
+|      75 | bipartite              |        |
+|      76 | k regular n node       |        |
+|---------+------------------------+--------|
+|         | Miscellaneous          |        |
+|---------+------------------------+--------|
+|      77 | eight queens           |        |
+|      78 | knights tour           |        |
+|      79 | von koch               |        |
+|      80 | arithmetic puzzle      |        |
+|      81 | number words           |        |
+|      82 | syntax checker         |        |
+|      83 | sudoku                 |        |
+|      84 | nonograms              |        |
+|      85 | crossword              |        |
+|---------+------------------------+--------|
+
 
 *** DONE 1 Tail of a list
 Write a function ~last : 'a list -> 'a option~ that returns the last
