@@ -776,12 +776,65 @@ the previous exercise
   #+RESULTS:
   | 1 | 2 | 3 |
  
-**** TODO Take Drop Tail [★★★★]
+**** DONE Take Drop Tail [★★★★]
 
 Revise your solutions for take and drop to be tail recursive, if they
 aren’t already. Test them on long lists with large values of n to see
 whether they run out of stack space. To construct long lists, use the
 ~--~ operator from the lists section.
+
+Here's the ~--~ operator:
+
+#+begin_src ocaml
+let rec from i j l = if i > j then l else from i (j - 1) (j :: l);;
+
+let ( -- ) i j = from i j [];;
+
+let long_list = 0 -- 1_000_000;;
+#+end_src
+
+#+RESULTS:
+| 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 | 43 | 44 | 45 | 46 | 47 | 48 | 49 | 50 | 51 | 52 | 53 | 54 | 55 | 56 | 57 | 58 | 59 | 60 | 61 | 62 | 63 | 64 | 65 | 66 | 67 | 68 | 69 | 70 | 71 | 72 | 73 | 74 | 75 | 76 | 77 | 78 | 79 | 80 | 81 | 82 | 83 | 84 | 85 | 86 | 87 | 88 | 89 | 90 | 91 | 92 | 93 | 94 | 95 | 96 | 97 | 98 | 99 | 100 | 101 | 102 | 103 | 104 | 105 | 106 | 107 | 108 | 109 | 110 | 111 | 112 | 113 | 114 | 115 | 116 | 117 | 118 | 119 | 120 | 121 | 122 | 123 | 124 | 125 | 126 | 127 | 128 | 129 | 130 | 131 | 132 | 133 | 134 | 135 | 136 | 137 | 138 | 139 | 140 | 141 | 142 | 143 | 144 | 145 | 146 | 147 | 148 | 149 | 150 | 151 | 152 | 153 | 154 | 155 | 156 | 157 | 158 | 159 | 160 | 161 | 162 | 163 | 164 | 165 | 166 | 167 | 168 | 169 | 170 | 171 | 172 | 173 | 174 | 175 | 176 | 177 | 178 | 179 | 180 | 181 | 182 | 183 | 184 | 185 | 186 | 187 | 188 | 189 | 190 | 191 | 192 | 193 | 194 | 195 | 196 | 197 | 198 | 199 | 200 | 201 | 202 | 203 | 204 | 205 | 206 | 207 | 208 | 209 | 210 | 211 | 212 | 213 | 214 | 215 | 216 | 217 | 218 | 219 | 220 | 221 | 222 | 223 | 224 | 225 | 226 | 227 | 228 | 229 | 230 | 231 | 232 | 233 | 234 | 235 | 236 | 237 | 238 | 239 | 240 | 241 | 242 | 243 | 244 | 245 | 246 | 247 | 248 | 249 | 250 | 251 | 252 | 253 | 254 | 255 | 256 | 257 | 258 | 259 | 260 | 261 | 262 | 263 | 264 | 265 | 266 | 267 | 268 | 269 | 270 | 271 | 272 | 273 | 274 | 275 | 276 | 277 | 278 | 279 | 280 | 281 | 282 | 283 | 284 | 285 | 286 | 287 | 288 | 289 | 290 | 291 | 292 | 293 | 294 | 295 | 296 | 297 | 298 | ... |
+
+#+begin_src ocaml
+    let take n l =
+      let rec take_tr n l h = match n with
+        | 0 -> h
+        | n -> (match l with
+               | [] -> h
+               | x :: xs -> take_tr (n-1) (xs) (x :: h)) in
+      List.rev (take_tr n l []);;
+
+    List.length (take 2000000 (6 -- 4000000))
+#+end_src
+
+#+RESULTS:
+: 2000000
+
+I am not sure I needed to use ~List.rev~ here. That seems like a cost
+that should be avoided, if possible. It also means I'm not 100% sure
+this is tail recursive unless I check whether or not ~List.rev~ is
+tail recursive. The documentation doesn't say whether it is or isn't.
+
+#+begin_src ocaml
+    let rec drop n l =
+      match n with
+      | 0 -> l
+      | n -> (match l with
+             | [] -> []
+             | x :: xs -> drop (n-1) xs);;
+
+    drop 999999 (1 -- 1000000);;
+#+end_src
+
+#+RESULTS:
+| 1000000 |
+
+Still not clear how to check whether or not something is tail
+recursive. It seems like the givaway is when the recursive call is
+part of a bigger expression instead of just on its own. I also think
+that ~drop 999999 (1 -- 1000000)~ would have stack overflowed if this
+wasn't tail recursive.
 
 **** DONE Unimodal [★★★]
 
@@ -821,22 +874,318 @@ as is the empty list.
 #+RESULTS:
 : true
 
-**** TODO Power set [★★★]
-**** TODO Print int list rec [★★]
-**** TODO Print int list iter [★★]
+**** DONE Power set [★★★]
+
+Write a function ~powerset : int list -> int list list~ that takes a
+set ~S~ represented as a list and returns the set of all subsets of
+S. The order of subsets in the powerset and the order of elements in
+the subsets do not matter.
+
+Hint: Consider the recursive structure of this problem. Suppose you
+already have ~p~, such that ~p = powerset s~. How could you use ~p~ to
+compute ~powerset (x :: s)~?
+
+#+begin_src ocaml :results verbatim
+  let rec powerset lst = match lst with
+    | [] -> [[]]
+    | x :: xs -> let p = powerset xs in
+                 (List.map (fun s -> x::s) p) @ p;;
+  List.length (powerset [1;2;3;4;5;6;7])
+#+end_src
+
+#+RESULTS:
+: - : int = 128
+
+**** DONE Print int list rec [★★]
+
+Write a function print_int_list : int list -> unit that prints its
+input list, one number per line. For example, print_int_list [1; 2; 3]
+should result in this output:
+
+#+begin_example
+1
+2
+3
+#+end_example
+
+#+begin_src ocaml :results verbatim
+    let rec print_int_list = function
+      | [] -> ()
+      | x :: xs -> (x |> string_of_int |> print_endline) ; print_int_list xs;;
+
+    print_int_list [1;2;3;4;5;5;6]
+#+end_src
+
+#+RESULTS:
+: 1
+: 2
+: 3
+: 4
+: 5
+: 5
+: 6
+: - : unit = ()
+
+**** DONE Print int list iter [★★]
+
+Write a function ~print_int_list' : int list -> unit~ whose
+specification is the same as ~print_int_list~. Do not use the keyword
+~rec~ in your solution, but instead to use the ~List~ module function
+~List.iter~.
+
+#+begin_src ocaml :results verbatim
+  let print_int_list lst = 
+    List.iter (fun e -> e |> string_of_int |> print_endline) lst;;
+
+  print_int_list [1;2;3;4;5;5;6];;
+#+end_src
+
+#+RESULTS:
+: 1
+: 2
+: 3
+: 4
+: 5
+: 5
+: 6
+: - : unit = ()
+
 **** TODO Student [★★]
 **** TODO Pokerecord [★★]
-**** TODO Safe hd and tl [★★]
+**** DONE Safe hd and tl [★★]
+
+Write a function ~safe_hd : 'a list -> 'a option~ that returns ~Some
+x~ if the head of the input list is ~x~, and ~None~ if the input list
+is empty.
+
+
+Also write a function ~safe_tl : 'a list -> 'a list option~ that
+returns the tail of the list, or ~None~ if the list is empty.
+
+#+begin_src ocaml
+    let safe_hd = function
+      | [] -> None
+      | x :: xs -> Some x;;
+
+    safe_hd [4;2;3];;
+    safe_hd [1];;
+    safe_hd [];;
+#+end_src
+
+#+RESULTS:
+: None
+
+#+begin_src ocaml
+    let safe_tl = function
+      | [] -> None
+      | x :: xs -> Some xs;;
+
+    safe_tl [4;2;3];;
+    safe_tl [1];;
+    safe_tl [];;
+#+end_src
+
+#+RESULTS:
+: None
+
 **** TODO Pokefun [★★★]
 **** TODO Date before [★★]
 **** TODO Earliest date [★★★]
-**** TODO Assoc list [★]
+**** DONE Assoc list [★]
+
+Use the functions ~insert~ and ~lookup~ from the section on association
+lists to construct an association list that maps the integer ~1~ to the
+string ~“one”~, ~2~ to ~“two”~, and ~3~ to ~“three”~. Lookup the key ~2~. Lookup
+the key ~4~.
+
+Here are ~insert~ and ~lookup~:
+
+#+begin_src ocaml
+  let insert k v lst = (k, v) :: lst
+
+  let rec lookup k = function
+    | [] -> None
+    | (k', v) :: t -> if k = k' then Some v else lookup k t
+#+end_src
+
+#+RESULTS:
+: <fun>
+
+#+begin_src ocaml
+    let assoc_list =
+      []
+      |> insert 1 "one"
+      |> insert 2 "two"
+      |> insert 3 "three";;
+
+    lookup 2 assoc_list;;
+    lookup 4 assoc_list;;
+#+end_src
+
+#+RESULTS:
+: None
+
 **** TODO Cards [★★]
-**** TODO Matching [★]
-**** TODO Quadrant [★★]
-**** TODO Quadrant when [★★]
-**** TODO Depth [★★]
-**** TODO Shape [★★★]
+**** DONE Matching [★]
+
+For each pattern in the list below, give a value of type ~int option
+list~ that does not match the pattern and is not the empty list, or
+explain why that’s impossible.
+
+1. ~Some x :: tl~
+
+   ~[None]~ does not match, since the head does not match
+   
+2. ~[Some 3110; None]~
+
+   ~[None]~ does not match, since the head does not match. Also, ~[Some
+   3110; Some 3110]~ will not match, since the second element is not
+   ~None~.
+   
+3. ~[Some x; _]~
+
+   Again, ~[Some x; None; None]~ does not match. It's too long.
+   
+4. ~h1 :: h2 :: tl~
+
+   Any list of length ~2~ or greater will match this pattern. But
+   ~[None]~ does not match it.
+   
+5. ~h :: tl~
+
+   This pattern matches every list except the empty list, so we can't
+   match it with a nonempty list.
+**** DONE Quadrant [★★]
+
+Complete the ~quadrant~ function below, which should return the quadrant
+of the given ~x, y~ point according to the diagram on the right
+(borrowed from Wikipedia). Points that lie on an axis do not belong to
+any quandrant. Hints: (a) define a helper function for the sign of an
+integer, (b) match against a pair.
+
+#+begin_src ocaml
+  type quad = I | II | III | IV
+  type sign = Neg | Zero | Pos
+
+  let sign (x:int) : sign =
+    match x with
+    | x when x > 0 -> Pos
+    | x when x < 0 -> Neg
+    | _ -> Zero
+
+  let quadrant : int*int -> quad option = fun (x,y) ->
+    match (sign x, sign y) with
+      | (Pos, Pos) -> Some I
+      | (Neg, Pos) -> Some II
+      | (Neg, Neg) -> Some III
+      | (Pos, Neg) -> Some IV
+      | _ -> None;;
+
+  quadrant (13,-58);;
+#+end_src
+
+#+RESULTS:
+: Some IV
+
+**** DONE Quadrant when [★★]
+
+Rewrite the quadrant function to use the when syntax. You won’t need
+your helper function from before.
+
+#+begin_src ocaml
+  let quadrant_when : int*int -> quad option = function
+      | (x,y) when x > 0 && y > 0 -> Some I
+      | (x,y) when x < 0 && y > 0 -> Some II
+      | (x,y) when x < 0 && y < 0 -> Some III
+      | (x,y) when x > 0 && y < 0 -> Some IV
+      | _ -> None;;
+
+  quadrant_when (13,-58)
+#+end_src
+
+#+RESULTS:
+: Some IV
+
+**** DONE Depth [★★]
+
+Write a function ~depth : 'a tree -> int~ that returns the number of
+nodes in any longest path from the root to a leaf. For example, the
+depth of an empty tree (simply ~Leaf~) is ~0~, and the depth of tree
+~t~ above is ~3~. Hint: there is a library function ~max : 'a -> 'a ->
+'a~ that returns the maximum of any two values of the same type.
+
+#+begin_src ocaml
+  type 'a tree =
+  | Leaf
+  | Node of 'a * 'a tree * 'a tree
+#+end_src
+
+#+RESULTS:
+: type 'a tree = Leaf | Node of 'a * 'a tree * 'a tree
+
+Here's the tree from 3.11.1:
+
+#+begin_src ocaml
+(* the code below constructs this tree:
+         4
+       /   \
+      2     5
+     / \   / \
+    1   3 6   7
+*)
+let t =
+  Node(4,
+    Node(2,
+      Node(1, Leaf, Leaf),
+      Node(3, Leaf, Leaf)
+    ),
+    Node(5,
+      Node(6, Leaf, Leaf),
+      Node(7, Leaf, Leaf)
+    )
+  )
+#+end_src
+
+#+RESULTS:
+: Node (4, Node (2, Node (1, Leaf, Leaf), Node (3, Leaf, Leaf)),
+:    Node (5, Node (6, Leaf, Leaf), Node (7, Leaf, Leaf)))
+
+#+begin_src ocaml
+    let depth t =
+      let rec depth_tr d t = match t with
+      | Leaf -> d
+      | Node (x, left, right) -> max (depth_tr (d+1) left) (depth_tr (d+1) right) in
+    depth_tr 0 t;;
+
+    depth Leaf;;
+    depth (Node(1, Leaf, Node(1, Leaf, Leaf)));;
+    depth t
+#+end_src
+
+#+RESULTS:
+: 3
+
+**** DONE Shape [★★★]
+
+Write a function ~same_shape : 'a tree -> 'b tree -> bool~ that
+determines whether two trees have the same shape, regardless of
+whether the values they carry at each node are the same. Hint: use a
+pattern match with three branches, where the expression being matched
+is a pair of trees.
+
+#+begin_src ocaml
+    let rec same_shape t1 t2 = match (t1, t2) with
+      | (Leaf, Leaf) -> true
+      | (Node(_, left1, right1), Node(_, left2, right2)) -> ((same_shape left1 left2) && (same_shape right1 right2))
+
+      | _ -> false;;
+
+    same_shape (Node(4,t,t)) (Node(1, t, t));;
+#+end_src
+
+#+RESULTS:
+: true
+
 **** TODO List max exn [★★]
 **** TODO List max exn string [★★]
 **** TODO List max exn ounit [★]
