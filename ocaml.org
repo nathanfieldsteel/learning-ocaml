@@ -86,7 +86,7 @@ val x : int = 42
 #+RESULTS:
 : 7
 
-*** TODO 2.9 Basics - Exercises:
+*** DONE 2.9 Basics - Exercises:
 **** DONE Values [★]
 What is the type and value of each of the following OCaml expressions:
 
@@ -1186,8 +1186,65 @@ is a pair of trees.
 #+RESULTS:
 : true
 
-**** TODO List max exn [★★]
+**** DONE List max exn [★★]
+
+Write a function ~list_max : int list -> int~ that returns the maximum integer in a list, or raises ~Failure "list_max"~ if the list is empty.
+
+#+begin_src ocaml
+      let rec list_max_exn lst =
+        let rec list_max_exn_acc m lst = match lst with
+          | x :: xs -> if (x > m)
+                       then (list_max_exn_acc x xs)
+                       else (list_max_exn_acc m xs)
+          | [] -> m in
+      match List.hd lst with
+      | exception (_) -> failwith "list_max"
+      | m -> list_max_exn_acc m (List.tl lst);;
+
+    list_max_exn [1;2;3;4;56;6;7;6;5;4;5;0;0;0;11;12;13];;
+    list_max_exn []
+#+end_src
+
+#+RESULTS:
+: Exception: Failure "list_max".
+
+There is something going on here that I don't understand. I thought
+that if you had a match expression, every possible match needs to
+evaluate to the same type. But in the second match expression in the
+above code, the first branch looks like it has type ~exception~ while
+the second has type ~int~ or maybe ~'a~.
+
+I also got a weird warning when I matched with ~exception (Failure
+"hd")~ ("fragile-literal-pattern) that went away when I changed to to
+~exception (_)~, though this seems less accurate.
+
 **** TODO List max exn string [★★]
+
+Write a function ~list_max_string : int list -> string~ that returns a
+string containing the maximum integer in a list, or the string
+~"empty"~ (note, not the exception ~Failure "empty"~ but just the
+string ~"empty"~) if the list is empty. Hint: ~string_of_int~ in the
+standard library will do what its name suggests.
+
+#+begin_src ocaml
+        let list_max_string lst =
+          let rec list_max_string_acc m lst = match lst with
+            | [] -> m
+            | x :: xs -> if (x > m)
+                         then (list_max_string_acc x xs)
+                         else(list_max_string_acc m xs) in
+          match lst with
+          | [] -> "empty"
+          | x :: xs -> list_max_string_acc x xs |> string_of_int;;
+
+        list_max_string [123;252435;12312;345435;123];;
+        list_max_string [99999;99998];;
+        list_max_string []
+#+end_src
+
+#+RESULTS:
+: empty
+
 **** TODO List max exn ounit [★]
 **** TODO is_bst [★★★★]
 **** TODO Quadrant poly  [★★]
