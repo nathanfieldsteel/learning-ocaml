@@ -4442,28 +4442,58 @@ is empty, it's a balanced expression. But if you get to the end of the
 string and the stack still has characters, it's incomplete
 *** Day 14 - Polymerization
 
-#+begin_src ocaml
+I don't love how messy this is, might want to come back to it later
+and clean it up. A lot of hashtables and imperative trickery. Not very functional.
 
+#+begin_src ocaml :results verbatim
   let polymerization filename =
-    let input = filename
-                |> open_in in
-    let rec file_to_list_of_strings lst inpt =
-      (try let next_line = input_line inpt in
-           file_to_list_of_strings (lst @ [next_line]) inpt
-       with
-         End_of_file -> lst) in
-    let input_list = file_to_list_of_strings [] input in
-    let initial_string = List.hd input_list in
-    let insertions = Hashtbl.create 256 in
-    let parse_rule r h =
-      Hashtbl.add h (String.sub r 0 1) (String.sub r 6 6) in
-    let
+    let inpt = open_in filename in
+    let rec stringlist_from_in_ch ch =
+      try (let line = input_line ch
+           in line :: stringlist_from_in_ch ch)
+      with End_of_file -> [] in
+    let lines = stringlist_from_in_ch inpt in
+    let initial_string = List.hd lines in
+    let rec list_of_string s = match String.length s with
+      | 0 -> []
+      | n -> (String.sub s 0 1) :: list_of_string (String.sub s 1 (n-1)) in
+    let initial_list = list_of_string initial_string in
+    let rule_strings = lines |> List.tl |> List.tl in
+    let num_rules = List.length rule_strings in
+    let rule_hashtbl = Hashtbl.create num_rules in
+    let rule_of_string s = 
+      let k = String.sub s 0 2 in
+      let v = String.sub s 6 1 in
+      Hashtbl.add rule_hashtbl k v in
+    ignore(List.map rule_of_string rule_strings);
+    let rec apply_rules lst h = match lst with
+      | [] -> []
+      | [c] -> [c]
+      | a :: b :: cs -> if (Hashtbl.mem h (a^b))
+                        then (let x = Hashtbl.find h (a^b) in
+                              a :: x :: (apply_rules (b :: cs) h))
+                        else (a :: (apply_rules (b :: cs) h)) in
+    let mut_list = ref initial_list in
+    let i = ref 0 in
+    while (!i < 10)
+    do (mut_list := apply_rules (!mut_list) rule_hashtbl; i := !i+1)
+    done;
+    let t = Hashtbl.create (List.length !mut_list) in
+    let rec tally lst = match lst with
+      | [] -> t
+      | x :: xs -> (if (Hashtbl.mem t x)
+                    then (Hashtbl.replace t x (1 + (Hashtbl.find t x)))
+                    else (Hashtbl.add t x 1); tally xs) in
+    ignore(tally !mut_list);
+    let most_common = Hashtbl.fold (fun k v m -> max v m) t 0 in
+    let least_common = Hashtbl.fold (fun k v m -> min v m) t (List.length !mut_list) in
+    most_common - least_common;;
 
-  polymerization "input14-1.txt"
+    polymerization "input14-1.txt"
 #+end_src
 
 #+RESULTS:
-: PBVHVOCOCFFNBCNCCBHK
+: - : string = "C"
 
 *** Day 18 - Snailfish numbers
 
