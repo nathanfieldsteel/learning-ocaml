@@ -1218,7 +1218,7 @@ I also got a weird warning when I matched with ~exception (Failure
 "hd")~ ("fragile-literal-pattern) that went away when I changed to to
 ~exception (_)~, though this seems less accurate.
 
-**** TODO List max exn string [★★]
+**** DONE List max exn string [★★]
 
 Write a function ~list_max_string : int list -> string~ that returns a
 string containing the maximum integer in a list, or the string
@@ -1247,6 +1247,9 @@ standard library will do what its name suggests.
 
 **** TODO List max exn ounit [★]
 **** TODO is_bst [★★★★]
+
+Write a function ~is_bst : ('a*'b) tree -> bool~ that returns true if and only if the given tree satisfies the binary search tree invariant. An efficient version of this function that visits each node at most once is somewhat tricky to write. Hint: write a recursive helper function that takes a tree and either gives you (i) the minimum and maximum value in the tree, or (ii) tells you that the tree is empty, or (iii) tells you that the tree does not satisfy the invariant. Your ~is_bst~ function will not be recursive, but will call your helper function and pattern match on the result. You will need to define a new variant type for the return type of your helper function.
+
 **** TODO Quadrant poly  [★★]
 *** 4.9 Higher-Order Programming - Exercises
 **** DONE Twice, no arguments [★]
@@ -1664,7 +1667,27 @@ computation is doing: combining, transforming, or filtering elements.
   #+RESULTS:
   : - : string = "0 -- 1 -- 2 -- 3 -- 4 -- 5 -- 6 -- 7"
 
-**** TODO association list keys [★★★]
+**** DONE association list keys [★★★]
+
+Recall that an association list is an implementation of a dictionary
+in terms of a list of pairs, in which we treat the first component of
+each pair as a key and the second component as a value.
+
+Write a function ~keys: ('a * 'b) list -> 'a list~ that returns a list of the unique keys in an association list. Since they must be unique, no value should appear more than once in the output list. The order of values output does not matter. How compact and efficient can you make your solution? Can you do it in one line and linearithmic space and time? Hint: ~List.sort_uniq~.
+
+#+begin_src ocaml
+    let keys al = List.map (fun (k,v) -> k) al |> List.sort_uniq (fun k1 k2 -> if (k1 < k2) then (-1) else (if k1 > k2 then 1 else 0));;
+
+    keys [('a',12);('b',13);('c',120);('c',14);('c',9356);('z',19);('a',53);('d',13);('e',63)]
+#+end_src
+
+#+RESULTS:
+| a | b | c | d | e | z |
+
+I don't know if this is n log n space and time. I'm also not sure if
+this is the "one line" solution they're hinting at, since it's a bit
+long for one line.
+
 **** TODO valid matrix [★★★]
 
 A mathematical matrix can be represented with lists. In row-major
@@ -2135,6 +2158,69 @@ Euclid’s algorithm to be helpful:
 **** TODO Implementation with abstracted interface [★]
 **** TODO Preinter for date [★★★]
 **** TODO Refactor arith [★★★★]
+*** 6.11 Correctness - Exercises
+*** 7.5 Mutability - Exercises
+**** TODO mutable fields [★]
+**** TODO refs [★]
+**** DONE inc fun [★]
+
+Define a reference to a function as follows:
+
+#+begin_src ocaml
+  let inc = ref (fun x -> x + 1)
+#+end_src
+
+#+RESULTS:
+: {contents = <fun>}
+
+Write code that uses ~inc~ to produce the value ~3110~.
+
+(This is disgusting)
+#+begin_src ocaml
+    let p = ref 0 in
+    let q = ref 0 in
+    let r = ref 0 in
+    while ((!p) < 2)
+    do (p := !p + 1)
+    done;
+    while ((!q) < 5)
+    do (q := !q + 1)
+    done;
+    while ((!r) < 311)
+    do (r := !r + 1)
+    done;
+    (!p) * (!q) * (!r);
+#+end_src
+
+#+RESULTS:
+: 3110
+
+**** DONE addition assignment [★★]
+
+The ~C~ language and many languages derived from it, such as Java, has
+an addition assignment operator written ~a += b~ and meaning ~a = a +
+b~. Implement such an operator in OCaml; its type should be ~int ref
+-> int -> unit~.
+
+(uncomfortably close to line noise here, this function is like 60% punctuation)
+
+#+begin_src ocaml
+  let ( +:= ) x y = x := !x + y;;
+
+  let x = ref 0;;
+
+  x +:= 12;;
+  x +:= 28;;
+  x +:= -3;;
+
+  !x;;
+#+end_src
+
+#+RESULTS:
+: 37
+
+
+
 * Learning OCaml - problems
 ** 99 OCaml Problems
 
