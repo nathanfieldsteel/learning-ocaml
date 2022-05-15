@@ -531,7 +531,7 @@ each:
   Hello world!- : unit = ()
   #+end_export
 
-*** 3.14 Data and Types - Exercises
+*** TODO 3.14 Data and Types - Exercises
 **** DONE List Expressions [★]
 + Construct a list that has the integers 1 through 5 in it. Use the
   square bracket notation for lists.
@@ -1251,7 +1251,7 @@ standard library will do what its name suggests.
 Write a function ~is_bst : ('a*'b) tree -> bool~ that returns true if and only if the given tree satisfies the binary search tree invariant. An efficient version of this function that visits each node at most once is somewhat tricky to write. Hint: write a recursive helper function that takes a tree and either gives you (i) the minimum and maximum value in the tree, or (ii) tells you that the tree is empty, or (iii) tells you that the tree does not satisfy the invariant. Your ~is_bst~ function will not be recursive, but will call your helper function and pattern match on the result. You will need to define a new variant type for the return type of your helper function.
 
 **** TODO Quadrant poly  [★★]
-*** 4.9 Higher-Order Programming - Exercises
+*** TODO 4.9 Higher-Order Programming - Exercises
 **** DONE Twice, no arguments [★]
 
 Consider the following definitions. Use the toplevel to determine what the types of quad and fourth are. Explain how it can be that quad is not syntactically written as a function that takes an argument, and yet its type shows that it is in fact a function.
@@ -1794,7 +1794,7 @@ transposition and row vector dot product.
 
 Done, but still need to do the unit testing on all these matrix problems
 
-*** 5.11 Modular Programming - Exercises
+*** TODO 5.11 Modular Programming - Exercises
 **** DONE Complex synonym [★]
 
 Here is a module type for complex numbers, which have a real and imaginary component:
@@ -2158,10 +2158,64 @@ Euclid’s algorithm to be helpful:
 **** TODO Implementation with abstracted interface [★]
 **** TODO Preinter for date [★★★]
 **** TODO Refactor arith [★★★★]
-*** 6.11 Correctness - Exercises
+*** TODO 6.11 Correctness - Exercises
 *** 7.5 Mutability - Exercises
-**** TODO mutable fields [★]
-**** TODO refs [★]
+**** DONE mutable fields [★]
+
+Define an OCaml record type to represent student names and GPAs. It
+should be possible to mutate the value of a student’s GPA. Write an
+expression defining a student with name ~"Alice"~ and GPA ~3.7~. Then
+write an expression to mutate Alice’s GPA to ~4.0~
+
+#+begin_src ocaml
+  (* defining a record type with a mutable gpa field: *)
+  type student = {name : string; mutable gpa: float};;
+
+  (* create the specified instance *)
+  let student_rec = {name = "Alice"; gpa = 3.7};;
+
+  (* change the gpa as specified *)
+  student_rec.gpa <- 4.0;;
+
+  (* inspect to confirm *)
+  student_rec
+#+end_src
+
+#+RESULTS:
+: {name = "Alice"; gpa = 4.}
+
+**** DONE refs [★]
+
+Give OCaml expressions that have the following types. Use utop to
+check your answers.
+
++ ~bool ref~
+
+#+begin_src ocaml
+  let br = ref true;;
+#+end_src
+
+#+RESULTS:
+: {contents = true}
+
++ ~int list ref~
+
+#+begin_src ocaml :results verbatim
+  let ilr = ref [1;2;3]
+#+end_src
+
+#+RESULTS:
+: val ilr : int list ref = {contents = [1; 2; 3]}
+
++ ~int ref list~
+
+#+begin_src ocaml :results verbatim
+  List.map (fun i -> ref i) [1;2]
+#+end_src
+
+#+RESULTS:
+: - : int ref list = [{contents = 1}; {contents = 2}]
+
 **** DONE inc fun [★]
 
 Define a reference to a function as follows:
@@ -2220,7 +2274,260 @@ b~. Implement such an operator in OCaml; its type should be ~int ref
 : 37
 
 
+**** DONE physical equality [★★]
 
+Define ~x~, ~y~, and ~z~ as follows:
+
+#+begin_src ocaml
+  let x = ref 0
+  let y = x
+  let z = ref 0
+#+end_src
+
+#+RESULTS:
+: {contents = 0}
+
+Predict the value of the following series of expressions:
+
+- ~x == y;;~
+- ~x == z;;~
+- ~x = y;;~
+- ~x = z;;~
+- ~x := 1;;~
+- ~x = y;;~
+- ~x = z;;~
+
++ ~# x == y;;~
+
+~y~ is another name for ~x~. They should be equal.
+
+#+begin_src ocaml
+  x == y
+#+end_src
+
+#+RESULTS:
+: true
+
++ ~# x == z;;~
+
+~x~ and ~z~ are two different references. Different boxes with the
+same content are not the same box. They should not be equal
+
+#+begin_src ocaml
+  x == z
+#+end_src
+
+#+RESULTS:
+: false
+
++ ~# x = y;;~
+
+My guess is that structural equality (same thing in memory) is
+stronger than mathematical equality (evaluate to the same value), so
+I'm guessing this is true:
+
+#+begin_src ocaml
+  x = y
+#+end_src
+
+#+RESULTS:
+: true
+
++ ~# x = z;;~
+
+both ~x~ and ~z~ are the same "value" (a reference containing a zero),
+so I expect them to be "equal" despite not being the same reference.
+
+#+begin_src ocaml
+  x = z
+#+end_src
+
+#+RESULTS:
+: true
+
++ ~# x := 1;;~
+
+Switching the contents of reference ~x~ from ~0~ to ~1~.
+
+#+begin_src ocaml
+  x := 1
+#+end_src
+
+#+RESULTS:
+: ()
+
++ ~# x = y;;~
+
+~y~ is just a different name for the exact same location in
+memory. When we changed ~x~, we also changed ~y~. They are still
+(structurally) equal so they should still be mathematically equal
+
+#+begin_src ocaml
+  x = y
+#+end_src
+
+#+RESULTS:
+: true
+
++ ~# x = z;;~
+
+These two used to be references containing the same value. But now ~x~
+contains ~1~ while ~z~ still contains ~0~. So they should no longer be
+equal.
+
+#+begin_src ocaml
+  x = z
+#+end_src
+
+#+RESULTS:
+: false
+
+**** DONE norm [★★]
+
+The Euclidean norm of an $n$-dimensional vector $x = (x_1, \ldots,
+x_n)$ is written $|x|$ and is defined to be $$\sqrt{x_1^2 + \cdots +
+x_n^2}.$$ Write a function ~norm: vector -> float~ that computes the
+Euclidean norm of a vector, where ~vector~ is defined as follows:
+
+#+begin_src ocaml
+  (* AF: the float array [| x1; ...; xn |] represents the
+   ,*     vector (x1, ..., xn)
+   ,* RI: the array is non-empty *)
+  type vector = float array
+#+end_src
+
+#+begin_src ocaml
+  let norm vect = 
+    vect
+    |> Array.map (function x -> x *. x)
+    |> Array.fold_left (+.) 0.
+    |> Float.sqrt;;
+
+  norm [|5.0; 12.0|];;
+
+  norm [|0.0;12.0;34.0;56.0;78.0|]
+#+end_src
+
+#+RESULTS:
+: 102.56705123966468
+
+**** DONE normalize [★★]
+
+Every vector $x$ can be normalized by dividing each component by
+$|x|$. This yields a vector with norm $1$.
+
+Write a function ~normalize : vector -> unit~ that normalizes a vector
+“in place” by mutating the input array. Here’s a sample usage:
+
+#+begin_src ocaml
+  # let a = [|1.; 1.|];;
+  val a : float array = [|1.; 1.|]
+
+  # normalize a;;
+  - : unit = ()
+
+  # a;;
+  - : float array = [|0.7071...; 0.7071...|]
+#+end_src
+
+This works and doesn't use a loop, but it's not clear to me that it's
+the "right" way to do this. Seems like an abuse of ~mapi~, and my
+suspicion is there's something better suited to this purpose.
+
+#+begin_src ocaml :results verbatim
+  let normalize vect =
+    let n = norm vect in
+    let replace_at i e = vect.(i) <- e /. n in
+    ignore (vect |> Array.mapi replace_at);;
+
+  let v = [|3.0; 4.0|];;
+  norm v;;
+  normalize v;;
+  v;;
+  norm v;;
+#+end_src
+
+#+RESULTS:
+: - : float = 1.
+
+**** DONE norm loop [★★]
+
+Modify your implementation of ~norm~ to use a loop.
+
+#+begin_src ocaml
+  let norm vect =
+    let len = Array.length vect in
+    let sum_of_squares = ref 0.0 in
+    let i = ref 0 in
+    while (!i < len)
+    do (sum_of_squares := !sum_of_squares +. (vect.(!i) *. vect.(!i));
+        i := !i + 1)
+    done;
+    Float.sqrt(!sum_of_squares);;
+
+  norm [|5.0; 12.0|]
+#+end_src
+
+#+RESULTS:
+: 13
+
+**** DONE normalize loop [★★]
+
+Modify your implementation of ~normalize~ to use a loop.
+
+#+begin_src ocaml :results verbatim
+  let normalize vect =
+    let n = Array.length vect in
+    let n = norm vect in
+    let i = ref 0 in
+    while !i < len
+    do (vect.(!i) <- vect.(!i) /. n;
+        i := !i + 1)
+    done;;
+
+  let v = [| 3.0; 4.0 |];;
+
+  norm v;;
+  normalize v;;
+  v;;
+  norm v;;
+#+end_src
+
+**** DONE init matrix [★★★]
+
+The ~Array~ module contains two functions for creating an array:
+~make~ and ~init~. ~make~ creates an array and fills it with a default
+value, while ~init~ creates an array and uses a provided function to
+fill it in. The library also contains a function ~make_matrix~ for
+creating a two-dimensional array, but it does not contain an analogous
+~init_matrix~ to create a matrix using a function for initialization.
+
+Write a function ~init_matrix : int -> int -> (int -> int -> 'a) -> 'a
+array array~ such that ~~init_matrix n o f~ creates and returns an ~n~
+by ~o~ matrix ~m~ with ~m.(i).(j) = f i j~ for all ~i~ and ~j~ in
+bounds.
+
+See the documentation for ~make_matrix~ for more information on the
+representation of matrices as arrays.
+
+(I refuse to use "n x o" matrix. All matrices are m x n. C'mon now.)
+
+#+begin_src ocaml
+  let init_matrix m n f = 
+    Array.init m (fun i -> Array.init n (fun j -> f i j));;
+#+end_src
+
+#+begin_src ocaml
+  init_matrix 4 4 (fun i j -> i + 2*j)
+#+end_src
+
+#+RESULTS:
+| 0 | 2 | 4 | 6 |
+| 1 | 3 | 5 | 7 |
+| 2 | 4 | 6 | 8 |
+| 3 | 5 | 7 | 9 |
+
+**** TODO doubly linked list [★★★★]
 * Learning OCaml - problems
 ** 99 OCaml Problems
 
