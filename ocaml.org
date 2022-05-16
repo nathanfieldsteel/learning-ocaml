@@ -950,8 +950,98 @@ specification is the same as ~print_int_list~. Do not use the keyword
 : 6
 : - : unit = ()
 
-**** TODO Student [★★]
-**** TODO Pokerecord [★★]
+**** DONE Student [★★]
+
+Assume the following type definition:
+
+#+begin_src ocaml
+  type student = {first_name : string; last_name : string; gpa : float}
+#+end_src
+
+#+RESULTS:
+: type student = { first_name : string; last_name : string; gpa : float; }
+
+Give OCaml expressions that have the following types:
+
++ ~student~
+
+  #+begin_src ocaml
+    let s = {first_name = "John";
+             last_name = "Smith";
+             gpa = 3.9}
+  #+end_src
+
+  #+RESULTS:
+  : {first_name = "John"; last_name = "Smith"; gpa = 3.9}
+
++ ~student -> string * string~ (a function that extracts the student’s
+  name)
+
+  #+begin_src ocaml
+    let name_of_student s = (s.last_name, s.first_name);;
+
+    name_of_student s;;
+  #+end_src
+
+  #+RESULTS:
+  : ("Smith", "John")
+
++ ~string -> string -> float -> student~ (a function that creates a
+  student record)
+
+  (using the syntactic sugar mentioned in the chapter)
+  
+#+begin_src ocaml :results verbatim
+  let student first_name last_name gpa = {first_name; last_name; gpa};;
+#+end_src
+
+#+RESULTS:
+: val student : string -> string -> float -> student = <fun>
+
+**** DONE Pokerecord [★★]
+
+Here is a variant that represents a few Pokémon types:
+
+#+begin_src ocaml
+  type poketype = Normal | Fire | Water
+#+end_src
+
+#+RESULTS:
+: type poketype = Normal | Fire | Water
+
++ Define the type ~pokemon~ to be a record with fields ~name~ (a
+  string), ~hp~ (an integer), and ~ptype~ (a poketype).
+
+  #+begin_src ocaml
+    type pokemon = {name:string; hp:int; ptype:poketype}
+  #+end_src
+
+  #+RESULTS:
+  : type pokemon = { name : string; hp : int; ptype : poketype; }
+
++ Create a record named ~charizard~ of type ~pokemon~ that represents
+  a Pokémon with 78 HP and Fire type.
+
+  #+begin_src ocaml
+    let charizard = {name = "charizard";
+                     hp = 78;
+                     ptype = Fire}
+  #+end_src
+
+  #+RESULTS:
+  : {name = "charizard"; hp = 78; ptype = Fire}
+
++ Create a record named ~squirtle~ of type ~pokemon~ that represents a Pokémon with 44 HP and Water type.
+
+  #+begin_src ocaml
+    let squirtle = {name = "squirtle";
+                    hp = 44;
+                     ptype = Water}
+  #+end_src
+
+  #+RESULTS:
+  : {name = "squirtle"; hp = 44; ptype = Water}
+  
 **** DONE Safe hd and tl [★★]
 
 Write a function ~safe_hd : 'a list -> 'a option~ that returns ~Some
@@ -988,9 +1078,112 @@ returns the tail of the list, or ~None~ if the list is empty.
 #+RESULTS:
 : None
 
-**** TODO Pokefun [★★★]
-**** TODO Date before [★★]
-**** TODO Earliest date [★★★]
+**** DONE Pokefun [★★★]
+
+Write a function ~max_hp : pokemon list -> pokemon option~ that, given
+a list of ~pokemon~, finds the Pokémon with the highest HP.
+
+#+begin_src ocaml
+  let max_hp lst =
+    let rec max_hp_acc m lst = match lst with
+    | [] -> m
+    | x :: xs -> if (x.hp > m)
+                 then (max_hp_acc x.hp xs)
+                 else (max_hp_acc m xs) in
+    match lst with
+    | [] -> None
+    | x :: xs -> let m = x.hp in Some (max_hp_acc m xs);;
+
+  max_hp [charizard; squirtle];;
+  max_hp []
+#+end_src
+
+#+RESULTS:
+: None
+
+**** DONE Date before [★★]
+
+Define a date-like triple to be a value of type ~int * int *
+int~. Examples of date-like triples include ~(2013, 2, 1)~ and ~(0, 0,
+1000)~. A date is a date-like triple whose first part is a positive
+year (i.e., a year in the common era), second part is a month between
+1 and 12, and third part is a day between 1 and 31 (or 30, 29, or 28,
+depending on the month and year). (2013, 2, 1) is a date; (0, 0, 1000)
+is not.
+
+Write a function ~is_before~ that takes two dates as input and
+evaluates to ~true~ or ~false~. It evaluates to true if the first
+argument is a date that comes before the second argument. (If the two
+dates are the same, the result is false.)
+
+Your function needs to work correctly only for dates, not for
+arbitrary date-like triples. However, you will probably find it easier
+to write your solution if you think about making it work for arbitrary
+date-like triples. For example, it’s easier to forget about whether
+the input is truly a date, and simply write a function that claims
+(for example) that January 100, 2013 comes before February 34,
+2013—because any date in January comes before any date in February,
+but a function that says that January 100, 2013 comes after February
+34, 2013 is also valid. You may ignore leap years.
+
+(I think this isn't the "right" way to do this. Need to go back
+through the chapter and see if I missed anything.
+
+#+begin_src ocaml
+  type date_like_triple = {year : int;
+                           month : int;
+                           day : int};;
+
+  let is_before d1 d2 =
+    let (y1, m1, d1, y2, m2, d2) = (d1.year,
+                                    d1.month,
+                                    d1.day,
+                                    d2.year,
+                                    d2.month,
+                                    d2.day) in
+    if y1 < y2 then true
+    else if y1 > y2 then false
+    else if m1 < m2 then true
+    else if m1 > m2 then false
+    else if d1 < d2 then true
+    else if d1 >= d2 then false
+    else false;;
+
+  let date1 = {year=1988;month=6;day=22};;
+  let date2 = {year=1986;month=7;day=14};;
+  is_before date1 date2
+#+end_src
+
+#+RESULTS:
+: false
+
+**** DONE Earliest date [★★★]
+
+Write a function ~earliest : (int*int*int) list -> (int * int * int)
+option~. It evaluates to ~None~ if the input list is empty, and to
+~Some d~ if ~date d~ is the earliest date in the list. Hint: use
+~is_before~.
+
+As in the previous exercise, your function needs to work correctly
+only for dates, not for arbitrary date-like triples
+
+#+begin_src ocaml
+  let earliest lst =
+    let rec earliest_carry d lst = match lst with
+      | [] -> d
+      | x :: xs -> if (is_before x d)
+                   then (earliest_carry x xs)
+                   else (earliest_carry d xs) in
+    match lst with
+    | [] -> None
+    | x :: xs -> Some (earliest_carry x xs);;
+
+  earliest [date1; date2]
+#+end_src
+
+#+RESULTS:
+: Some {year = 1986; month = 7; day = 14}
+
 **** DONE Assoc list [★]
 
 Use the functions ~insert~ and ~lookup~ from the section on association
@@ -1025,7 +1218,74 @@ Here are ~insert~ and ~lookup~:
 #+RESULTS:
 : None
 
-**** TODO Cards [★★]
+**** DONE Cards [★★]
+
++ Define a variant type suit that represents the four suits, ♣ ♦ ♥ ♠,
+  in a standard 52-card deck. All the constructors of your type should
+  be constant.
+
+#+begin_src ocaml
+    type suit =
+    | Hearts
+    | Clubs
+    | Diamonds
+    | Spades
+#+end_src
+
+#+RESULTS:
+: type suit = Clubs | Diamonds | Hearts | Spades
+
++ Define a type rank that represents the possible ranks of a card: 2,
+  3, …, 10, Jack, Queen, King, or Ace. There are many possible
+  solutions; you are free to choose whatever works for you. One is to
+  make rank be a synonym of int, and to assume that Jack=11, Queen=12,
+  King=13, and Ace=1 or 14. Another is to use variants.
+
+#+begin_src ocaml
+  type face =
+    | King
+    | Queen
+    | Jack
+
+  type rank =
+    | Number of int
+    | Face of face
+#+end_src
+
+#+RESULTS:
+: type face = King | Queen | Jack
+: type rank = Number of int | Face of face
+
++ Define a type card that represents the suit and rank of a single
+  card. Make it a record with two fields.
+
+  #+begin_src ocaml
+    type card = {rank : rank; suit : suit}
+  #+end_src
+
+  #+RESULTS:
+  : type card = { rank : rank; suit : suit; }
+
++ Define a few values of type card: the Ace of Clubs, the Queen of
+  Hearts, the Two of Diamonds, the Seven of Spades.
+
+#+begin_src ocaml
+  let ace_of_clubs = {rank = Number 1;
+                      suit = Clubs};;
+
+  let queen_of_hearts = {rank = Face Queen;
+                         suit = Hearts}
+
+  let two_of_diamonds = {rank = Number 2;
+                         suit = Diamonds};;
+
+  let seven_of_spades = {rank = Number 7;
+                         suit = Spades};;
+#+end_src
+
+#+RESULTS:
+: {rank = Number 7; suit = Spades}
+
 **** DONE Matching [★]
 
 For each pattern in the list below, give a value of type ~int option
@@ -2159,6 +2419,7 @@ Euclid’s algorithm to be helpful:
 **** TODO Preinter for date [★★★]
 **** TODO Refactor arith [★★★★]
 *** TODO 6.11 Correctness - Exercises
+
 *** 7.5 Mutability - Exercises
 **** DONE mutable fields [★]
 
@@ -2272,7 +2533,6 @@ b~. Implement such an operator in OCaml; its type should be ~int ref
 
 #+RESULTS:
 : 37
-
 
 **** DONE physical equality [★★]
 
@@ -3251,6 +3511,15 @@ we want to really generate all the possibilities in a list.
 : - : int list list = [[1; 2; 3; 4; 5; 6]]
 
 **** TODO 27 - Group the elements of a list into disjoint subsets 
+
+Group the elements of a set into disjoint subsets
+
++ In how many ways can a group of 9 people work in 3 disjoint
+  subgroups of 2, 3 and 4 persons? Write a function that generates all
+  the possibilities and returns them in a list.
+
++ Generalize the above function in a way that we can specify a list of group sizes and the function will return a list of groups.
+
 **** DONE 28 Sorting a list of lists according to length of sublists
 
 Sorting a list of lists according to length of sublists.
@@ -3855,13 +4124,12 @@ balanced tree with ~n~ nodes. But this completely determined ~right~.
 
 Seems right.
 
-**** TODO 48 Construct height-balanced binary trees
+**** DONE 48 Construct height-balanced binary trees
 
 In a height-balanced binary tree, the following property holds for
 every node: The height of its left subtree and the height of its right
 subtree are almost equal, which means their difference is not greater
 than one.
-
 
 Write a function ~hbal_tree~ to construct height-balanced binary trees
 for a given height. The function should generate all solutions via
@@ -4496,7 +4764,4 @@ and clean it up. A lot of hashtables and imperative trickery. Not very functiona
 : - : string = "C"
 
 *** Day 18 - Snailfish numbers
-
 **** Part 1
-
-Use a custom type.
