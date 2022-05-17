@@ -1,5 +1,6 @@
 #+STARTUP: content
 
+
 * Learning OCaml - Notes
 
 My notes file for learning OCaml and for working through the CS3110 book.
@@ -7,7 +8,7 @@ My notes file for learning OCaml and for working through the CS3110 book.
 ** Goals
 + Learning OCaml.
 + Literate programming in org-mode.
-** Notes on OCaml in org-mode
+** Remarks on OCaml in org-mode
 
 These variables control something about the way code gets
 passed to and retrieved from the ocaml toplevel that emacs runs in the
@@ -70,23 +71,14 @@ In the event that source blocks aren't sufficient, you can open the
 actual running toplevel with ~M-x tuareg-run-ocaml~ and interact with
 it directly.
 
-** CS3110 - notes and exercises
+** CS3110 - Notes
 
-#+begin_src ocaml
-  let x = 42;;
-#+end_src
-
-#+RESULTS:
-val x : int = 42
-
-#+begin_src ocaml
-  (fun x -> x + 3) 4;;
-#+end_src
-
-#+RESULTS:
-: 7
-
-*** DONE 2.9 Basics - Exercises:
+** TODO CS3110 Exercises [70/212] [33%]
+  :PROPERTIES:
+  :COOKIE_DATA: todo recursive
+  :END:
+  
+*** DONE 2.9 Basics - Exercises [16/16]
 **** DONE Values [★]
 What is the type and value of each of the following OCaml expressions:
 
@@ -531,7 +523,10 @@ each:
   Hello world!- : unit = ()
   #+end_export
 
-*** TODO 3.14 Data and Types - Exercises
+  :PROPERTIES:  
+  :COOKIE_DATA: todo recursive
+  :END:
+*** TODO 3.14 Data and Types - Exercises [27/32]
 **** DONE List Expressions [★]
 + Construct a list that has the integers 1 through 5 in it. Use the
   square bracket notation for lists.
@@ -1511,7 +1506,7 @@ standard library will do what its name suggests.
 Write a function ~is_bst : ('a*'b) tree -> bool~ that returns true if and only if the given tree satisfies the binary search tree invariant. An efficient version of this function that visits each node at most once is somewhat tricky to write. Hint: write a recursive helper function that takes a tree and either gives you (i) the minimum and maximum value in the tree, or (ii) tells you that the tree is empty, or (iii) tells you that the tree does not satisfy the invariant. Your ~is_bst~ function will not be recursive, but will call your helper function and pattern match on the result. You will need to define a new variant type for the return type of your helper function.
 
 **** TODO Quadrant poly  [★★]
-*** TODO 4.9 Higher-Order Programming - Exercises
+*** TODO 4.9 Higher-Order Programming - Exercises [13/18]
 **** DONE Twice, no arguments [★]
 
 Consider the following definitions. Use the toplevel to determine what the types of quad and fourth are. Explain how it can be that quad is not syntactically written as a function that takes an argument, and yet its type shows that it is in fact a function.
@@ -2054,7 +2049,7 @@ transposition and row vector dot product.
 
 Done, but still need to do the unit testing on all these matrix problems
 
-*** TODO 5.11 Modular Programming - Exercises
+*** TODO 5.11 Modular Programming - Exercises [3/29]
 **** DONE Complex synonym [★]
 
 Here is a module type for complex numbers, which have a real and imaginary component:
@@ -2418,9 +2413,30 @@ Euclid’s algorithm to be helpful:
 **** TODO Implementation with abstracted interface [★]
 **** TODO Preinter for date [★★★]
 **** TODO Refactor arith [★★★★]
-*** TODO 6.11 Correctness - Exercises
-
-*** 7.5 Mutability - Exercises
+*** TODO 6.11 Correctness - Exercises [0/22]
+**** TODO spec game [★★★]
+**** TODO poly spec [★★★]
+**** TODO poly impl [★★★]
+**** TODO interval arithmetic [★★★★]
+**** TODO function maps [★★★★]
+**** TODO set black box [★★★]
+**** TODO set glass box [★★★]
+**** TODO random lists [★★★]
+**** TODO qcheck odd divisor [★★★]
+**** TODO qcheck avg [★★★★]
+**** TODO exp [★★]
+**** TODO fibi [★★★]
+**** TODO expsq [★★★]
+**** TODO mult [★★]
+**** TODO append nil [★★]
+**** TODO rev dist append [★★★]
+**** TODO rev involutize [★★★]
+**** TODO reflect size [★★★]
+**** TODO fold theorem 2 [★★★★]
+**** TODO propositions [★★★★]
+**** TODO list spec [★★★]
+**** TODO bag spec [★★★★]
+*** TODO 7.5 Mutability - Exercises [10/11]
 **** DONE mutable fields [★]
 
 Define an OCaml record type to represent student names and GPAs. It
@@ -2788,3 +2804,82 @@ representation of matrices as arrays.
 | 3 | 5 | 7 | 9 |
 
 **** TODO doubly linked list [★★★★]
+
+*** TODO 8.9 Data Structures - Exercises [0/44]
+**** TODO hash insert [★★]
+**** TODO relax bucket RI [★★]
+**** TODO strengthen bucket RI [★★]
+**** TODO hash values [★★]
+**** TODO hashtbl usage [★★]
+**** TODO hashtbl stats [★]
+**** TODO hashtbl bindings [★★]
+**** TODO hashtbl load factor [★★]
+**** TODO functorial interface [★★★]
+**** TODO equals and hash [★★]
+**** TODO bad hash [★★]
+**** TODO linear probing [★★★★]
+**** TODO functorized BST [★★★]
+**** TODO efficient traversal [★★★]
+**** TODO RB draw complete [★★]
+**** TODO RB draw insert [★★]
+**** TODO standard library set [★★]
+**** TODO pow2 [★★]
+**** TODO more sequences [★★]
+**** TODO nth [★★]
+**** TODO hd tl [★★]
+**** TODO filter [★★★]
+**** TODO interleave [★★★]
+**** TODO sift [★★★]
+**** TODO primes [★★★]
+**** TODO approximately e [★★★★]
+**** TODO better e [★★★★]
+**** TODO different sequence rep [★★★]
+**** TODO lazy hello [★]
+**** TODO lazy and [★★]
+**** TODO lazy sequence [★★★]
+**** TODO promise and resolve [★★]
+**** TODO promise and resolve lwt [★★]
+**** TODO timing challenge 1 [★★]
+**** TODO timing challenge 2 [★★★]
+**** TODO timing challenge 3 [★★★]
+**** TODO timing challenge 4 [★★★]
+**** TODO file monitor [★★★★]
+**** TODO add opt [★★]
+**** TODO fmap and join [★★]
+**** TODO fmap and join again [★★]
+**** TODO bind from fmap+join [★★★]
+**** TODO list monad [★★★]
+**** TODO trivial monad laws [★★★]
+*** TODO 9.5 Interpreters - Exercises [0/32]
+**** TODO parse [★]
+**** TODO simpl ids [★★]
+**** TODO times parsing [★★]
+**** TODO infer [★★]
+**** TODO subexpression types [★]
+**** TODO typing [★★]
+**** TODO substitution [★★]
+**** TODO step expression [★]
+**** TODO step let expression [★★]
+**** TODO variants [★]
+**** TODO application [★★]
+**** TODO omega [★★★]
+**** TODO pair parsing [★★★]
+**** TODO pair type checking [★★★]
+**** TODO pair evaluation [★★★]
+**** TODO desugar list [★]
+**** TODO list not empty [★★]
+**** TODO list not empty [★★★★]
+**** TODO let rec [★★★★]
+**** TODO simple expression [★]
+**** TODO let and match expressions [★★]
+**** TODO closures [★★]
+**** TODO lexical scope and shadowing [★★]
+**** TODO more evaluation [★★]
+**** TODO dynamic scope [★★★]
+**** TODO more dynamic scope [★★★]
+**** TODO constraints [★★]
+**** TODO unify [★★]
+**** TODO unify more [★★★]
+**** TODO infer apply [★★★]
+**** TODO infer double [★★★]
+**** TODO infer S [★★★★]
