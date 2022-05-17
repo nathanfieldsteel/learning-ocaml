@@ -1,6 +1,5 @@
 #+STARTUP: content
 
-
 * Learning OCaml - Notes
 
 My notes file for learning OCaml and for working through the CS3110 book.
@@ -565,7 +564,6 @@ Write a function that returns the product of all the elements in a
 list. The product of all the elements of an empty list is ~1~.
 
 #+begin_src ocaml
-
   let list_product l =
     let rec list_product_acc p l = match l with
       | [] -> p
@@ -600,7 +598,136 @@ concatenation of all the strings in an empty list is the empty string
 
 **** TODO product test [★★]
 
-Unit test the function product that you wrote in an exercise above.
+Relevant files in ~standalone~ directory.
+
+I had trouble following the instructions in the CS3110 book. Following
+section 3.3.1, In a new directory, I created a file ~sum.ml~
+containing
+
+#+begin_src ocaml
+let rec sum = function
+  | [] -> 0
+  | x :: xs -> x + sum xs
+#+end_src
+
+A file ~test.ml~ containing
+
+#+begin_src ocaml
+open OUnit2
+open Sum
+
+let tests = "test suite for sum" >::: [
+  "empty" >:: (fun _ -> assert_equal 0 (sum []));
+  "singleton" >:: (fun _ -> assert_equal 1 (sum [1]));
+  "two_elements" >:: (fun _ -> assert_equal 3 (sum [1; 2]));
+]
+
+let _ = run_test_tt_main tests
+#+end_src
+
+and a file ~dune~ containing
+
+#+begin_src
+(executable
+ (name test)
+ (libraries ounit2))
+#+end_src
+
+Now, running ~dune build test.exe~ throws an error: "Error: I cannot
+find the root of the current workspace/project." There was also a lot
+of complaining about the lack of a ~dune-project~ file. I followed
+dune's suggestion to create one via ~dune init proj sum~, but the
+complaints about the root continued. Doing ~dune build test.exe --root
+.~ seemed to work. It complained about not finding ~ounit2~, but after
+doing ~opam install ounit2~, that went away. Still, my feeling is that
+I'm not doing this right. Probably the best thing to do is learn how
+to start the whole project through dune, put the code to be tested and
+the tests in the correct locations, and do things that way.
+
+But at this point it does seem like ~dune build test.exe --root .~
+succeeds (with a persistent warning about the lack of a ~dune-project~
+file), and then ~dune exec ./test.exe --root .~ runs the tests. Dune says:
+
+#+begin_export ascii
+Ran: 3 tests in: 0.11 seconds.
+OK
+#+end_export
+
+I'd like to know how to start from an empty directory, and do ~dune
+init proj <name>~ to create an entire new dune project. Then fill that
+project with the relevant code to be tested, the relevant tests, and
+run those tests all within dune. But I can't seem to make that
+work. Dune's documentation is just a little too sparse for me to
+figure it out on my own.
+
+I seem to have a workflow that works and "fixes" (suppresses) errors
+and warnings, and for purposes of reproducibility, I'll try to make it
+clear what I did for this problem.
+
+In a new directory, create the following files:
+
+The product function is in ~product.ml~ 
+
+#+begin_src ocaml
+  let product lst =
+    let rec product_acc p l = match l with
+      | [] -> p
+      | x :: xs -> product_acc (x * p) xs in
+    product_acc 1 lst
+#+end_src
+
+The test suite is in ~test.ml~
+
+#+begin_src ocaml
+  open OUnit2
+  open Product
+
+  let tests = "test suite for product" >::: [
+    "empty" >:: (fun _ -> assert_equal 1 (product []));
+    "singleton one" >:: (fun _ -> assert_equal 1 (product [1]));
+    "singleton five" >:: (fun _ -> assert_equal 5 (product [5]));
+    "two_elements_both_one" >:: (fun _ -> assert_equal 1 (product [1; 1]));
+    "two_elements_one_one" >:: (fun _ -> assert_equal 3 (product [1; 3]));
+    "two_elements_neither_one" >:: (fun _ -> assert_equal 10 (product [5; 2]));
+    "three_elements" >:: (fun _ -> assert_equal 30 (product [2; 3; 5]));
+    "six_elements" >:: (fun _ -> assert_equal 720 (product [1;2;3;4;5;6]));
+  ]
+
+  let _ = run_test_tt_main tests
+#+end_src
+
+There's a ~dune~ file
+
+#+begin_export ascii
+(executable
+ (name test)
+ (libraries ounit2))
+#+end_export
+
+But also a ~dune-project~ file, containing
+
+#+begin_export ascii
+(lang dune 1.1)
+(name product)
+#+end_export
+
+(Is this what ~dune~ needs in order to know where the root of the
+current project is? It seems like this is the change that got rid of
+that error / warning).
+
+Now, we can run ~dune build test.exe~, followed by ~dune exec
+test.exe~. This gives:
+
+#+begin_export ascii
+........                           
+Ran: 8 tests in: 0.11 seconds.
+OK
+#+end_export
+
+It is still not clear to me that this is the "right" way to do
+this. But it's close enough to the process outlined in section 3.3.1
+in the book that I think I'll stick with this for now. I'd still like
+to learn how to use ~dune~ properly, but I'll postpone that until later.
 
 **** DONE Patterns [★★★]
 
