@@ -1,0 +1,358 @@
+#+STARTUP: content
+
+** Advent of Code 2021
+*** Day 1 - Sonar Sweep
+**** Part 1:
+Given a ~tally~ of the number of increases already seen, the
+~previous~ integer from the file, and the ~in_channel~ ready to spit
+out the next integer in the file:
+
+If you're done reading the file, then ~tally~ is the
+answer. Otherwise, check whether the ~next~ integer in the file is
+bigger than the ~previous~ one, and recursively call ~count_increases~
+with appropriately updated ~tally~ and ~previous~ parameters.
+
+#+begin_src ocaml
+    let count_increases filename =
+      let input = open_in filename in
+      let rec count_increases tally previous f =
+        try (let next = f
+                        |> input_line
+                        |> int_of_string in
+             match next with
+             | a when a > previous -> count_increases (tally + 1) next f
+             | _ -> count_increases tally next f
+            ) with End_of_file -> tally in
+      let first = input
+                |> input_line
+                |> int_of_string in
+      count_increases 0 first input;;
+#+end_src
+
+#+RESULTS:
+: <fun>
+
+#+begin_src ocaml :results verbatim
+  count_increases "input1-1.txt"
+#+end_src
+
+#+RESULTS:
+: - : int = 1215
+**** Part 2:
+
+Give a ~tally~ of how many increases you've seen so far, and also
+~prev1~, ~prev2~ and ~prev3~ the three previous entries in the input,
+then all that matters for updating the tally is whether the ~next~ input is bigger than ~prev1~.
+
+#+begin_src ocaml
+    let count_window_increases filename =
+      let input = open_in filename in
+      let rec window_increases tally prev1 prev2 prev3 f =
+        try ( let next = f
+                         |> input_line
+                         |> int_of_string in
+              match next - prev1 with
+              | d when d > 0 -> window_increases (tally+1) prev2 prev3 next f
+              | _ -> window_increases tally prev2 prev3 next f
+            ) with End_of_file -> tally in
+    let first = input
+                |> input_line
+                |> int_of_string in
+    let second = input
+                |> input_line
+                |> int_of_string in
+    let third = input
+                |> input_line
+                |> int_of_string in
+    window_increases 0 first second third input;;
+#+end_src
+
+#+RESULTS:
+: <fun>
+
+#+begin_src ocaml :results verbatim
+  count_window_increases "input1-2.txt"
+#+end_src
+
+#+RESULTS:
+: - : int = 1150
+*** Day 2 - Dive!
+**** Part 1
+
+#+begin_src ocaml
+  let dive filename =
+    let input = open_in filename in
+    let rec dive horizontal depth f =
+      try (let nextline = input_line f in
+           let [direction; value_str] = String.split_on_char ' ' nextline in
+           let value = int_of_string value_str in
+           match direction with
+           | "forward" -> dive (horizontal + value) depth f
+           | "up" -> dive horizontal (depth - value) f
+           | "down" -> dive horizontal (depth + value) f)
+      with End_of_file -> (horizontal * depth) in
+  dive 0 0 input;;
+#+end_src
+
+#+RESULTS:
+: <fun>
+
+#+begin_src ocaml
+  dive "input2-1.txt"
+#+end_src
+
+#+RESULTS:
+: 2073315
+
+**** Part 2
+
+#+begin_src ocaml
+  let dive2 filename =
+    let input = open_in filename in
+    let rec dive h d a f =
+      try (let nextline = input_line f in
+           let [direction; x_str] = String.split_on_char ' ' nextline in
+           let x = int_of_string x_str in
+           match direction with
+          | "up" -> dive h d (a - x) f
+          | "down" -> dive h d (a + x) f
+          | "forward" -> dive (h + x) (d + a*x) a f)
+      with End_of_file -> (h*d) in
+    dive 0 0 0 input;;
+#+end_src
+
+#+RESULTS:
+: <fun>
+
+#+begin_src ocaml
+  dive2 "input2-1.txt"
+#+end_src
+
+#+RESULTS:
+: 1840311528
+
+*** Day 3 - Binary Diagnostics
+**** Part 1
+#+begin_src ocaml
+
+  let consumption filename =
+    let len = filename
+              |> open_in
+              |> input_line
+              |> String.length in
+    let input = filename
+                |> open_in in
+    let rec zero_list l = match l with
+      | 0 -> []
+      | _ -> 0 :: zero_list (l-1) in
+    let initial_tally = zero_list len in
+    let rec update_tally tally bitline =
+      match String.length bitline with
+      | 0 -> []
+      | b -> match (String.sub bitline 0 1) with
+             | "1" -> (match tally with
+                       | h::tl -> (h+1) :: (update_tally tl (String.sub bitline 1 (b-1))))
+             | "0" -> (match tally with
+                       | h::tl -> h :: (update_tally tl (String.sub bitline 1 (b-1)))) in
+    let rec full_tally tl in_ch = try
+        (let next_line = input_line in_ch in
+         full_tally (update_tally tl next_line) in_ch)
+      with End_of_file -> tl in
+    let final_tally = full_tally initial_tally input in
+    let rec number_of_entries count in_ch =
+      try (let trash = (input_line in_ch) in number_of_entries (count+1) in_ch)
+      with End_of_file -> count in 
+    let entry_count = number_of_entries 0 (open_in filename) in
+    let exp a p = match p with
+      | 0 -> 1
+      | _ -> a * exp a (p-1) in
+    let rec gamma g c tally = match tally with
+      | [] -> g
+      | h :: tl -> match h with
+                   | a when a > (entry_count/2) -> gamma (g + exp 2 (c-1)) (c-1) tl
+                   | a when a < (entry_count/2) -> gamma g (c-1) tl in
+    let gam = gamma 0 len final_tally in
+    let eps = (exp 2 (len)) - gam - 1 in
+    (gam, eps, gam*eps);;
+
+  consumption "input3-1.txt"
+
+#+end_src
+
+#+RESULTS:
+| 493 | 499 | 493 | 513 | 473 | 483 | 488 | 505 | 517 | 505 | 492 | 471 |
+
+*** Day 6 - Lanternfish
+
+Given a countdown ~c~ and a number of days ~d~, write a recursive
+function for the number of lanternfish there will be after ~d~
+days. Keep a cache of values to avoid exponential-time blowups.
+
+#+begin_src ocaml
+      let rec lf c d =
+        let cache = Hashtbl.create 100 in
+        let rec lf_mem x y =
+          try
+            Hashtbl.find cache [x;y]
+          with
+            Not_found ->
+             match y with
+             | 0 -> (Hashtbl.add cache [x;y] 1; 1)
+             | _ -> match x with
+                    | x when x > 0 -> let ans = lf_mem (x-1) (y-1) in
+                                      (Hashtbl.add cache [x;y] ans; ans)
+                    | _ -> (let ans = lf_mem 6 (y-1) + lf_mem 8 (y-1) in
+                           (Hashtbl.add cache [x;y] ans; ans))
+        in lf_mem c d;;
+#+end_src
+
+#+RESULTS:
+: <fun>
+
+#+begin_src ocaml
+  let lanternfish filename days =
+    let rec sum = function
+      | [] -> 0
+      | head::tail -> head + (sum tail) in
+    filename
+    |> open_in
+    |> input_line
+    |> String.split_on_char ','
+    |> List.map int_of_string
+    |> List.map (fun c -> lf c days)
+    |> sum;;
+#+end_src
+ 
+#+RESULTS:
+: <fun>
+
+#+begin_src ocaml
+  lanternfish "input6-1.txt" 80
+#+end_src
+
+#+RESULTS:
+: 354564
+
+**** Part 2
+
+The memoization was probably not necessary for part 1, but would have
+been for part 2.
+
+#+begin_src ocaml
+  lanternfish "input6-1.txt" 256
+#+end_src
+
+#+RESULTS:
+: 1609058859115
+
+*** Day 7 - The Treachery of Whales
+**** Part 1
+
+If ~h~ is chosen horizontal position to align to, then the total fuel
+consumed is the sum of ~abs(x-h)~ as ~x~ ranges over all the initial
+positions specified in the input.
+
+If you increase ~h~ by ~a~, this sum will increase by ~a~ times the number of positions
+~x~ that are less than ~h~, and it will decrease by ~a~ times the
+number of positions ~x~ that are greater than ~h~.
+
+In other words, the values of ~h~ that minimized the total fuel
+function is one with the same number of position values ~x~ greater
+than it and less than it. This is the median of the input list if it
+has odd length, and is any number between the two middle values if
+the input list has even length.
+
+So all we have to do is take the input list, find its median ~h~, and
+sum ~|x-h|~ for all ~x~ in the input list
+
+Finding the median of an unsorted list can be done in linear time, so
+sorting is not optimal here.
+
+#+begin_src ocaml
+
+  let minimize_fuel filename =
+    let input_list = filename
+                     |> open_in
+                     |> input_line
+                     |> String.split_on_char ','
+                     |> List.map int_of_string
+                     |> List.sort (fun a b -> a - b) in
+    let median = List.nth input_list ((List.length input_list)/2) in
+    let rec fuelsum list h partial =
+      match list with
+      | [] -> partial
+      | x::t -> fuelsum t h (partial + abs(x - h)) in
+    fuelsum input_list median 0;;
+
+  minimize_fuel "input7-1.txt"
+#+end_src
+
+#+RESULTS:
+: 323647
+
+*** Day 10 - Syntax Scoring
+**** Part 1
+
+To check whether a string is balanced or not, use a stack. Push
+opening characters onto the stack. When closing characters are
+encountered, pop the stack if it matches. Otherwise, that's the first
+incorrect character. If you get to the end of the string and the stack
+is empty, it's a balanced expression. But if you get to the end of the
+string and the stack still has characters, it's incomplete
+*** Day 14 - Polymerization
+
+I don't love how messy this is, might want to come back to it later
+and clean it up. A lot of hashtables and imperative trickery. Not very functional.
+
+#+begin_src ocaml :results verbatim
+  let polymerization filename =
+    let inpt = open_in filename in
+    let rec stringlist_from_in_ch ch =
+      try (let line = input_line ch
+           in line :: stringlist_from_in_ch ch)
+      with End_of_file -> [] in
+    let lines = stringlist_from_in_ch inpt in
+    let initial_string = List.hd lines in
+    let rec list_of_string s = match String.length s with
+      | 0 -> []
+      | n -> (String.sub s 0 1) :: list_of_string (String.sub s 1 (n-1)) in
+    let initial_list = list_of_string initial_string in
+    let rule_strings = lines |> List.tl |> List.tl in
+    let num_rules = List.length rule_strings in
+    let rule_hashtbl = Hashtbl.create num_rules in
+    let rule_of_string s = 
+      let k = String.sub s 0 2 in
+      let v = String.sub s 6 1 in
+      Hashtbl.add rule_hashtbl k v in
+    ignore(List.map rule_of_string rule_strings);
+    let rec apply_rules lst h = match lst with
+      | [] -> []
+      | [c] -> [c]
+      | a :: b :: cs -> if (Hashtbl.mem h (a^b))
+                        then (let x = Hashtbl.find h (a^b) in
+                              a :: x :: (apply_rules (b :: cs) h))
+                        else (a :: (apply_rules (b :: cs) h)) in
+    let mut_list = ref initial_list in
+    let i = ref 0 in
+    while (!i < 10)
+    do (mut_list := apply_rules (!mut_list) rule_hashtbl; i := !i+1)
+    done;
+    let t = Hashtbl.create (List.length !mut_list) in
+    let rec tally lst = match lst with
+      | [] -> t
+      | x :: xs -> (if (Hashtbl.mem t x)
+                    then (Hashtbl.replace t x (1 + (Hashtbl.find t x)))
+                    else (Hashtbl.add t x 1); tally xs) in
+    ignore(tally !mut_list);
+    let most_common = Hashtbl.fold (fun k v m -> max v m) t 0 in
+    let least_common = Hashtbl.fold (fun k v m -> min v m) t (List.length !mut_list) in
+    most_common - least_common;;
+
+    polymerization "input14-1.txt"
+#+end_src
+
+#+RESULTS:
+: - : string = "C"
+
+*** Day 18 - Snailfish numbers
+**** Part 1
