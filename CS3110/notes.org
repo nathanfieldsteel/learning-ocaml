@@ -72,7 +72,7 @@ it directly.
 
 ** CS3110 - Notes
 
-** TODO CS3110 Exercises [70/212] [33%]
+** TODO CS3110 Exercises [71/212] [33%]
   :PROPERTIES:
   :COOKIE_DATA: todo recursive
   :END:
@@ -525,7 +525,7 @@ each:
   :PROPERTIES:  
   :COOKIE_DATA: todo recursive
   :END:
-*** TODO 3.14 Data and Types - Exercises [27/32]
+*** TODO 3.14 Data and Types - Exercises [28/32]
 **** DONE List Expressions [★]
 + Construct a list that has the integers 1 through 5 in it. Use the
   square bracket notation for lists.
@@ -596,7 +596,7 @@ concatenation of all the strings in an empty list is the empty string
 #+RESULTS:
 : Hello, world!
 
-**** TODO product test [★★]
+**** DONE product test [★★]
 
 Relevant files in ~standalone~ directory.
 
@@ -791,12 +791,12 @@ Consult the List standard library to solve these exercises:
   fewer than five elements, return 0. Hint: List.length and List.nth.
 
   #+begin_src ocaml
-        let fifth_element l =
-          if (List.length l >= 5) then (List.nth l 4) else (0);;
+    let fifth_element l =
+      if (List.length l >= 5) then (List.nth l 4) else (0);;
 
-        fifth_element [1;2;3;4;5;6;7;8;9];;
-        fifth_element [8;7;6;5;4];;
-        fifth_element [1]
+    fifth_element [1;2;3;4;5;6;7;8;9];;
+    fifth_element [8;7;6;5;4];;
+    fifth_element [1]
   #+end_src
 
   #+RESULTS:
@@ -1632,7 +1632,46 @@ standard library will do what its name suggests.
 
 Write a function ~is_bst : ('a*'b) tree -> bool~ that returns true if and only if the given tree satisfies the binary search tree invariant. An efficient version of this function that visits each node at most once is somewhat tricky to write. Hint: write a recursive helper function that takes a tree and either gives you (i) the minimum and maximum value in the tree, or (ii) tells you that the tree is empty, or (iii) tells you that the tree does not satisfy the invariant. Your ~is_bst~ function will not be recursive, but will call your helper function and pattern match on the result. You will need to define a new variant type for the return type of your helper function.
 
+I don't really understand the signature of the specified function. Why
+do we need to be working with a tree of ordered pairs of type
+~('a*'b)~ ? It would make sense to write a polymorphic ~is_bst~ for
+any ~'a tree~ where ~'a~ is a type that that admits a total order. But
+why a tree of pairs of two types?
+
+Maybe just do it for ~int tree~ for now?
+
 **** TODO Quadrant poly  [★★]
+
+Modify your definition of ~quadrant~ to use polymorphic variants. The
+types of your functions should become these:
+
+#+begin_src ocaml
+  val sign : int -> [> `Neg | `Pos | `Zero ]
+  val quadrant : int * int -> [> `I | `II | `III | `IV ] option
+#+end_src
+
+#+begin_src ocaml :results verbatim
+    let sign = function
+      | p when p > 0 -> `Pos
+      | n when n < 0 -> `Neg
+      | _ -> `Zero
+#+end_src
+
+#+RESULTS:
+: val sign : int -> [> `Neg | `Pos | `Zero ] = <fun>
+
+#+begin_src ocaml :results verbatim
+      let quadrant (x,y) = match (sign x, sign y) with
+        | (`Pos, `Pos) -> Some `I
+        | (`Neg, `Pos) -> Some `II
+        | (`Neg, `Neg) -> Some `III
+        | (`Pos, `Neg) -> Some `IV
+        | _ -> None
+#+end_src
+
+#+RESULTS:
+: val quadrant : int * int -> [> `I | `II | `III | `IV ] option = <fun>
+
 *** TODO 4.9 Higher-Order Programming - Exercises [13/18]
 **** DONE Twice, no arguments [★]
 
