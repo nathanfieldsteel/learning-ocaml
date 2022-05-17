@@ -1,0 +1,1619 @@
+** 99 OCaml Problems
+
+Working through [[https://ocaml.org/problems#1][this list]] of problems
+
+*** Checklist
+| Nummber | Description            | Status |
+|---------+------------------------+--------|
+|         | Miscellaneous          |        |
+|---------+------------------------+--------|
+|       1 | tail of a list         | done   |
+|       2 | last two elements      | done   |
+|       3 | nth_element            | done   |
+|       4 | list length            | done   |
+|       5 | reverse                | done   |
+|       6 | palindrome             | done   |
+|       7 | flatten                | done   |
+|       8 | delete duplicates      | done   |
+|       9 | pack                   | done   |
+|      10 | run-length             | done   |
+|      11 | run-length mod         | done   |
+|      12 | run-length decode      | done   |
+|      13 | run-length direct      | done   |
+|      14 | duplicate elts         | done   |
+|      15 | replicate elts         | done   |
+|      16 | drop every nth         | done   |
+|      17 | split list             | done   |
+|      18 | list slice             | done   |
+|      19 | rotate n left          | done   |
+|      20 | remove kth             | done   |
+|      21 | insert                 | done   |
+|      22 | range                  | done   |
+|      23 | extract random         | done   |
+|      24 | lotto                  | done   |
+|      25 | random permutation     | done   |
+|      26 | k choose n             | done   |
+|      27 | partitions             |        |
+|      28 | sort by length         | done   |
+|---------+------------------------+--------|
+|         | Arithmetic             |        |
+|---------+------------------------+--------|
+|      29 | prime                  | done*  |
+|      30 | gcd                    | done   |
+|      31 | coprime                | done   |
+|      32 | euler phi              | done   |
+|      33 | prime factors          |        |
+|      34 | prime factors 2        |        |
+|      35 | euler phi 2            |        |
+|      36 | compare euler phis     |        |
+|      37 | prime list             | done   |
+|      38 | goldbach               |        |
+|      39 | goldbach list          |        |
+|---------+------------------------+--------|
+|         | Logic and Codes        |        |
+|---------+------------------------+--------|
+|      40 | truth tables 1         |        |
+|      41 | truth tables 2         |        |
+|      42 | gray code              | done   |
+|      43 | huffman code           |        |
+|---------+------------------------+--------|
+|         | Trees                  |        |
+|---------+------------------------+--------|
+|      44 | balanced binary tree   | done   |
+|      45 | symmetric binary tree  | done   |
+|      46 | binary search tree     |        |
+|      47 | generate and test      |        |
+|      48 | height balanced tree   |        |
+|      49 | height balanced tree 2 |        |
+|      50 | collect leaves in list | done   |
+|      51 | count leaves           | done   |
+|      52 | collect nodes at level | done   |
+|      53 | collect internal nodes | done   |
+|      54 | complete binary tree   |        |
+|      55 | layout binary tree     |        |
+|      56 | layout binary tree 2   |        |
+|      57 | layout binary tree 3   |        |
+|      58 | string rep tree        |        |
+|      59 | seqeuences of trees    |        |
+|      60 | dotstring of tree      |        |
+|---------+------------------------+--------|
+|         | Multiway trees         |        |
+|---------+------------------------+--------|
+|      61 | nodes of multiway tree |        |
+|      62 | tree from node string  |        |
+|      63 | internal path length   |        |
+|      64 | bottom up order        |        |
+|      65 | lisp-like tree rep     |        |
+|---------+------------------------+--------|
+|         | Graphs                 |        |
+|---------+------------------------+--------|
+|      66 | conversions            |        |
+|      67 | paths                  |        |
+|      68 | cycles                 |        |
+|      69 | all spanning           |        |
+|      70 | min spanning           |        |
+|      71 | graph isomorphism      |        |
+|      72 | node degree + color    |        |
+|      73 | depth first traverse   |        |
+|      74 | connected components   |        |
+|      75 | bipartite              |        |
+|      76 | k regular n node       |        |
+|---------+------------------------+--------|
+|         | Miscellaneous          |        |
+|---------+------------------------+--------|
+|      77 | eight queens           |        |
+|      78 | knights tour           |        |
+|      79 | von koch               |        |
+|      80 | arithmetic puzzle      |        |
+|      81 | number words           |        |
+|      82 | syntax checker         |        |
+|      83 | sudoku                 |        |
+|      84 | nonograms              |        |
+|      85 | crossword              |        |
+|---------+------------------------+--------|
+
+*** Lists
+**** DONE 1 Tail of a list
+Write a function ~last : 'a list -> 'a option~ that returns the last
+element of a list.
+
+#+begin_src ocaml
+
+    let rec last lst = match lst with
+      | [] -> None
+      | x :: [] -> Some x
+      | x :: xs -> last xs;;
+
+    last [1;2;3];;
+    last [1];;
+    last []
+#+end_src
+
+#+RESULTS:
+: None
+**** DONE 2 Last two elements of a list
+
+Find the last but one (last and penultimate) elements of a list.
+
+#+begin_src ocaml
+
+    let rec last_two lst = match lst with
+      | [] -> None
+      | x :: [] -> None
+      | x :: y :: [] -> Some (x, y)
+      | x :: xs -> last_two xs;;
+
+    last_two [1;3;2;4;3;2;3];;
+    last_two [1;3];;
+    last_two [1];;
+    last_two []
+#+end_src
+
+#+RESULTS:
+: None
+
+**** DONE 3 Nth element of a list
+
+Find the K^{th} element of a list.
+
+This one requires the parentehses around the inner ~match~
+expressions. Otherwise, it thinks ~m~ is of type ~'a list~.
+
+#+begin_src ocaml
+  let rec at n lst = match n with
+    | 0 -> None
+    | 1 -> (match lst with
+            | [] -> None
+            | x :: xs -> Some x)
+    | m -> (match lst with
+            | [] -> None
+            | x :: xs -> at (m - 1) xs);;
+
+  at 3 [1;2;3;4;5]
+#+end_src
+
+#+RESULTS:
+: Some 3
+
+**** DONE 4 length of a list
+Find the number of elements of a list
+
+#+begin_src ocaml
+
+    let length lst =
+      let rec length_acc i lst = match lst with
+        | [] -> i
+        | x :: xs -> length_acc (i + 1) xs in
+      length_acc 0 lst;;
+
+    length [1;2;3;4;5];;
+    length [];;
+#+end_src
+
+#+RESULTS:
+: 0
+
+**** DONE 5 Reverse a list
+
+Reverse a list
+
+#+begin_src ocaml
+
+    let rec rev lst = match lst with
+      | [] -> []
+      | x :: xs -> (rev xs) @ (x::[]);;
+
+    rev [1;2;5;4;3]
+#+end_src
+
+#+RESULTS:
+| 3 | 4 | 5 | 2 | 1 |
+
+**** DONE 6 Palindrome
+Find out whether a list is a palindrom
+
+#+begin_src ocaml
+
+   let rec is_palindrome lst =
+     let revlst = rev lst in
+     let rec list_equals l1 l2 = match l1 with
+       | [] -> (match l2 with
+                | [] -> true
+                | y :: ys -> false)
+       | x :: xs -> (match l2 with
+                     | [] -> false
+                     | y :: ys -> (match y with
+                                   | y when y = x -> list_equals xs ys
+                                   | _ -> false)) in
+   list_equals lst revlst;;
+
+   [is_palindrome [1;2;2;1];
+    is_palindrome [1];
+    is_palindrome [];
+    is_palindrome [1;2;3;4;5;4;3;2;1];
+    is_palindrome [1;2;3;4;3];
+    is_palindrome [1;2;3]]
+
+#+end_src
+
+#+RESULTS:
+| true | true | true | true | false | false |
+
+**** DONE 7 Flatten a list
+
+Flatten a nested list structure
+
+#+begin_src ocaml :results verbatim
+    (* type definition for nested list *)
+    type 'a node =
+      | One of 'a 
+      | Many of 'a node list;;
+
+    let rec flatten nl = match nl with
+      | [] -> []
+      | (One x) :: xs -> x :: flatten xs
+      | (Many xs) :: xss -> (flatten xs) @ (flatten xss);;
+
+    flatten [One "a"; Many [One "b"; Many [One "c" ;One "d"]; One "e"]]
+#+end_src
+
+#+RESULTS:
+: - : string list = ["a"; "b"; "c"; "d"; "e"]
+
+**** DONE 8 Eliminate duplicates
+
+Eliminate consecutive duplicates of list elements.
+
+#+begin_src ocaml
+
+    let rec compress l = match l with
+      | [] -> []
+      | x :: [] -> x :: []
+      | x :: y :: xs when x = y -> compress (y :: xs)
+      | x :: y :: xs when x <> y -> x :: compress (y :: xs);;
+
+    compress [1;1;1;1;2;2;2;2;3;3;4;4;5;5;6;5;4]
+#+end_src
+
+#+RESULTS:
+| 1 | 2 | 3 | 4 | 5 | 6 | 5 | 4 |
+
+**** DONE 9 Pack consecutive duplicates
+
+Pack consecutive duplicates of list elements into sublists
+
+#+begin_src ocaml
+
+  let pack l =
+    let rec pack_help h l = match h with
+      | [] -> (match l with
+               | [] -> []
+               | x :: xs -> pack_help [x] xs)
+      | y :: ys -> (match l with
+                    | [] -> [h]
+                    | x :: xs -> match x with
+                                      | x when x = y -> pack_help (x :: h) xs 
+                                      | _ -> h :: (pack_help [x] xs)) in
+    pack_help [] l;;
+
+  pack [1;1;1;2;2;3;3;3;3;3;4;5;6;4]
+#+end_src
+
+#+RESULTS:
+| 1 | 1 | 1 |   |   |
+| 2 | 2 |   |   |   |
+| 3 | 3 | 3 | 3 | 3 |
+| 4 |   |   |   |   |
+| 5 |   |   |   |   |
+| 6 |   |   |   |   |
+| 4 |   |   |   |   |
+
+**** DONE 10 Run length encoding
+
+Run-length encoding of a list
+
+#+begin_src ocaml :results verbatim
+
+  let encode l =
+    let rle x = (List.length x, List.hd x) in
+    l |> pack |> List.map rle;;
+
+  encode [1;1;1;1;2;3;4;4;4;4;4;4;4;4;3;3;2]
+#+end_src
+
+#+RESULTS:
+: - : (int * int) list = [(4, 1); (1, 2); (1, 3); (8, 4); (2, 3); (1, 2)]
+
+**** DONE 11 Modified Run-length encoding
+
+Modify the result of the previous problem in such a way that if an
+element has no duplicates it is simply copied into the result
+list. Only elements with duplicates are transferred as (N E) lists.
+
+Since OCaml lists are homogeneous, one needs to define a type to hold
+both single elements and sub-lists.
+
+#+begin_src ocaml
+type 'a rle =
+  | One of 'a
+  | Many of int * 'a
+#+end_src
+
+#+RESULTS:
+: type 'a rle = One of 'a | Many of int * 'a
+
+#+begin_src ocaml :results verbatim
+  let encode lst =
+    let rle_of_packed l = match l with
+      | x :: [] -> One x
+      | x :: xs -> Many (List.length l, x) in
+    lst |> pack |> List.map rle_of_packed;;
+
+  encode [1;1;2;2;3;3;3;4;5;5;5;5;5];;
+#+end_src
+
+#+RESULTS:
+: - : int rle list =
+: [Many (2, 1); Many (2, 2); Many (3, 3); One 4; Many (5, 5)]
+
+**** DONE 12 Decode a run-length encoded list
+
+Given a run-length code list generated as specified in the previous
+problem, construct its uncompressed version.
+
+#+begin_src ocaml :results verbatim
+    let decode lst =
+      let rec unpack e = match e with
+        | One x -> [x]
+        | Many (n,x) -> (match n with
+                          | 2 -> x :: x :: []
+                          | _ -> x :: unpack (Many (n-1,x))) in
+      lst |> List.map unpack |> List.fold_left (@) [];;
+
+  decode [Many (2, 1); Many (2, 2); Many (3, 3); One 4; Many (5, 5)]
+#+end_src
+
+#+RESULTS:
+: - : int list = [1; 1; 2; 2; 3; 3; 3; 4; 5; 5; 5; 5; 5]
+
+can this be done without the fold?
+
+**** DONE 13 Run-length encoding of a list (direct solution)
+
+Implement the so-called run-length encoding data compression method
+directly. I.e. don't explicitly create the sublists containing the
+duplicates, as in problem "Pack consecutive duplicates of list
+elements into sublists", but only count them. As in problem "Modified
+run-length encoding", simplify the result list by replacing the
+singleton lists (1 X) by X.
+
+#+begin_src ocaml :results verbatim
+    let encode lst =
+      let rec encode_acc ct e lst = match lst with
+        | [] -> (match ct with
+                | 1 -> [One e]
+                | n -> [Many (n,e)])
+        | x :: [] when x = e -> [Many (ct + 1, e)]
+        | x :: [] -> (match ct with
+                     | 1 -> [One e; One x]
+                     | n -> [Many (ct, e); One x])
+        | x :: xs when x = e -> encode_acc (ct + 1) e xs 
+        | x :: xs -> (match ct with
+                     | 1 -> (One e) :: encode_acc 1 x xs
+                     | n -> (Many (n,e)) :: encode_acc 1 x xs) in
+      match lst with
+      | [] -> []
+      | x :: xs -> encode_acc 1 x xs;;
+
+    encode [1;1;1;1;2;2;3;3;3;3;4;5;6;5;4;4;4;4;5;5;5;5;5;5;5;5;5;0];;
+#+end_src
+
+#+RESULTS:
+: - : int rle list =
+: [Many (4, 1); Many (2, 2); Many (4, 3); One 4; One 5; One 6; One 5;
+:  Many (4, 4); Many (9, 5); One 0]
+
+**** DONE 14 Duplicate the elements of a list
+
+Duplicate the elements of a list
+
+#+begin_src ocaml :results verbatim
+    let rec duplicate lst = match lst with
+      | [] -> []
+      | x :: xs -> x :: x :: duplicate xs;;
+
+    duplicate ["a";"b";"c";"c";"d"]
+#+end_src
+
+#+RESULTS:
+: - : string list = ["a"; "a"; "b"; "b"; "c"; "c"; "c"; "c"; "d"; "d"]
+
+**** DONE 15 Replicate the elements of a list a given number of times
+
+Replicate the elements of a list a given number of times
+
+#+begin_src ocaml :results verbatim
+    let rec replicate lst n =
+      let rec repeated n e = match n with
+        | 0 -> []
+        | n -> e :: repeated (n-1) e in
+      lst |> List.map (repeated n) |> List.fold_left (@) [];;
+
+    replicate [1;2;3;3;4] 4
+#+end_src
+
+#+RESULTS:
+: - : int list = [1; 1; 1; 1; 2; 2; 2; 2; 3; 3; 3; 3; 3; 3; 3; 3; 4; 4; 4; 4]
+
+**** DONE 16 Drop every N'th element from a list
+
+Drop every N'th element from a list
+
+#+begin_src ocaml :results verbatim
+  let drop lst n =
+    let rec drop_help lst n m = match m with
+      | 1 -> (match lst with
+              | [] -> []
+              | x :: xs -> drop_help xs n n)
+      | m -> (match lst with
+              | [] -> []
+              | x :: xs -> x :: (drop_help xs n (m-1))) in
+    drop_help lst n n;;
+
+  drop [1;2;3;4;5;6;7;8;9;10] 3
+#+end_src
+
+#+RESULTS:
+: - : int list = [1; 2; 4; 5; 7; 8; 10]
+
+**** DONE 17 Split a list into two parts; the length of the first part is given
+
+Split a list into two parts; the length of the first part is given
+
+If the length of the first part is longer than the entire list, then
+the first part is the list and the second part is empty.
+
+#+begin_src ocaml :results verbatim
+    let split lst n =
+      let rec split_help lst partial n = match n with
+        | 0 -> [List.rev partial; lst]
+        | n -> (match lst with
+                | [] -> [List.rev partial;lst]
+                | x :: xs -> split_help xs (x :: partial) (n-1)) in
+      split_help lst [] n;;
+
+    split [1;2;3;4;5;6;7] 4;;
+
+#+end_src
+
+#+RESULTS:
+: - : int list list = [[1; 2; 3; 4]; [5; 6; 7]]
+
+**** DONE 18 Extract a slice from a list
+
+Given two indices, ~i~ and ~k~, the slice is the list containing the
+elements between the ~ith~ and ~kth~ element of the original list
+(both limits included). Start counting the elements with ~0~ (this is
+the way the List module numbers elements).
+
+#+begin_src ocaml :results verbatim
+  let rec slice lst i j = match i with
+    | 0 -> (match j with
+           | 0 -> (match lst with
+                  | [] -> []
+                  | x :: xs -> [x])
+           | j when j > 0 -> (match lst with
+                             | [] -> []
+                             | x :: xs -> x :: (slice xs 0 (j-1)))
+           | j -> [])
+    | i -> (match lst with
+            | [] -> []
+            | x :: xs -> slice xs (i-1) (j-1));;
+
+  slice [1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17] 5 7
+#+end_src
+
+#+RESULTS:
+: - : int list = [6; 7; 8]
+
+**** DONE 19 Rotate a list N places to the left
+
+Rotate a list N places to the left
+
+#+begin_src ocaml :results verbatim
+    let rotate lst n =
+      let l = List.length lst in
+      let m = if (n mod l >= 0) then (n mod l) else ((n mod l) + l) in
+      let rec rotate_help lst part n = match n with
+        | 0 -> lst @ part
+        | n -> (match lst with
+                | [] -> part
+                | x :: xs -> rotate_help xs (part @ [x]) (n-1)) in
+      rotate_help lst [] m;;
+
+    rotate [1;2;3;4;5;6;7] (-8);;
+    rotate [1;2;3;4;5;6;7] (1000);;
+    rotate [1] (100000);;
+    rotate [1;2;3;4;5;6;7] (-12367)
+
+#+end_src
+
+#+RESULTS:
+: - : int list = [3; 4; 5; 6; 7; 1; 2]
+
+**** DONE 20 Remove the K'th element from a list
+Remove the K'th element from a list
+
+The first element of the list is numbered 0, the second 1,...
+
+#+begin_src ocaml :results verbatim
+    let remove_at k lst =
+      let rec remove_at_help k lst partial = match k with
+        | 0 -> (match lst with
+                | [] -> partial
+                | x :: xs -> partial @ xs)
+        | k -> (match lst with
+               | [] -> partial
+               | x :: xs -> remove_at_help (k-1) xs (partial @ [x]))  in
+      remove_at_help k lst [];;
+
+    remove_at 3 [1;2;3;4;5;6;7];;
+#+end_src
+
+#+RESULTS:
+: - : int list = [1; 2; 3; 5; 6; 7]
+
+**** DONE 21 Insert element into a list at a given position 
+
+Start counting list elements with 0. If the position is larger or
+equal to the length of the list, insert the element at the end. (The
+behavior is unspecified if the position is negative.)
+
+#+begin_src ocaml :results verbatim
+    let rec insert_at e i lst =
+      match i with
+      | j when j <= 0 -> e :: lst
+      | i -> (match lst with
+             | [] -> [e]
+             | x :: xs -> x :: (insert_at e (i-1) xs));;
+
+    insert_at 2 4 [1;1;1;1;1;1;1;1;1]
+#+end_src
+
+#+RESULTS:
+: - : int list = [1; 1; 1; 1; 2; 1; 1; 1; 1; 1]
+
+(not tail recursive. can be re-written to be so, but I can only see a
+way that might overuse the ~@~ operator)
+**** DONE 22 Create a list containing all integers within a given range
+
+If first argument is greater than second, produce a list in decreasing
+order
+
+#+begin_src ocaml :results verbatim
+    let rec range i j =
+      let k = j - i in
+      match k with
+      | k when k < 0 -> i :: (range (i-1) j)
+      | k when k = 0 -> [i]
+      | k -> i :: range (i+1) j;;
+
+    range (-10) (-2);;
+    range 1 42;;
+    range 4 4;;
+    range 10 0
+#+end_src
+
+#+RESULTS:
+: - : int list = [10; 9; 8; 7; 6; 5; 4; 3; 2; 1; 0]
+
+**** DONE 23 Extract a given number of randomly selected elements from a list
+
+The selected items shall be returned in a list. We use the Random
+module but do not initialize it with Random.self_init for
+reproducibility.
+
+(I'm assuming this means the elements should be distinct? as in, a
+random subset of the specified size?)
+
+If the list has length ~n~ and you're picking ~k~ elements, then there are ~n~
+choose ~k~ subsets. And ~n-1~ choose ~k-1~ of them will contain the
+first element. So with probability \(\frac{k}{n}\), pick the first
+element, and recursively choose ~k-1~ elements in the tail of the
+list. But with probability \(1- \frac{k}{n}\), don't pick the first
+element, and instead pick ~k~ elements from the tail of the list.
+
+#+begin_src ocaml :results verbatim
+  let rec rand_select lst k =
+    let n = List.length lst in
+    match k with
+    | k when k > n -> []
+    | k when k = n -> lst
+    | k -> let i = Random.int n in
+           match lst with
+           | [] -> []
+           | x :: xs -> if i + 1 <= k
+                        then (x :: rand_select xs (k-1))
+                        else (rand_select xs k);;
+
+  rand_select [1;2;3;4;5;6;7] 3
+#+end_src
+
+#+RESULTS:
+: - : int list = [2; 4; 5]
+
+seems pretty random. Should probably do actual statistics to be sure,
+but I trust my math.
+
+**** DONE 24 Lotto: Draw N different random numbers from the set 1..M
+
+Draw N different random numbers from the set 1 ... M
+
+The selected numbers shall be returned in a list.
+
+#+begin_src ocaml
+    let lotto_select n m = rand_select (range 1 m) n;;
+
+    lotto_select 5 50
+#+end_src
+
+#+RESULTS:
+| 11 | 14 | 29 | 39 | 49 |
+
+**** DONE 25 Generate a random permutation of the elements of a list
+
+Generate a random permutation of the elements of a list
+
+(this can probably be done more efficiently. Using ~remove_at~ from
+earlier might be bad)
+
+#+begin_src ocaml :results verbatim
+  let permutation lst = match lst with
+    | [] -> []
+    | _ -> let n = List.length lst in
+           let i = Random.int n in
+           let h = List.nth lst i in
+           h :: permutation (remove_at i lst);;
+
+
+  permutation (range 1 100)
+#+end_src
+
+#+RESULTS:
+: - : int list =
+: [51; 96; 40; 69; 10; 99; 70; 19; 77; 100; 16; 57; 84; 38; 63; 11; 62; 4; 87;
+:  65; 94; 29; 7; 53; 74; 50; 12; 9; 46; 73; 48; 33; 20; 54; 88; 3; 14; 67; 44;
+:  89; 8; 1; 35; 95; 6; 78; 42; 2; 32; 13; 71; 68; 25; 90; 52; 97; 91; 60; 31;
+:  76; 82; 80; 36; 28; 34; 30; 56; 83; 37; 23; 41; 24; 5; 15; 22; 66; 55; 17;
+:  26; 61; 75; 58; 86; 79; 59; 43; 45; 85; 93; 98; 72; 92; 39; 21; 18]
+
+**** DONE 26 Generate the combinations of K distinct objects chosen from the N elements of a list
+
+Generate the combinations of ~K~ distinct objects chosen from the ~N~ elements of a list.
+
+In how many ways can a committee of ~3~ be chosen from a group of ~12~
+people? We all know that there are ~12~ choose ~3~ = ~220~
+possibilities. For pure mathematicians, this result may be great. But
+we want to really generate all the possibilities in a list.
+
+#+begin_src ocaml :results verbatim
+      let rec extract k lst = match k with
+        | k when k < 0 -> []
+        | 0 -> [[]]
+        | k -> (let n = List.length lst in
+                match n with
+                | n when n < k -> []
+                | n when n = k -> [lst]
+                | n -> (match lst with
+                        | [] -> []
+                        | x :: xs ->
+                           (List.map (fun s -> x :: s) (extract (k-1) xs))
+                           @ (extract k xs)));;
+
+    extract 0 [1;2;3;4;5;6];;
+    extract 1 [1;2;3;4;5;6];;
+    extract 2 [1;2;3;4;5;6];;
+    extract 6 [1;2;3;4;5;6];;
+#+end_src
+
+#+RESULTS:
+: - : int list list = [[1; 2; 3; 4; 5; 6]]
+
+**** TODO 27 - Group the elements of a list into disjoint subsets 
+
+Group the elements of a set into disjoint subsets
+
++ In how many ways can a group of 9 people work in 3 disjoint
+  subgroups of 2, 3 and 4 persons? Write a function that generates all
+  the possibilities and returns them in a list.
+
++ Generalize the above function in a way that we can specify a list of group sizes and the function will return a list of groups.
+
+**** DONE 28 Sorting a list of lists according to length of sublists
+
+Sorting a list of lists according to length of sublists.
+
++ We suppose that a list contains elements that are lists
+  themselves. The objective is to sort the elements of this list
+  according to their length. E.g. short lists first, longer lists
+  later, or vice versa.
+  
++ Again, we suppose that a list contains elements that are lists
+  themselves. But this time the objective is to sort the elements of
+  this list according to their length frequency; i.e., in the default,
+  where sorting is done ascendingly, lists with rare lengths are
+  placed first, others with a more frequent length come later.
+
+#+begin_src ocaml :results verbatim
+    let length_sort lst =
+      let ( <<< ) l1 l2 = List.length l1 < List.length l2 in
+      let rec qs lst comparison = match lst with
+        | [] -> []
+        | x :: xs -> (let in_left l = l <<< x in
+                     let (left, right) = List.partition in_left xs in
+                     (qs left (<<<)) @ [x] @ (qs right (<<<))) in
+      qs lst (<<<);;
+
+    length_sort [[1;2;3];[4];[5;6];[7;7];[]]
+#+end_src
+
+#+RESULTS:
+: - : int list list = [[]; [4]; [5; 6]; [7; 7]; [1; 2; 3]]
+*** Arithmetic
+**** TODO 29 Primality test
+
+Determine whether a given integer is prime
+
+Ordinary naive seive:
+
+#+begin_src ocaml :results verbatim
+    let is_prime_seive n =
+      if n < 2
+      then false
+      else (let bound = n
+                        |> float_of_int
+                        |> Float.sqrt
+                        |> Float.floor
+                        |> int_of_float in
+            let rec range a b =
+              let s = b - a in
+              match s with
+              | s when s < 0 -> []
+              | 0 -> [a]
+              | s -> a :: range (a+1) b in
+            let candidates = range 2 bound in
+            (* seive lst m = true if a number in lst,
+             is a divisor of m, false otherwise. *)
+            let rec seive lst m = match lst with
+              | [] -> (false)
+              | p :: qs -> (if m mod p = 0
+                            then true
+                            else seive qs m) in
+            not (seive candidates n));;
+
+    let rec range a b =
+      let s = b - a in
+      match s with
+      | s when s < 0 -> []
+      | 1 -> [a]
+      | s -> a :: range (a+1) b;;
+
+    List.filter is_prime_seive (range 1 100000)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+- : int list =
+[2; 3; 5; 7; 11; 13; 17; 19; 23; 29; 31; 37; 41; 43; 47; 53; 59; 61; 67; 71;
+ 73; 79; 83; 89; 97; 101; 103; 107; 109; 113; 127; 131; 137; 139; 149; 151;
+ 157; 163; 167; 173; 179; 181; 191; 193; 197; 199; 211; 223; 227; 229; 233;
+ 239; 241; 251; 257; 263; 269; 271; 277; 281; 283; 293; 307; 311; 313; 317;
+ 331; 337; 347; 349; 353; 359; 367; 373; 379; 383; 389; 397; 401; 409; 419;
+ 421; 431; 433; 439; 443; 449; 457; 461; 463; 467; 479; 487; 491; 499; 503;
+ 509; 521; 523; 541; 547; 557; 563; 569; 571; 577; 587; 593; 599; 601; 607;
+ 613; 617; 619; 631; 641; 643; 647; 653; 659; 661; 673; 677; 683; 691; 701;
+ 709; 719; 727; 733; 739; 743; 751; 757; 761; 769; 773; 787; 797; 809; 811;
+ 821; 823; 827; 829; 839; 853; 857; 859; 863; 877; 881; 883; 887; 907; 911;
+ 919; 929; 937; 941; 947; 953; 967; 971; 977; 983; 991; 997; 1009; 1013;
+ 1019; 1021; 1031; 1033; 1039; 1049; 1051; 1061; 1063; 1069; 1087; 1091;
+ 1093; 1097; 1103; 1109; 1117; 1123; 1129; 1151; 1153; 1163; 1171; 1181;
+ 1187; 1193; 1201; 1213; 1217; 1223; 1229; 1231; 1237; 1249; 1259; 1277;
+ 1279; 1283; 1289; 1291; 1297; 1301; 1303; 1307; 1319; 1321; 1327; 1361;
+ 1367; 1373; 1381; 1399; 1409; 1423; 1427; 1429; 1433; 1439; 1447; 1451;
+ 1453; 1459; 1471; 1481; 1483; 1487; 1489; 1493; 1499; 1511; 1523; 1531;
+ 1543; 1549; 1553; 1559; 1567; 1571; 1579; 1583; 1597; 1601; 1607; 1609;
+ 1613; 1619; 1621; 1627; 1637; 1657; 1663; 1667; 1669; 1693; 1697; 1699;
+ 1709; 1721; 1723; 1733; 1741; 1747; 1753; 1759; 1777; 1783; 1787; 1789;
+ 1801; 1811; 1823; 1831; 1847; 1861; 1867; 1871; 1873; 1877; 1879; 1889;
+ 1901; 1907; 1913; 1931; 1933; 1949; 1951; 1973; 1979; ...]
+#+end_example
+
+Miller-Rabin:
+#+begin_src ocaml :results verbatim
+  let is_prime n = match n with
+    | n when n < 2 -> false
+    | 2 -> true
+    | n when n mod 2 = 0 -> false
+    | n -> (let witnesses = [2;3;5;7;11;13;17;19;23;29;31;37] in
+            let rec twos_exponent m =
+              match m with
+              | m when m mod 2 = 1 -> 0
+              | m -> 1 + twos_exponent (m / 2) in
+            let rec power a b = match b with
+              | 0 -> 1
+              | b -> a * pow a (b-1) in
+            let rec powermod a b n = match b with
+              | 0 -> 1
+              | b -> (a * powermod a (b-1) n) mod n in
+            let fermat_test a d n =
+              powermod a d n = 1 in
+            let rec root_test a r s n = () in
+            let s = twos_exponent (n-1) in
+            let d = (n-1) / (pow 2 s) in
+            (
+            (* miller-rabin goes here*)
+            )
+           );;
+  is_prime 1001
+#+end_src
+
+#+RESULTS:
+: 3
+: 125
+: - : bool = true
+
+**** DONE 30 - Determine the greatest common divisor of two positive integer numbers
+
+Determine the greatest common divisor of two positive integer numbers.
+
+Use Euclid's algorithm.
+
+#+begin_src ocaml
+  let rec gcd a b =
+    if (a < b)
+    then (gcd b a)
+    else let q = a / b in
+         let r = a - q*b in
+         match r with
+         | 0 -> b
+         | r -> gcd b r;;
+
+  gcd (324*17*11*13) (324*2*5*101);;
+#+end_src
+
+#+RESULTS:
+: 324
+
+**** DONE 31 - Determine whether two positive integer numbers are coprime
+
+Determine whether two positive integer numbers are coprime.
+
+Two numbers are coprime if their greatest common divisor equals 1.
+
+(seems trivial)
+
+#+begin_src ocaml
+  let rec coprime a b = gcd a b = 1;;
+#+end_src
+
+#+RESULTS:
+: <fun>
+
+**** DONE 32 - Calculate Euler's totient function \(\phi(m)\)
+
+Euler's so-called totient function φ(m) is defined as the number of
+positive integers r (1 ≤ r < m) that are coprime to m. We let φ(1)
+= 1.
+
+
+Find out what the value of φ(m) is if m is a prime number. Euler's
+totient function plays an important role in one of the most widely
+used public key cryptography methods (RSA). In this exercise you
+should use the most primitive method to calculate this function (there
+are smarter ways that we shall discuss later).
+
+(doing it the naive way:)
+
+#+begin_src ocaml
+  let phi m = match m with
+    | 1 -> 1
+    | m -> (let range a b =
+              let s = b - a in
+              match s with
+              | s when s < 0 -> []
+              | 0 -> [a]
+              | s -> a :: range (a+1) b in
+            let rec count_coprimes acc lst n =
+              match lst with
+              | [] -> acc
+              | d :: ds -> if (gcd n d = 1)
+                           then (count_coprimes (acc+1) ds n)
+                           else (count_coprimes acc ds n) in
+            count_coprimes 0 (range 1 m) m);;
+
+  phi 12321
+#+end_src
+
+#+RESULTS:
+: 7992
+
+**** TODO 33 - Determine the prime factors of a given positive integer
+
+BUGGY - check n = 25, it's failing there for some reason
+
+Construct a flat list containing the prime factors in ascending order.
+
+#+begin_src ocaml :results verbatim
+  let rec factors n =
+    if is_prime_seive n
+    then [n]
+    else
+      let bound = n
+                  |> float_of_int
+                  |> Float.sqrt
+                  |> Float.floor
+                  |> int_of_float in
+      let range a b =
+        let s = b - a in
+        match s with
+        | s when s < 0 -> []
+        | 0 -> [a]
+        | s -> a :: range(a+1) b in
+      let potential_divisors = range 2 bound
+                               |> List.filter is_prime_seive in
+      let rec smallest_prime_factor lst m = match lst with
+        | [] -> 1 (* impossible branch since n is composite *)
+        | d :: ds -> if m mod d = 0 then d else smallest_prime_factor ds m in
+      let p = smallest_prime_factor potential_divisors n in
+      p :: factors (n/p);;
+
+  factors (324*72*17*11)
+#+end_src
+
+#+RESULTS:
+: - : int list = [2; 2; 2; 2; 2; 3; 3; 3; 3; 3; 3; 11; 17]
+
+**** DONE 34 - Determine the prime factors of a given positive integer (2)
+
+Construct a list containing the prime factors and their
+multiplicity. Hint: The problem is similar to problem 13
+
+doing it the naive way for now:
+
+#+begin_src ocaml :results verbatim
+    let factors_with_multiplicity n =
+      let rec compress count p lst = match lst with
+        | [] -> [(p,count)]
+        | x :: xs when x = p -> compress (count+1) p xs
+        | x :: xs ->(p,count) :: compress 1 x xs in
+      match factors n with
+      | [] -> []
+      | [p] -> [(p,1)]
+      | p :: ps -> compress 1 p ps;;
+
+    factors_with_multiplicity (324*72*17*11*37)
+#+end_src
+
+#+RESULTS:
+: - : (int * int) list = [(2, 5); (3, 6); (11, 1); (17, 1); (37, 1)]
+
+**** TODO 35 Calculate Euler's totient function (improved)
+
+#+begin_src ocaml
+      let eulerphi m =
+        let facts = factors_with_multiplicity m in
+        let rec exp a b = match b with
+          | 0 -> 1
+          | b -> a * (exp a (b-1)) in
+        let rec phi_list_product lst = match lst with
+          | [] -> 1
+          | (p,e) :: tail -> (p-1) * (exp p (e-1)) * phi_list_product tail in
+        phi_list_product facts;;
+
+    (* check that it agrees w/ the previous *)
+      factors 50
+#+end_src
+
+#+RESULTS:
+: Stack overflow during evaluation (looping recursion?).
+
+**** TODO 36 Compare the two methods of calculating Euler's totient function
+**** DONE 37 A list of prime numbers
+
+Given a range of integers by its lower and upper limit, construct a
+list of all prime numbers in that range.
+
+#+begin_src ocaml
+
+    let all_primes a b =
+      let range a b =
+        let s = b - a in
+        match s with
+        | s when s < 0 -> []
+        | 0 -> [a]
+        | s -> a :: range (a+1) b in
+      range a b
+      |> List.filter is_prime_seive;;
+
+    (* could be improved *)
+
+    List.length (all_primes 2 7920)
+#+end_src
+
+#+RESULTS:
+: 1000
+
+**** TODO 38 Goldbach's conjecture
+**** TODO 39 A list of Goldbach compositions
+*** Logic and Codes
+**** TODO 40 Truth tables for logical expressions (2 variables)
+**** TODO 41 Truth tables for logical expressions
+**** DONE 42 Gray code
+
+An n-bit Gray code is a sequence of n-bit strings constructed according to certain rules. For example,
+
+n = 1: C(1) = ['0', '1'].
+n = 2: C(2) = ['00', '01', '11', '10'].
+n = 3: C(3) = ['000', '001', '011', '010', '110', '111', '101',
+'100'].
+
+Find out the construction rules and write a function with the following specification: gray n returns the n-bit Gray code.
+
+So vague...
+
+#+begin_src ocaml :results verbatim
+
+  let rec gray n = match n with
+    | 0 -> [""]
+    | n -> (List.map ((^) "0") (gray (n-1))) @
+             (List.map ((^) "1") (gray (n-1) |> List.rev));;
+
+  gray 3
+#+end_src
+
+#+RESULTS:
+: - : string list = ["000"; "001"; "011"; "010"; "110"; "111"; "101"; "100"]
+**** TODO 43 Huffman code
+*** Trees
+**** DONE 44 Completely balanced binary trees
+
+A binary tree is either empty or it is composed of a root element and two successors, which are binary trees themselves.
+
+In OCaml, one can define a new type ~binary_tree~ that carries an
+arbitrary value of type ~'a~ (thus is polymorphic) at each node.
+
+#+begin_src ocaml
+  type 'a binary_tree =
+    | Empty
+    | Node of 'a * 'a binary_tree * 'a binary_tree;;
+  type 'a binary_tree = Empty | Node of 'a * 'a binary_tree * 'a binary_tree
+#+end_src
+
+#+RESULTS:
+: type 'a binary_tree = Empty | Node of 'a * 'a binary_tree * 'a binary_tree
+
+An example of tree carrying ~char~ data is:
+
+#+begin_src ocaml
+  let example_tree =
+    Node ('a', Node ('b', Node ('d', Empty, Empty), Node ('e', Empty, Empty)),
+         Node ('c', Empty, Node ('f', Node ('g', Empty, Empty), Empty)));;
+#+end_src
+
+#+RESULTS:
+: Node ('a', Node ('b', Node ('d', Empty, Empty), Node ('e', Empty, Empty)),
+:    Node ('c', Empty, Node ('f', Node ('g', Empty, Empty), Empty)))
+
+In OCaml, the strict type discipline guarantees that, if you get a value of type ~binary_tree~, then it must have been created with the two constructors ~Empty~ and ~Node~.
+
+In a completely balanced binary tree, the following property holds for every node: The number of nodes in its left subtree and the number of nodes in its right subtree are almost equal, which means their difference is not greater than one.
+
+Write a function ~cbal_tree~ to construct completely balanced binary
+trees for a given number of nodes. The function should generate all
+solutions via backtracking. Put the letter ~'x'~ as information into
+all nodes of the tree.
+
+#+begin_src ocaml :results verbatim
+  let rec cbal_tree n =
+    let rec outer f lst1 lst2 = match lst1 with
+    | [] -> []
+    | x :: xs -> (List.map (fun y -> f x y) lst2)
+                 @ outer f xs lst2 in
+    let join l r = Node ('x', l, r) in
+    let all_joins llist rlist = (outer join llist rlist) in
+    match n with
+    | 0 -> [Empty]
+    | 1 -> [Node('x', Empty, Empty)]
+    | n when n mod 2 = 1 -> (let m = (n - 1)/2 in
+                             let subtrees = cbal_tree m in
+                             all_joins subtrees subtrees)
+    | n -> (let a = (n-2)/2 in
+            let b = a + 1 in
+            let asubtrees = cbal_tree a in
+            let bsubtrees = cbal_tree b in
+            (all_joins asubtrees bsubtrees)
+            @ (all_joins bsubtrees asubtrees));;
+
+  [0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;22;23;24;25]
+  |> List.map cbal_tree
+  |> List.map List.length
+#+end_src
+
+#+RESULTS:
+: - : int list =
+: [1; 1; 2; 1; 4; 4; 4; 1; 8; 16; 32; 16; 32; 16; 8; 1; 16; 64; 256; 256; 1024;
+:  1024; 1024; 256; 1024; 1024]
+
+results agree with https://oeis.org/A110316
+
+**** DONE 45 Symmetric binary trees
+
+Let us call a binary tree symmetric if you can draw a vertical line through the root node and then the right subtree is the mirror image of the left subtree. Write a function ~is_symmetric~ to check whether a given binary tree is symmetric.
+
+Hint: Write a function ~is_mirror~ first to check whether one tree is the mirror image of another. We are only interested in the structure, not in the contents of the nodes.
+
+#+begin_src ocaml
+    let is_symmetric t =
+      let rec is_mirror t1 t2 = match t1 with
+        | Empty -> (match t2 with
+                   | Empty -> true
+                   | _ -> false)
+        | Node (x, l1, r1) -> (match t2 with
+                               | Empty -> false
+                               | Node(y, l2, r2) -> (is_mirror l1 r2)
+                                                    && (is_mirror l2 r1)) in
+      match t with
+      | Empty -> true
+      | Node (x, l, r) -> is_mirror l r;;
+
+    List.map is_symmetric (cbal_tree 9);;
+#+end_src
+
+#+RESULTS:
+| false | false | false | true | false | false | true | false | false | true | false | false | true | false | false | false |
+
+**** DONE 46 Binary search trees
+
+Construct a binary search tree from a list of integer numbers.
+
+#+begin_src ocaml
+
+  let construct lst =
+    let rec insert t e = match t with
+      | Empty -> Node(e, Empty, Empty)
+      | Node (x, left, right) when e <= x -> Node(x, insert left e, right)
+      | Node (x, left, right) -> Node(x, left, insert right e) in
+    let rec insert_list t lst = match lst with
+      | [] -> t
+      | e :: es -> insert_list (insert t e) es in
+    insert_list Empty lst;;
+
+  construct [3;2;5;7;1]
+#+end_src
+
+#+RESULTS:
+: Node (3, Node (2, Node (1, Empty, Empty), Empty),
+:  Node (5, Empty, Node (7, Empty, Empty)))
+
+Then use this function to test the solution of the previous problem.
+
+#+begin_src ocaml
+  is_symmetric (construct [5; 3; 18; 1; 4; 12; 21]);;
+#+end_src
+
+#+RESULTS:
+: true
+
+#+begin_src ocaml
+  not (is_symmetric (construct [3; 2; 5; 7; 4]));;
+#+end_src
+
+#+RESULTS:
+: true
+
+**** DONE 47 Generate-and-test paradigm
+
+Apply the generate-and-test paradigm to construct all symmetric,
+completely balanced binary trees with a given number of nodes.
+
+#+begin_src ocaml :results verbatim
+    let sym_cbal_tree n =
+      n
+      |> cbal_tree
+      |> List.filter is_symmetric;;
+
+    sym_cbal_tree 5;;
+
+    List.length (sym_cbal_tree 57);;
+#+end_src
+
+#+RESULTS:
+: - : int = 256
+
+For ~Node (x, left, right)~ to be symmetric, ~left~ and ~right~ need
+to have the same number of nodes. So there will be no symmetric trees
+with an even number of nodes.
+
+#+begin_src ocaml
+    let rec range a b = match a with
+      | a when a < b -> a :: (range (a+1) b)
+      | a when a = b -> [b]
+      | _ -> [] in
+        (range 1 10)
+        |> List.map (fun n -> 2*n)
+        |> List.map sym_cbal_tree
+        |> List.map List.length;;
+#+end_src
+
+#+RESULTS:
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+
+But for odd numbers?
+
+#+begin_src ocaml
+    let rec range a b = match a with
+      | a when a < b -> a :: (range (a+1) b)
+      | a when a = b -> [b]
+      | _ -> [] in
+        (range 0 24)
+        |> List.map (fun n -> 2*n + 1)
+        |> List.map (fun m -> (m, sym_cbal_tree m))
+        |> List.map (fun (a,b) -> (a,List.length b));;
+#+end_src
+
+#+RESULTS:
+|  1 |    1 |
+|  3 |    1 |
+|  5 |    2 |
+|  7 |    1 |
+|  9 |    4 |
+| 11 |    4 |
+| 13 |    4 |
+| 15 |    1 |
+| 17 |    8 |
+| 19 |   16 |
+| 21 |   32 |
+| 23 |   16 |
+| 25 |   32 |
+| 27 |   16 |
+| 29 |    8 |
+| 31 |    1 |
+| 33 |   16 |
+| 35 |   64 |
+| 37 |  256 |
+| 39 |  256 |
+| 41 | 1024 |
+| 43 | 1024 |
+| 45 | 1024 |
+| 47 |  256 |
+| 49 | 1024 |
+
+My guess is that the number of symmetric completely balanced trees with 2n+1
+nodes will be the number of completely balanced trees with n
+nodes, since to be symmetric and completely balanced, it needs to be
+of the form ~Node(x, left, right)~ where ~left~ is a completely
+balanced tree with ~n~ nodes. But this completely determined ~right~.
+
+#+begin_src ocaml
+  let rec range a b = match a with
+    | a when a < b -> a :: (range (a+1) b)
+    | a when a = b -> [b]
+    | _ -> [] in
+      (range 0 24)
+      |> List.map (fun n -> (n, 2*n+1))
+      |> List.map (fun (a, b) -> (a |> cbal_tree |> List.length, b |> sym_cbal_tree |> List.length));;
+#+end_src
+
+#+RESULTS:
+|    1 |    1 |
+|    1 |    1 |
+|    2 |    2 |
+|    1 |    1 |
+|    4 |    4 |
+|    4 |    4 |
+|    4 |    4 |
+|    1 |    1 |
+|    8 |    8 |
+|   16 |   16 |
+|   32 |   32 |
+|   16 |   16 |
+|   32 |   32 |
+|   16 |   16 |
+|    8 |    8 |
+|    1 |    1 |
+|   16 |   16 |
+|   64 |   64 |
+|  256 |  256 |
+|  256 |  256 |
+| 1024 | 1024 |
+| 1024 | 1024 |
+| 1024 | 1024 |
+|  256 |  256 |
+| 1024 | 1024 |
+
+Seems right.
+
+**** DONE 48 Construct height-balanced binary trees
+
+In a height-balanced binary tree, the following property holds for
+every node: The height of its left subtree and the height of its right
+subtree are almost equal, which means their difference is not greater
+than one.
+
+Write a function ~hbal_tree~ to construct height-balanced binary trees
+for a given height. The function should generate all solutions via
+backtracking. Put the letter ~'x'~ as information into all nodes of the
+tree.
+
+#+begin_src ocaml :results verbatim
+    let rec hbal_tree h =
+      let rec outer f lst1 lst2 = match lst1 with
+        | [] -> []
+        | x :: xs -> (List.map (fun y -> f x y) lst2)
+                     @ outer f xs lst2 in
+      let join l r = Node ('x', l, r) in
+      let all_joins llist rlist = (outer join llist rlist) in
+      match h with
+      | 0 -> [Empty]
+      | 1 -> [Node('x', Empty, Empty)]
+      | h -> (let one_shorter_trees = hbal_tree (h-1) in
+              let two_shorter_trees = hbal_tree (h-2) in
+              (all_joins one_shorter_trees one_shorter_trees)
+              @ (all_joins one_shorter_trees two_shorter_trees)
+              @ (all_joins two_shorter_trees one_shorter_trees));;
+
+    List.length (hbal_tree 3)
+#+end_src
+
+#+RESULTS:
+: - : int = 15
+
+**** TODO 49 Construct height-balanced binary trees with a given number of nodes
+
+Consider a height-balanced binary tree of height ~h~. What is the
+maximum number of nodes it can contain?
+
+The answer is definitely 2^h - 1 (just fill the tree). but confirm
+this by exhaustive search for
+small h values
+
+#+begin_src ocaml
+  let max_nodes h =
+    let rec node_count t = match t with
+      | Empty -> 0
+      | Node(x, left, right) -> 1 + (node_count left) + (node_count right) in
+    let rec maximum r lst = match lst with
+      | [] -> r
+      | x :: xs -> if (x > r)
+                   then (maximum x xs)
+                   else (maximum r xs) in
+    h
+    |> hbal_tree
+    |> List.map node_count
+    |> maximum 0;;
+
+  List.map max_nodes [1;2;3;4;5]
+#+end_src
+
+#+RESULTS:
+| 1 | 3 | 7 | 15 | 31 |
+
+Seems right. But a better way would be:
+
+#+begin_src ocaml
+  let max_nodes h =
+  let rec pow a b =
+    match b with
+    | 0 -> 1
+    | b -> a * (pow a (b-1)) in
+  (pow 2 h) - 1;;
+
+List.map max_nodes [0;1;2;3;4;5]
+#+end_src
+
+#+RESULTS:
+| 0 | 1 | 3 | 7 | 15 | 31 |
+
+(could improve this further with better exponentiation, or even with bit shifting)
+
+What about the minimum number of nodes? Brute force first, to help
+make a conjecture:
+
+#+begin_src ocaml
+  let min_nodes h =
+    let rec node_count t = match t with
+      | Empty -> 0
+      | Node(x, left, right) -> 1 + (node_count left) + (node_count right) in
+    let rec minimum_acc r lst = match lst with
+      | [] -> r
+      | x :: xs -> if (x < r)
+                   then (minimum_acc x xs)
+                   else (minimum_acc r xs) in
+    let max = max_nodes h in
+    h
+    |> hbal_tree
+    |> List.map node_count
+    |> minimum_acc max;;
+
+  List.map min_nodes [0;1;2;3;4;5]
+#+end_src
+
+#+RESULTS:
+| 0 | 1 | 2 | 4 | 7 | 12 |
+
+My guess is that min_nodes h is 1 + (min_nodes (h-1)) + (min_nodes
+(h-2)), with initial terms min_nodes 0 = 0 and min_nodes 1 = 1. Makes
+sense if you think about trying to construct such a tree of height h
+using as few nodes as possible: You'd (arbitrarily) want the left tree to have
+height h-1 and the right to have height h-2, and each of them should
+have as few nodes as possible. There's some combinatorial details to
+check though, but here's a faster function:
+
+#+begin_src ocaml
+  let min_nodes h =
+  let rec min_nodes_help a b h =
+    match h with
+    | 0 -> a
+    | 1 -> b
+    | h -> min_nodes_help (b) (a + b + 1) (h-1) in
+  min_nodes_help 0 1 h;;
+
+List.map min_nodes [0;1;2;3;4;5;6;7;8;9;10]
+#+end_src
+
+#+RESULTS:
+| 0 | 1 | 2 | 4 | 7 | 12 | 20 | 33 | 54 | 88 | 143 |
+
+Now, just need a way to generate all height-balanced trees with a
+fixed number of nodes.
+
+**** DONE 50 Collect the leaves of a binary tree in a list
+
+A leaf is a node with no successors
+Write a function ~leaves~ to collect
+them in a list.
+
+#+begin_src ocaml
+  let rec leaves t = match t with
+    | Empty -> []
+    | Node (x, Empty, Empty) -> [x]
+    | Node (x,l,r) -> (leaves l) @ (leaves r);;
+
+  let t = Node ('0',
+              Node ('1',
+                    Node ('6',
+                          Empty,
+                          Empty),
+                    Node ('3',
+                      Node ('7',
+                            Empty,
+                            Empty),
+                      Empty)),
+              Node ('2',
+                Node ('4',
+                      Node ('8',
+                            Empty,
+                            Empty),
+                      Node ('5',
+                        Node ('9',
+                              Empty,
+                              Empty),
+                        Empty)),
+                Empty));;
+leaves t;;
+#+end_src
+
+#+RESULTS:
+| 6 | 7 | 8 | 9 |
+
+**** DONE 51 Count the leaves of a binary tree
+
+A leaf is a node with no
+successors. Write a function
+~count_leaves~ to count them.
+
+#+begin_src ocaml
+    let rec count_leaves t = match t with
+      | Empty -> 0
+      | Node(x,Empty,Empty) -> 1
+      | Node(x,left,right) -> (count_leaves right)
+                              + (count_leaves left);;
+
+    count_leaves Empty;;
+    count_leaves (Node('x',Node('y',Empty,Empty),Empty));;
+    count_leaves t
+#+end_src
+
+#+RESULTS:
+: 4
+
+**** DONE 52 Collect the nodes at a given level in a list
+
+A node of a binary tree is at level
+N if the path from the root to the
+node has length N-1. The root node
+is at level 1. Write a function
+~at_level t l~ to collect all nodes
+of the tree ~t~ at level ~l~ in a
+list.
+
+#+begin_src ocaml
+    let rec at_level t l = match l with
+      | l when l < 1 -> []
+      | 1 -> (match t with
+              | Empty -> []
+              | Node (x, l, r) -> [x])
+      | l -> (match t with
+              | Empty -> []
+              | Node (x, left, right) -> (at_level left (l-1)) @
+                                           (at_level right (l-1)));;
+
+    at_level t 0;;
+    at_level t 1;;
+    at_level t 2;;
+    at_level t 3;;
+    at_level t 4;;
+    at_level t 5;;
+    at_level t 6;;
+
+#+end_src
+
+#+RESULTS:
+: []
+
+**** DONE 53 Collect the internal nodes of a binary tree in a list
+
+An internal node of a binary tree
+has either one or two non-empty
+successors. Write a function
+~internals~ to collect them in a list.
+
+#+begin_src ocaml
+        let rec internals t = match t with
+          | Empty -> []
+          | Node (x, Empty, Empty) -> []
+          | Node (x, left, right) -> [x]
+                                     @ (internals left)
+                                     @ (internals right);;
+
+      internals t
+#+end_src
+
+#+RESULTS:
+| 0 | 1 | 3 | 2 | 4 | 5 |
+
+**** TODO 54
+**** TODO 55
+**** TODO 56
+**** TODO 57
+**** TODO 58
+**** TODO 59
+**** TODO 60
+*** Multiway trees
+**** TODO 61
+**** TODO 62
+**** TODO 63
+**** TODO 64
+**** TODO 65
+*** Graphs
+**** TODO 66
+**** TODO 67
+**** TODO 68
+**** TODO 69
+**** TODO 70
+**** TODO 71
+**** TODO 72
+**** TODO 73
+**** TODO 74
+**** TODO 75
+**** TODO 76
+*** Miscellaneous
+**** TODO 77
+**** TODO 78
+**** TODO 79
+**** TODO 80
+**** TODO 81
+**** TODO 82
+**** TODO 83
+**** TODO 84
+**** TODO 85
