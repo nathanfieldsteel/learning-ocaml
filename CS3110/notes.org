@@ -72,7 +72,7 @@ it directly.
 
 ** CS3110 - Notes
 
-** TODO CS3110 Exercises [71/212] [33%]
+** TODO CS3110 Exercises [72/212] [33%]
   :PROPERTIES:
   :COOKIE_DATA: todo recursive
   :END:
@@ -525,7 +525,7 @@ each:
   :PROPERTIES:  
   :COOKIE_DATA: todo recursive
   :END:
-*** TODO 3.14 Data and Types - Exercises [28/32]
+*** TODO 3.14 Data and Types - Exercises [29/32]
 **** DONE List Expressions [★]
 + Construct a list that has the integers 1 through 5 in it. Use the
   square bracket notation for lists.
@@ -1640,7 +1640,7 @@ why a tree of pairs of two types?
 
 Maybe just do it for ~int tree~ for now?
 
-**** TODO Quadrant poly  [★★]
+**** DONE Quadrant poly  [★★]
 
 Modify your definition of ~quadrant~ to use polymorphic variants. The
 types of your functions should become these:
