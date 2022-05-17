@@ -1,5 +1,0 @@
-# dune init proj product_test
-# OCAMLPARAM: unset
-# Shared cache: disabled
-# Workspace root:
-# /Users/nathanfieldsteel/learning/programming/ocaml/learning-ocaml/CS3110/standalone
