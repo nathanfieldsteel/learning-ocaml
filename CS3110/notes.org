@@ -790,37 +790,64 @@ Consult the List standard library to solve these exercises:
   element of that list, if such an element exists. If the list has
   fewer than five elements, return 0. Hint: List.length and List.nth.
 
-  #+begin_src ocaml
-    let fifth_element l =
-      if (List.length l >= 5) then (List.nth l 4) else (0);;
+#+begin_src ocaml
+  let fifth_element l =
+    if (List.length l >= 5) then (List.nth l 4) else (0);;
+#+end_src
 
-    fifth_element [1;2;3;4;5;6;7;8;9];;
-    fifth_element [8;7;6;5;4];;
-    fifth_element [1]
-  #+end_src
-
-  #+RESULTS:
-  : 0
+#+RESULTS:
+: <fun>
 
 + Write a function that takes an int list and returns the list sorted
 in descending order. Hint: List.sort with Stdlib.compare as its
 first argument, and List.rev.
   
 #+begin_src ocaml
-  let descending_sort l = l
-                    |> List.sort Stdlib.compare
-                    |> List.rev;;
-
-  descending_sort [1;4;3;2;3;4;3;1;10;23;14]
+  let descending_sort lst =
+    lst
+    |> List.sort Stdlib.compare
+    |> List.rev;;
 #+end_src
 
 #+RESULTS:
-| 23 | 14 | 10 | 4 | 4 | 3 | 3 | 3 | 2 | 1 | 1 |
+: <fun>
 
 **** TODO Library Test [★★★]
 
 Write a couple OUnit unit tests for each of the functions you wrote in
 the previous exercise
+
+Again, code is in the standalone directory.
+
+The functions to be tested are in ~library.ml~, which contains
+
+#+begin_src ocaml
+  let fifth_element l =
+    if (List.length l >= 5) then (List.nth l 4) else (0)
+
+  let descending_sort lst =
+    lst
+    |> List.sort Stdlib.compare
+    |> List.rev
+#+end_src
+
+#+RESULTS:
+: <fun>
+
+Then we also need a dune file
+
+#+begin_export ascii
+(executable
+ (name test)
+ (libraries ounit2))
+#+end_export
+
+as well as a dune-project file, it seems
+
+#+begin_src ascii
+(lang dune 1.1)
+(name library)
+#+end_src
 
 **** DONE Library Puzzle [★★★]
 
