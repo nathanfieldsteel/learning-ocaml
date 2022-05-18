@@ -72,7 +72,7 @@ it directly.
 
 ** CS3110 - Notes
 
-** TODO CS3110 Exercises [72/212] [33%]
+** TODO CS3110 Exercises [75/212] [35%]
   :PROPERTIES:
   :COOKIE_DATA: todo recursive
   :END:
@@ -525,7 +525,7 @@ each:
   :PROPERTIES:  
   :COOKIE_DATA: todo recursive
   :END:
-*** TODO 3.14 Data and Types - Exercises [29/32]
+*** TODO 3.14 Data and Types - Exercises [30/32]
 **** DONE List Expressions [★]
 + Construct a list that has the integers 1 through 5 in it. Use the
   square bracket notation for lists.
@@ -812,7 +812,7 @@ first argument, and List.rev.
 #+RESULTS:
 : <fun>
 
-**** TODO Library Test [★★★]
+**** DONE Library Test [★★★]
 
 Write a couple OUnit unit tests for each of the functions you wrote in
 the previous exercise
@@ -847,6 +847,11 @@ as well as a dune-project file, it seems
 #+begin_src ascii
 (lang dune 1.1)
 (name library)
+#+end_src
+
+Finally, the test file
+
+#+begin_src ocaml
 #+end_src
 
 **** DONE Library Puzzle [★★★]
@@ -2242,7 +2247,7 @@ transposition and row vector dot product.
 
 Done, but still need to do the unit testing on all these matrix problems
 
-*** TODO 5.11 Modular Programming - Exercises [3/29]
+*** TODO 5.11 Modular Programming - Exercises [4/29]
 **** DONE Complex synonym [★]
 
 Here is a module type for complex numbers, which have a real and imaginary component:
@@ -2526,7 +2531,7 @@ module type Fraction =
 Didn't really think about how to handle / avoid the case where the
 denominator is zero.
 
-**** TODO Fraction reduced [★★★]
+**** DONE Fraction reduced [★★★]
 
 Modify your implementation of ~Fraction~ to ensure these invariants
 hold of every value ~v~ of type ~t~ that is returned from ~make~, ~add~, and ~mul~:
@@ -2586,7 +2591,7 @@ Euclid’s algorithm to be helpful:
 : 63982/9
 
 **** TODO Make char map [★]
-**** TODO Char ordere [★]
+**** TODO Char order [★]
 **** TODO Use char map [★★]
 **** TODO Bindings [★★]
 **** TODO Date order [★★]
@@ -2606,7 +2611,7 @@ Euclid’s algorithm to be helpful:
 **** TODO Implementation with abstracted interface [★]
 **** TODO Preinter for date [★★★]
 **** TODO Refactor arith [★★★★]
-*** TODO 6.11 Correctness - Exercises [0/22]
+*** TODO 6.11 Correctness - Exercises [1/22]
 **** TODO spec game [★★★]
 **** TODO poly spec [★★★]
 **** TODO poly impl [★★★]
@@ -2617,7 +2622,42 @@ Euclid’s algorithm to be helpful:
 **** TODO random lists [★★★]
 **** TODO qcheck odd divisor [★★★]
 **** TODO qcheck avg [★★★★]
-**** TODO exp [★★]
+**** DONE exp [★★]
+
+Prove that ~exp x (m + n) = exp x m * exp x n~, where
+
+#+begin_src ocaml
+  let rec exp x n =
+    if n = 0 then 1 else x * exp x (n - 1)
+#+end_src
+
+Proceed by induction on $n$.
+
+When $n = 0$, we have:
+
+#+begin_example
+   exp x (m + n)
+ = exp x (m + 0)     (by assumption)
+ = exp x m           (arith)
+ = exp x m * 1       (arith)
+ = exp x m * exp x 0 (by definition)
+ = exp x m * exp x n (by assumption)
+#+end_example
+
+Now assume the equality holds for some fixed $n$ value, say $n =
+k$. It remains to prove the equality in the case where $n = k + 1$:
+
+#+begin_example
+   exp x (m + (k + 1))
+ = exp x ((m + k) + 1)         (associativity of +)
+ = exp x (m + k) * x           (by definition of exp)
+ = exp x m * exp x k * x       (by induction)
+ = exp x m * exp x k * exp x 1 (by definition)
+ = exp x m * exp x (k + 1)     (by definition of exp)
+#+end_example
+
+This concludes the proof.
+
 **** TODO fibi [★★★]
 **** TODO expsq [★★★]
 **** TODO mult [★★]
