@@ -353,6 +353,59 @@ and clean it up. A lot of hashtables and imperative trickery. Not very functiona
 
 #+RESULTS:
 : - : string = "C"
+*** Day 16 - Packet Decoders
+
+#+begin_src ocaml
+    let rec binary_string_of_hex_string s =
+    let n = String.length s in
+    if n = 0 then "" else
+      let first = String.sub s 0 1 in
+      let rest = String.sub s 1 (n-1) in
+      let first_bin = match first with
+        | "0" -> "0000"
+        | "1" -> "0001"
+        | "2" -> "0010"
+        | "3" -> "0011"
+        | "4" -> "0100"
+        | "5" -> "0101"
+        | "6" -> "0110"
+        | "7" -> "0111"
+        | "8" -> "1000"
+        | "9" -> "1001"
+        | "A" -> "1010"
+        | "B" -> "1011"
+        | "C" -> "1100"
+        | "D" -> "1101"
+        | "E" -> "1110"
+        | "F" -> "1111"
+        | _ -> "" in
+      first_bin ^ binary_string_of_hex_string rest;;
+#+end_src
+
+#+begin_src ocaml
+  let int_of_binary_string b =
+    let rec pow a b = match b with
+      | 0 -> 1
+      | b -> a * pow a (b-1) in
+    let rec int_of_binary_string_acc partial two_power b = 
+      let n = String.length b in
+      match n with
+      | 0 -> partial
+      | n -> (let last = String.sub b (n-1) 1 in
+              let rest = String.sub b 0 (n-1) in
+              match last with
+              | "0" -> int_of_binary_string_acc partial (two_power + 1) rest
+              | "1" -> int_of_binary_string_acc
+                         (partial + pow 2 two_power)
+                         (two_power + 1)
+                         (rest)) in
+    int_of_binary_string_acc 0 0 b;;
+
+  int_of_binary_string (binary_string_of_hex_string "811")
+#+end_src
+
+#+RESULTS:
+: 2065
 
 *** Day 18 - Snailfish numbers
 **** Part 1
