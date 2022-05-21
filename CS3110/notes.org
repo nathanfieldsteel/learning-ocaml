@@ -80,7 +80,7 @@ it directly.
   :END:
   
 *** DONE 2.9 Basics - Exercises [16/16]
-**** DONE Values $[\star]$ $$
+**** DONE Values $[\star]$
 
 What is the type and value of each of the following OCaml expressions:
 
@@ -103,7 +103,7 @@ The first is ~42 : int~, the second is ~CS 3110 : string~
 #+RESULTS:
 : CS 3110
 
-**** DONE Operators $[\star\star]$$$
+**** DONE Operators $[\star\star]$
 
 + Write an expression that multiplies 42 by 10
 
