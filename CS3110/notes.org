@@ -4,6 +4,7 @@
 
 My notes file for learning OCaml and for working through the CS3110 book.
 
+
 ** Goals
 + Learning OCaml.
 + Literate programming in org-mode.
@@ -78,7 +79,7 @@ it directly.
   :END:
   
 *** DONE 2.9 Basics - Exercises [16/16]
-**** DONE Values [★]
+**** DONE Values [*]
 What is the type and value of each of the following OCaml expressions:
 
 + ~7 * (1 + 2 + 3)~
@@ -99,7 +100,7 @@ The first is ~42 : int~, the second is ~CS 3110 : string~
 
 #+RESULTS:
 : CS 311
-**** DONE Operators [★★]
+**** DONE Operators [**]
 
 + Write an expression that multiplies 42 by 10
 + Write an expression that divides 3.14 by 2.0
@@ -128,7 +129,7 @@ The first is ~42 : int~, the second is ~CS 3110 : string~
 
   #+RESULTS:
   : 23053.93332480000
-**** DONE Equality [★]
+**** DONE Equality [*]
 
 + Write an expression that compares ~42~~ to ~42~ using structural equality
 + Write an expression that compares ~"hi"~ to ~"hi"~ using structural
@@ -164,7 +165,7 @@ Physical equality is compared with ~==~ and ~!=~.
 structural equality is closer to the mathematical notion of equality,
 but physical equality is closer to "are these the same object in
 memory?". Probably usually better to use ~=~.
-**** DONE Assertions [★]
+**** DONE Assertions [*]
 
 + Enter ~assert true;;~ into utop and see what happens.
 + Enter ~assert false;;~ into utop and see what happens.
@@ -180,7 +181,7 @@ memory?". Probably usually better to use ~=~.
 
   #+RESULTS:
   : ()
-**** DONE If [★]
+**** DONE If [*]
 
 Write an if expression that evaluates to 42 if 2 is greater than 1 and
 otherwise evaluates to 7.
@@ -191,7 +192,7 @@ otherwise evaluates to 7.
 
 #+RESULTS:
 : 42
-**** DONE Double fun [★]
+**** DONE Double fun [*]
 
 Using the increment function from above as a guide, define a function
 double that multiplies its input by 2. For example, double 7 would
@@ -213,7 +214,7 @@ test cases into assertions.
 #+RESULTS:
 : ()
 
-**** DONE More fun [★★]
+**** DONE More fun [**]
 
 + Define a function that computes the cube of a floating-point number. Test your function by applying it to a few inputs.
 + Define a function that computes the sign (1, 0, or -1) of an integer. Use a nested if expression. Test your function by applying it to a few inputs.
@@ -260,7 +261,7 @@ assert (area 1.0 -. Float.pi < 1e-5)
 #+RESULTS:
 : ()
 
-**** DONE RMS [★★]
+**** DONE RMS [**]
 
 Define a function that computes the root mean square of two
 numbers—i.e.
@@ -292,7 +293,7 @@ test with pythagorean triples
 #+RESULTS:
 : ()
 
-**** DONE date fun [★★★]
+**** DONE date fun [***]
 
 Define a function that takes an integer d and string m as input and returns true just when d and m form a valid date. Here, a valid date has a month that is one of the following abbreviations: Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sept, Oct, Nov, Dec. And the day must be a number that is between 1 and the minimum number of days in that month, inclusive. For example, if the month is Jan, then the day is between 1 and 31, inclusive, whereas if the month is Feb, then the day is between 1 and 28, inclusive.
 
@@ -315,7 +316,7 @@ supposed to to this with a hash table or something?
 #+RESULTS:
 : true
 
-**** DONE fib [★★]
+**** DONE fib [**]
 
 Define a recursive function ~fib : int -> int~, such that ~fib n~ is
 the nth number in the Fibonacci sequence, which is 1, 1, 2, 3, 5, 8,
@@ -336,7 +337,7 @@ the nth number in the Fibonacci sequence, which is 1, 1, 2, 3, 5, 8,
   #+RESULTS:
   | 1 | 1 | 2 | 3 | 5 | 8 | 13 | 21 | 34 | 55 |
 
-**** DONE fib fast [★★★]
+**** DONE fib fast [***]
 
 How quickly does your implementation of fib compute the 50th Fibonacci
 number? If it computes nearly instantaneously, congratulations! But
@@ -410,7 +411,7 @@ indicating that integer overflow occurred?
 #+RESULTS:
 : 91
 
-**** DONE poly types [★★★]
+**** DONE poly types [***]
 
 What is the type of each of the functions below? You can ask the
 toplevel to check your answers
@@ -442,7 +443,7 @@ toplevel to check your answers
   type ~T2~. The output is always ~y~, which will have type ~T1~. So
   ~i: bool -> T1 -> T2 -> T1~
 
-**** DONE Divide [★★]
+**** DONE Divide [**]
 
 Write a function divide : numerator:float -> denominator:float ->
 float. Apply your function.
@@ -465,7 +466,7 @@ float. Apply your function.
 (weirdly, ~nan = nan~ is false, so you need to use the compare in that
 case)
 
-**** DONE Associativity [★★]
+**** DONE Associativity [**]
 
 Suppose that we have defined ~let add x y = x + y~. Which of the
 following produces an integer, which produces a function, and which
@@ -483,7 +484,7 @@ toplevel.
   produce an error, since ~5~ is not a function, so it can't be
   applied to ~1~.
 
-**** DONE Average [★★]
+**** DONE Average [**]
 
 Define an infix operator ~+/.~ to compute the average of two
 floating-point numbers. For example,
@@ -501,7 +502,7 @@ floating-point numbers. For example,
   #+RESULTS:
   : 0
 
-**** DONE Hello World [★]
+**** DONE Hello World [*]
 
 Type the following in utop, and notice the difference in output from
 each:
@@ -526,7 +527,7 @@ each:
   :COOKIE_DATA: todo recursive
   :END:
 *** TODO 3.14 Data and Types - Exercises [30/32]
-**** DONE List Expressions [★]
+**** DONE List Expressions [*]
 + Construct a list that has the integers 1 through 5 in it. Use the
   square bracket notation for lists.
   
@@ -558,7 +559,7 @@ each:
   #+RESULTS:
   | 1 | 2 | 3 | 4 | 5 |
 
-**** DONE Product [★★]
+**** DONE Product [**]
 
 Write a function that returns the product of all the elements in a
 list. The product of all the elements of an empty list is ~1~.
@@ -576,7 +577,7 @@ list. The product of all the elements of an empty list is ~1~.
 #+RESULTS:
 : 1728000
 
-**** DONE concat [★★]
+**** DONE concat [**]
 
 Write a function that concatenates all the strings in a list. The
 concatenation of all the strings in an empty list is the empty string
@@ -596,7 +597,7 @@ concatenation of all the strings in an empty list is the empty string
 #+RESULTS:
 : Hello, world!
 
-**** DONE product test [★★]
+**** DONE product test [**]
 
 Relevant files in ~standalone~ directory.
 
@@ -729,7 +730,7 @@ this. But it's close enough to the process outlined in section 3.3.1
 in the book that I think I'll stick with this for now. I'd still like
 to learn how to use ~dune~ properly, but I'll postpone that until later.
 
-**** DONE Patterns [★★★]
+**** DONE Patterns [***]
 
 Using pattern matching, write three functions, one for each of the following properties. Your functions should return true if the input list has the property and false otherwise.
 
@@ -782,7 +783,7 @@ integer, I get a type error
   #+RESULTS:
   : true
   
-**** DONE Library [★★★]
+**** DONE Library [***]
 
 Consult the List standard library to solve these exercises:
 
@@ -812,7 +813,7 @@ first argument, and List.rev.
 #+RESULTS:
 : <fun>
 
-**** DONE Library Test [★★★]
+**** DONE Library Test [***]
 
 Write a couple OUnit unit tests for each of the functions you wrote in
 the previous exercise
@@ -836,25 +837,25 @@ The functions to be tested are in ~library.ml~, which contains
 
 Then we also need a dune file
 
-#+begin_export ascii
+#+begin_example
 (executable
  (name test)
  (libraries ounit2))
-#+end_export
+#+end_example
 
 as well as a dune-project file, it seems
 
-#+begin_src ascii
+#+begin_example
 (lang dune 1.1)
 (name library)
-#+end_src
+#+end_example
 
 Finally, the test file
 
 #+begin_src ocaml
 #+end_src
 
-**** DONE Library Puzzle [★★★]
+**** DONE Library Puzzle [***]
 
 + Write a function that returns the last element of a list. Your
   function may assume that the list is non-empty. Hint: Use two
@@ -887,7 +888,7 @@ Finally, the test file
   #+RESULTS:
   : true
 
-**** DONE Take Drop [★★★]
+**** DONE Take Drop [***]
 
 + Write a function take : int -> 'a list -> 'a list such that take n
   lst returns the first n elements of lst. If lst has fewer than n
@@ -930,7 +931,7 @@ Finally, the test file
   #+RESULTS:
   | 1 | 2 | 3 |
  
-**** DONE Take Drop Tail [★★★★]
+**** DONE Take Drop Tail [****]
 
 Revise your solutions for take and drop to be tail recursive, if they
 aren’t already. Test them on long lists with large values of n to see
@@ -990,7 +991,7 @@ part of a bigger expression instead of just on its own. I also think
 that ~drop 999999 (1 -- 1000000)~ would have stack overflowed if this
 wasn't tail recursive.
 
-**** DONE Unimodal [★★★]
+**** DONE Unimodal [***]
 
 Write a function is_unimodal : int list -> bool that takes an integer
 list and returns whether that list is unimodal. A unimodal list is a
@@ -1028,7 +1029,7 @@ as is the empty list.
 #+RESULTS:
 : true
 
-**** DONE Power set [★★★]
+**** DONE Power set [***]
 
 Write a function ~powerset : int list -> int list list~ that takes a
 set ~S~ represented as a list and returns the set of all subsets of
@@ -1050,7 +1051,7 @@ compute ~powerset (x :: s)~?
 #+RESULTS:
 : - : int = 128
 
-**** DONE Print int list rec [★★]
+**** DONE Print int list rec [**]
 
 Write a function print_int_list : int list -> unit that prints its
 input list, one number per line. For example, print_int_list [1; 2; 3]
@@ -1080,7 +1081,7 @@ should result in this output:
 : 6
 : - : unit = ()
 
-**** DONE Print int list iter [★★]
+**** DONE Print int list iter [**]
 
 Write a function ~print_int_list' : int list -> unit~ whose
 specification is the same as ~print_int_list~. Do not use the keyword
@@ -1104,7 +1105,7 @@ specification is the same as ~print_int_list~. Do not use the keyword
 : 6
 : - : unit = ()
 
-**** DONE Student [★★]
+**** DONE Student [**]
 
 Assume the following type definition:
 
@@ -1152,7 +1153,7 @@ Give OCaml expressions that have the following types:
 #+RESULTS:
 : val student : string -> string -> float -> student = <fun>
 
-**** DONE Pokerecord [★★]
+**** DONE Pokerecord [**]
 
 Here is a variant that represents a few Pokémon types:
 
@@ -1196,7 +1197,7 @@ Here is a variant that represents a few Pokémon types:
   #+RESULTS:
   : {name = "squirtle"; hp = 44; ptype = Water}
   
-**** DONE Safe hd and tl [★★]
+**** DONE Safe hd and tl [**]
 
 Write a function ~safe_hd : 'a list -> 'a option~ that returns ~Some
 x~ if the head of the input list is ~x~, and ~None~ if the input list
@@ -1232,7 +1233,7 @@ returns the tail of the list, or ~None~ if the list is empty.
 #+RESULTS:
 : None
 
-**** DONE Pokefun [★★★]
+**** DONE Pokefun [***]
 
 Write a function ~max_hp : pokemon list -> pokemon option~ that, given
 a list of ~pokemon~, finds the Pokémon with the highest HP.
@@ -1255,7 +1256,7 @@ a list of ~pokemon~, finds the Pokémon with the highest HP.
 #+RESULTS:
 : None
 
-**** DONE Date before [★★]
+**** DONE Date before [**]
 
 Define a date-like triple to be a value of type ~int * int *
 int~. Examples of date-like triples include ~(2013, 2, 1)~ and ~(0, 0,
@@ -1311,7 +1312,7 @@ through the chapter and see if I missed anything.
 #+RESULTS:
 : false
 
-**** DONE Earliest date [★★★]
+**** DONE Earliest date [***]
 
 Write a function ~earliest : (int*int*int) list -> (int * int * int)
 option~. It evaluates to ~None~ if the input list is empty, and to
@@ -1338,7 +1339,7 @@ only for dates, not for arbitrary date-like triples
 #+RESULTS:
 : Some {year = 1986; month = 7; day = 14}
 
-**** DONE Assoc list [★]
+**** DONE Assoc list [*]
 
 Use the functions ~insert~ and ~lookup~ from the section on association
 lists to construct an association list that maps the integer ~1~ to the
@@ -1372,11 +1373,11 @@ Here are ~insert~ and ~lookup~:
 #+RESULTS:
 : None
 
-**** DONE Cards [★★]
+**** DONE Cards [**]
 
-+ Define a variant type suit that represents the four suits, ♣ ♦ ♥ ♠,
-  in a standard 52-card deck. All the constructors of your type should
-  be constant.
++ Define a variant type suit that represents the four suits, (hearts,
+  clubs, diamonds and spades), in a standard 52-card deck. All the
+  constructors of your type should be constant.
 
 #+begin_src ocaml
     type suit =
@@ -1440,7 +1441,7 @@ Here are ~insert~ and ~lookup~:
 #+RESULTS:
 : {rank = Number 7; suit = Spades}
 
-**** DONE Matching [★]
+**** DONE Matching [*]
 
 For each pattern in the list below, give a value of type ~int option
 list~ that does not match the pattern and is not the empty list, or
@@ -1469,7 +1470,7 @@ explain why that’s impossible.
 
    This pattern matches every list except the empty list, so we can't
    match it with a nonempty list.
-**** DONE Quadrant [★★]
+**** DONE Quadrant [**]
 
 Complete the ~quadrant~ function below, which should return the quadrant
 of the given ~x, y~ point according to the diagram on the right
@@ -1501,7 +1502,7 @@ integer, (b) match against a pair.
 #+RESULTS:
 : Some IV
 
-**** DONE Quadrant when [★★]
+**** DONE Quadrant when [**]
 
 Rewrite the quadrant function to use the when syntax. You won’t need
 your helper function from before.
@@ -1520,7 +1521,7 @@ your helper function from before.
 #+RESULTS:
 : Some IV
 
-**** DONE Depth [★★]
+**** DONE Depth [**]
 
 Write a function ~depth : 'a tree -> int~ that returns the number of
 nodes in any longest path from the root to a leaf. For example, the
@@ -1579,7 +1580,7 @@ let t =
 #+RESULTS:
 : 3
 
-**** DONE Shape [★★★]
+**** DONE Shape [***]
 
 Write a function ~same_shape : 'a tree -> 'b tree -> bool~ that
 determines whether two trees have the same shape, regardless of
@@ -1600,7 +1601,7 @@ is a pair of trees.
 #+RESULTS:
 : true
 
-**** DONE List max exn [★★]
+**** DONE List max exn [**]
 
 Write a function ~list_max : int list -> int~ that returns the maximum integer in a list, or raises ~Failure "list_max"~ if the list is empty.
 
@@ -1632,7 +1633,7 @@ I also got a weird warning when I matched with ~exception (Failure
 "hd")~ ("fragile-literal-pattern) that went away when I changed to to
 ~exception (_)~, though this seems less accurate.
 
-**** DONE List max exn string [★★]
+**** DONE List max exn string [**]
 
 Write a function ~list_max_string : int list -> string~ that returns a
 string containing the maximum integer in a list, or the string
@@ -1659,8 +1660,8 @@ standard library will do what its name suggests.
 #+RESULTS:
 : empty
 
-**** TODO List max exn ounit [★]
-**** TODO is_bst [★★★★]
+**** TODO List max exn ounit [*]
+**** TODO is_bst [****]
 
 Write a function ~is_bst : ('a*'b) tree -> bool~ that returns true if and only if the given tree satisfies the binary search tree invariant. An efficient version of this function that visits each node at most once is somewhat tricky to write. Hint: write a recursive helper function that takes a tree and either gives you (i) the minimum and maximum value in the tree, or (ii) tells you that the tree is empty, or (iii) tells you that the tree does not satisfy the invariant. Your ~is_bst~ function will not be recursive, but will call your helper function and pattern match on the result. You will need to define a new variant type for the return type of your helper function.
 
@@ -1672,7 +1673,7 @@ why a tree of pairs of two types?
 
 Maybe just do it for ~int tree~ for now?
 
-**** DONE Quadrant poly  [★★]
+**** DONE Quadrant poly  [**]
 
 Modify your definition of ~quadrant~ to use polymorphic variants. The
 types of your functions should become these:
@@ -1705,7 +1706,7 @@ types of your functions should become these:
 : val quadrant : int * int -> [> `I | `II | `III | `IV ] option = <fun>
 
 *** TODO 4.9 Higher-Order Programming - Exercises [13/18]
-**** DONE Twice, no arguments [★]
+**** DONE Twice, no arguments [*]
 
 Consider the following definitions. Use the toplevel to determine what the types of quad and fourth are. Explain how it can be that quad is not syntactically written as a function that takes an argument, and yet its type shows that it is in fact a function.
 
@@ -1754,7 +1755,7 @@ x)~, so ~twice f~ is a function still waiting for its last argument.
 
 The same description of ~twice double~ applies to ~twice square~ as
 well, since ~double~ and ~square~ have the same type.
-**** DONE Mystery Operator 1 [★★]
+**** DONE Mystery Operator 1 [**]
 
 What does the following operator do?
 
@@ -1777,7 +1778,7 @@ argument. So ~f $ x~ evaluates to ~f x~. But because of the precedence
 of operator binding, ~double 3 + 1~ is ~(double 3) + 1~, which is
 ~7~. But ~double $ 3 + 1~ is ~($) (double) (3 + 1)~, which is ~8~
 
-**** DONE Mystery Operator 2 [★★]
+**** DONE Mystery Operator 2 [**]
 
 What does the following operator do?
 
@@ -1802,7 +1803,7 @@ What does the following operator do?
 that, when applied to ~x~, give ~f (g x)~ (as opposed to ~f g
 x~). This is function composition.
 
-**** DONE Repeat [★★]
+**** DONE Repeat [**]
 
 Generalize ~twice~ to a function ~repeat~, such that ~repeat f n x~ applies ~f~ to ~x~ a total of ~n~ times.
 
@@ -1817,7 +1818,7 @@ Generalize ~twice~ to a function ~repeat~, such that ~repeat f n x~ applies ~f~ 
 #+RESULTS:
 : 1024
 
-**** DONE Product [★]
+**** DONE Product [*]
 
 Use ~fold_left~ to write a function ~product_left~ that computes the product of a list of floats. The product of the empty list is ~1.0~. Hint: recall how we implemented sum in just one line of code in lecture.
 
@@ -1861,7 +1862,7 @@ around it though) to specificy the list argument to ~product_right~.
 #+RESULTS:
 : <fun>
 
-**** DONE Terse Product [★★]
+**** DONE Terse Product [**]
 
 How terse can you make your solutions to the ~product~ exercise?
 Hints: you need only one line of code for each, and you do not need
@@ -1889,7 +1890,7 @@ could do:
 (should figure out exactly the syntax and conventions for labelled
 argument, since I don't feel like I did this exactly the right way.)
 
-**** DONE sum cube odd [★★]
+**** DONE sum cube odd [**]
 
 Write a function ~sum_cube_odd n~ that computes the sum of the cubes
 of all the odd numbers between ~0~ and ~n~ inclusive. Do not write any
@@ -1918,7 +1919,7 @@ The infix range operator from earlier in the chapter:
 #+RESULTS:
 : 1225
 
-**** DONE sum cube odd pipeline [★★]
+**** DONE sum cube odd pipeline [**]
 
 Rewrite the previous function with the pipeline ~|>~ operator. (I
 already used it a fair bit in the previous, But I guess with even
@@ -1938,7 +1939,7 @@ fewer inner ~let~ statements and more pipelininig it could be written:
 #+RESULTS:
 : 1225
 
-**** DONE exists [★★]
+**** DONE exists [**]
 Consider writing a function ~exists: ('a -> bool) -> 'a list -> bool~, such that ~exists p [a1; ...; an]~ returns whether at least one element of the list satisfies the predicate ~p~. That is, it evaluates the same as ~(p a1) || (p a2) || ... || (p an)~. When applied to an empty list, it evaluates to false.
 
 Write three solutions to this problem, as we did above:
@@ -1998,14 +1999,14 @@ Write three solutions to this problem, as we did above:
 
 (There are probably lots of ways to do this one)
 
-**** TODO account balance [★★★]
+**** TODO account balance [***]
 
 Write a function which, given a list of numbers representing debits,
 deducts them from an account balance, and finally returns the
 remaining amount in the balance. Write three versions: fold_left,
 fold_right, and a direct recursive implementation.
 
-**** DONE library uncurried [★★]
+**** DONE library uncurried [**]
 
 Here is an uncurried version of ~List.nth~:
 
@@ -2049,7 +2050,7 @@ In a similar way, write uncurried versions of these library functions:
   #+RESULTS:
   : 16
 
-**** DONE map composition [★★★]
+**** DONE map composition [***]
 
 Show how to replace any expression of the form ~List.map f (List.map g
 lst)~ with an equivalent expression that calls ~List.map~ only once.
@@ -2069,7 +2070,7 @@ The expression
 #+RESULTS:
 | 4 | 7 | 10 | 13 |
 
-**** DONE more list fun [★★★]
+**** DONE more list fun [***]
 
 Write functions that perform the following computations. Each function
 that you write should use one of ~List.fold~, ~List.map~ or
@@ -2120,7 +2121,7 @@ computation is doing: combining, transforming, or filtering elements.
   #+RESULTS:
   : - : string = "0 -- 1 -- 2 -- 3 -- 4 -- 5 -- 6 -- 7"
 
-**** DONE association list keys [★★★]
+**** DONE association list keys [***]
 
 Recall that an association list is an implementation of a dictionary
 in terms of a list of pairs, in which we treat the first component of
@@ -2141,7 +2142,7 @@ I don't know if this is n log n space and time. I'm also not sure if
 this is the "one line" solution they're hinting at, since it's a bit
 long for one line.
 
-**** TODO valid matrix [★★★]
+**** TODO valid matrix [***]
 
 A mathematical matrix can be represented with lists. In row-major
 representation, this matrix
@@ -2179,7 +2180,7 @@ for example
 
   (still need to do the unit test part of this problem)
   
-**** TODO row vector add [★★★]
+**** TODO row vector add [***]
 
 Implement a function ~add_row_vectors: int list -> int list -> int list~
 for the element-wise addition of two row vectors. For example, the
@@ -2197,7 +2198,7 @@ elegant one-line solution using ~List.map2~. Unit test the function
 #+RESULTS:
 : - : int list = [7; 9; 13]
 
-**** TODO matrix add [★★★]
+**** TODO matrix add [***]
 
 Implement a function ~add_matrices: int list list -> int list list ->
 int list list~ for matrix addition. If the two input matrices are not
@@ -2214,7 +2215,7 @@ function.
 #+RESULTS:
 : - : int list list = [[9; 11; 13]; [15; 17; 19]; [21; 23; 25]]
 
-**** TODO matrix multiply [★★★★]
+**** TODO matrix multiply [****]
 
 Implement a function ~multiply_matrices: int list list -> int list list
 -> int list list~ for matrix multiplication. If the two input matrices
@@ -2248,7 +2249,7 @@ transposition and row vector dot product.
 Done, but still need to do the unit testing on all these matrix problems
 
 *** TODO 5.11 Modular Programming - Exercises [4/29]
-**** DONE Complex synonym [★]
+**** DONE Complex synonym [*]
 
 Here is a module type for complex numbers, which have a real and imaginary component:
 
@@ -2281,7 +2282,7 @@ signature can be written more tersely because of the type synonym.
 : module type ComplexSig =
 :   sig type t = float * float val zero : t val add : t -> t -> t end
 
-**** DONE Complex encapsulation [★★]
+**** DONE Complex encapsulation [**]
 
 Here is a module for the module type from the previous exercise:
 
@@ -2387,7 +2388,7 @@ The ~ComplexSig~ type needs ~zero~ to have type ~float * float~. Since
 the ~zero~ in this module has type ~int * int~, it doesn't typecheck
 as being an instance of ~ComplexSig~.
 
-**** TODO Big list queue [★★]
+**** TODO Big list queue [**]
 
 Use the following code to create ~ListQueue~ of exponentially increasing length: 10, 100, 1000, etc. How big of a queue can you create before there is a noticeable delay? How big until there’s a delay of at least 10 seconds? (Note: you can abort utop computations with Ctrl-C.)
 
@@ -2464,10 +2465,10 @@ end
 
 ~10000~ took about 1 second, ~50000~ took about 30.
 
-**** TODO Big batched queue [★★]
-**** TODO Queue efficiency [★★★]
-**** TODO Binary search tree map [★★★★]
-**** DONE Fration [★★★]
+**** TODO Big batched queue [**]
+**** TODO Queue efficiency [***]
+**** TODO Binary search tree map [****]
+**** DONE Fration [***]
 
 Write a module that implements the Fraction module type below:
 
@@ -2531,7 +2532,7 @@ module type Fraction =
 Didn't really think about how to handle / avoid the case where the
 denominator is zero.
 
-**** DONE Fraction reduced [★★★]
+**** DONE Fraction reduced [***]
 
 Modify your implementation of ~Fraction~ to ensure these invariants
 hold of every value ~v~ of type ~t~ that is returned from ~make~, ~add~, and ~mul~:
@@ -2590,39 +2591,39 @@ Euclid’s algorithm to be helpful:
 #+RESULTS:
 : 63982/9
 
-**** TODO Make char map [★]
-**** TODO Char order [★]
-**** TODO Use char map [★★]
-**** TODO Bindings [★★]
-**** TODO Date order [★★]
-**** TODO Calendar [★★]
-**** TODO Print calendar [★★]
-**** TODO Is for [★★★]
-**** TODO First after [★★★]
-**** TODO Sets [★★★]
-**** TODO ToString [★★]
-**** TODO Print [★★]
-**** TODO Print int [★★]
-**** TODO Print string [★★]
-**** TODO Print reuse [★]
-**** TODO Print string reuse revisited [★★]
-**** TODO Implementation without interface [★]
-**** TODO Implementation with interface [★]
-**** TODO Implementation with abstracted interface [★]
-**** TODO Preinter for date [★★★]
-**** TODO Refactor arith [★★★★]
+**** TODO Make char map [*]
+**** TODO Char order [*]
+**** TODO Use char map [**]
+**** TODO Bindings [**]
+**** TODO Date order [**]
+**** TODO Calendar [**]
+**** TODO Print calendar [**]
+**** TODO Is for [***]
+**** TODO First after [***]
+**** TODO Sets [***]
+**** TODO ToString [**]
+**** TODO Print [**]
+**** TODO Print int [**]
+**** TODO Print string [**]
+**** TODO Print reuse [*]
+**** TODO Print string reuse revisited [**]
+**** TODO Implementation without interface [*]
+**** TODO Implementation with interface [*]
+**** TODO Implementation with abstracted interface [*]
+**** TODO Preinter for date [***]
+**** TODO Refactor arith [****]
 *** TODO 6.11 Correctness - Exercises [1/22]
-**** TODO spec game [★★★]
-**** TODO poly spec [★★★]
-**** TODO poly impl [★★★]
-**** TODO interval arithmetic [★★★★]
-**** TODO function maps [★★★★]
-**** TODO set black box [★★★]
-**** TODO set glass box [★★★]
-**** TODO random lists [★★★]
-**** TODO qcheck odd divisor [★★★]
-**** TODO qcheck avg [★★★★]
-**** DONE exp [★★]
+**** TODO spec game [***]
+**** TODO poly spec [***]
+**** TODO poly impl [***]
+**** TODO interval arithmetic [****]
+**** TODO function maps [****]
+**** TODO set black box [***]
+**** TODO set glass box [***]
+**** TODO random lists [***]
+**** TODO qcheck odd divisor [***]
+**** TODO qcheck avg [****]
+**** DONE exp [**]
 
 Prove that ~exp x (m + n) = exp x m * exp x n~, where
 
@@ -2658,19 +2659,19 @@ k$. It remains to prove the equality in the case where $n = k + 1$:
 
 This concludes the proof.
 
-**** TODO fibi [★★★]
-**** TODO expsq [★★★]
-**** TODO mult [★★]
-**** TODO append nil [★★]
-**** TODO rev dist append [★★★]
-**** TODO rev involutize [★★★]
-**** TODO reflect size [★★★]
-**** TODO fold theorem 2 [★★★★]
-**** TODO propositions [★★★★]
-**** TODO list spec [★★★]
-**** TODO bag spec [★★★★]
+**** TODO fibi [***]
+**** TODO expsq [***]
+**** TODO mult [**]
+**** TODO append nil [**]
+**** TODO rev dist append [***]
+**** TODO rev involutize [***]
+**** TODO reflect size [***]
+**** TODO fold theorem 2 [****]
+**** TODO propositions [****]
+**** TODO list spec [***]
+**** TODO bag spec [****]
 *** TODO 7.5 Mutability - Exercises [10/11]
-**** DONE mutable fields [★]
+**** DONE mutable fields [*]
 
 Define an OCaml record type to represent student names and GPAs. It
 should be possible to mutate the value of a student’s GPA. Write an
@@ -2694,7 +2695,7 @@ write an expression to mutate Alice’s GPA to ~4.0~
 #+RESULTS:
 : {name = "Alice"; gpa = 4.}
 
-**** DONE refs [★]
+**** DONE refs [*]
 
 Give OCaml expressions that have the following types. Use utop to
 check your answers.
@@ -2726,7 +2727,7 @@ check your answers.
 #+RESULTS:
 : - : int ref list = [{contents = 1}; {contents = 2}]
 
-**** DONE inc fun [★]
+**** DONE inc fun [*]
 
 Define a reference to a function as follows:
 
@@ -2759,7 +2760,7 @@ Write code that uses ~inc~ to produce the value ~3110~.
 #+RESULTS:
 : 3110
 
-**** DONE addition assignment [★★]
+**** DONE addition assignment [**]
 
 The ~C~ language and many languages derived from it, such as Java, has
 an addition assignment operator written ~a += b~ and meaning ~a = a +
@@ -2783,7 +2784,7 @@ b~. Implement such an operator in OCaml; its type should be ~int ref
 #+RESULTS:
 : 37
 
-**** DONE physical equality [★★]
+**** DONE physical equality [**]
 
 Define ~x~, ~y~, and ~z~ as follows:
 
@@ -2891,7 +2892,7 @@ equal.
 #+RESULTS:
 : false
 
-**** DONE norm [★★]
+**** DONE norm [**]
 
 The Euclidean norm of an $n$-dimensional vector $x = (x_1, \ldots,
 x_n)$ is written $|x|$ and is defined to be $$\sqrt{x_1^2 + \cdots +
@@ -2920,7 +2921,7 @@ Euclidean norm of a vector, where ~vector~ is defined as follows:
 #+RESULTS:
 : 102.56705123966468
 
-**** DONE normalize [★★]
+**** DONE normalize [**]
 
 Every vector $x$ can be normalized by dividing each component by
 $|x|$. This yields a vector with norm $1$.
@@ -2959,7 +2960,7 @@ suspicion is there's something better suited to this purpose.
 #+RESULTS:
 : - : float = 1.
 
-**** DONE norm loop [★★]
+**** DONE norm loop [**]
 
 Modify your implementation of ~norm~ to use a loop.
 
@@ -2980,7 +2981,7 @@ Modify your implementation of ~norm~ to use a loop.
 #+RESULTS:
 : 13
 
-**** DONE normalize loop [★★]
+**** DONE normalize loop [**]
 
 Modify your implementation of ~normalize~ to use a loop.
 
@@ -3002,7 +3003,7 @@ Modify your implementation of ~normalize~ to use a loop.
   norm v;;
 #+end_src
 
-**** DONE init matrix [★★★]
+**** DONE init matrix [***]
 
 The ~Array~ module contains two functions for creating an array:
 ~make~ and ~init~. ~make~ creates an array and fills it with a default
@@ -3036,83 +3037,118 @@ representation of matrices as arrays.
 | 2 | 4 | 6 | 8 |
 | 3 | 5 | 7 | 9 |
 
-**** TODO doubly linked list [★★★★]
+**** TODO doubly linked list [****]
 
 *** TODO 8.9 Data Structures - Exercises [0/44]
-**** TODO hash insert [★★]
-**** TODO relax bucket RI [★★]
-**** TODO strengthen bucket RI [★★]
-**** TODO hash values [★★]
-**** TODO hashtbl usage [★★]
-**** TODO hashtbl stats [★]
-**** TODO hashtbl bindings [★★]
-**** TODO hashtbl load factor [★★]
-**** TODO functorial interface [★★★]
-**** TODO equals and hash [★★]
-**** TODO bad hash [★★]
-**** TODO linear probing [★★★★]
-**** TODO functorized BST [★★★]
-**** TODO efficient traversal [★★★]
-**** TODO RB draw complete [★★]
-**** TODO RB draw insert [★★]
-**** TODO standard library set [★★]
-**** TODO pow2 [★★]
-**** TODO more sequences [★★]
-**** TODO nth [★★]
-**** TODO hd tl [★★]
-**** TODO filter [★★★]
-**** TODO interleave [★★★]
-**** TODO sift [★★★]
-**** TODO primes [★★★]
-**** TODO approximately e [★★★★]
-**** TODO better e [★★★★]
-**** TODO different sequence rep [★★★]
-**** TODO lazy hello [★]
-**** TODO lazy and [★★]
-**** TODO lazy sequence [★★★]
-**** TODO promise and resolve [★★]
-**** TODO promise and resolve lwt [★★]
-**** TODO timing challenge 1 [★★]
-**** TODO timing challenge 2 [★★★]
-**** TODO timing challenge 3 [★★★]
-**** TODO timing challenge 4 [★★★]
-**** TODO file monitor [★★★★]
-**** TODO add opt [★★]
-**** TODO fmap and join [★★]
-**** TODO fmap and join again [★★]
-**** TODO bind from fmap+join [★★★]
-**** TODO list monad [★★★]
-**** TODO trivial monad laws [★★★]
+**** TODO hash insert [**]
+**** TODO relax bucket RI [**]
+**** TODO strengthen bucket RI [**]
+**** TODO hash values [**]
+**** TODO hashtbl usage [**]
+**** TODO hashtbl stats [*]
+**** TODO hashtbl bindings [**]
+**** TODO hashtbl load factor [**]
+**** TODO functorial interface [***]
+**** TODO equals and hash [**]
+**** TODO bad hash [**]
+**** TODO linear probing [****]
+**** TODO functorized BST [***]
+**** TODO efficient traversal [***]
+**** TODO RB draw complete [**]
+**** TODO RB draw insert [**]
+**** TODO standard library set [**]
+**** TODO pow2 [**]
+**** TODO more sequences [**]
+**** TODO nth [**]
+**** TODO hd tl [**]
+**** TODO filter [***]
+**** TODO interleave [***]
+**** TODO sift [***]
+**** TODO primes [***]
+**** TODO approximately e [****]
+**** TODO better e [****]
+**** TODO different sequence rep [***]
+**** TODO lazy hello [*]
+**** TODO lazy and [**]
+**** TODO lazy sequence [***]
+**** TODO promise and resolve [**]
+**** TODO promise and resolve lwt [**]
+**** TODO timing challenge 1 [**]
+**** TODO timing challenge 2 [***]
+**** TODO timing challenge 3 [***]
+**** TODO timing challenge 4 [***]
+**** TODO file monitor [****]
+**** TODO add opt [**]
+**** TODO fmap and join [**]
+**** TODO fmap and join again [**]
+**** TODO bind from fmap+join [***]
+**** TODO list monad [***]
+**** TODO trivial monad laws [***]
 *** TODO 9.5 Interpreters - Exercises [0/32]
-**** TODO parse [★]
-**** TODO simpl ids [★★]
-**** TODO times parsing [★★]
-**** TODO infer [★★]
-**** TODO subexpression types [★]
-**** TODO typing [★★]
-**** TODO substitution [★★]
-**** TODO step expression [★]
-**** TODO step let expression [★★]
-**** TODO variants [★]
-**** TODO application [★★]
-**** TODO omega [★★★]
-**** TODO pair parsing [★★★]
-**** TODO pair type checking [★★★]
-**** TODO pair evaluation [★★★]
-**** TODO desugar list [★]
-**** TODO list not empty [★★]
-**** TODO list not empty [★★★★]
-**** TODO let rec [★★★★]
-**** TODO simple expression [★]
-**** TODO let and match expressions [★★]
-**** TODO closures [★★]
-**** TODO lexical scope and shadowing [★★]
-**** TODO more evaluation [★★]
-**** TODO dynamic scope [★★★]
-**** TODO more dynamic scope [★★★]
-**** TODO constraints [★★]
-**** TODO unify [★★]
-**** TODO unify more [★★★]
-**** TODO infer apply [★★★]
-**** TODO infer double [★★★]
-**** TODO infer S [★★★★]
+**** TODO parse [*]
+**** TODO simpl ids [**]
+**** TODO times parsing [**]
+**** TODO infer [**]
+**** TODO subexpression types [*]
+**** TODO typing [**]
+**** TODO substitution [**]
+**** TODO step expression [*]
+**** TODO step let expression [**]
+**** TODO variants [*]
+**** TODO application [**]
+**** TODO omega [***]
+**** TODO pair parsing [***]
+**** TODO pair type checking [***]
+**** TODO pair evaluation [***]
+**** TODO desugar list [*]
+**** TODO list not empty [**]
+**** TODO list not empty [****]
+**** TODO let rec [****]
+**** TODO simple expression [*]
+**** TODO let and match expressions [**]
+**** TODO closures [**]
+**** TODO lexical scope and shadowing [**]
+**** TODO more evaluation [**]
+**** TODO dynamic scope [***]
+**** TODO more dynamic scope [***]
+**** TODO constraints [**]
+**** TODO unify [**]
+**** TODO unify more [***]
+**** TODO infer apply [***]
+**** TODO infer double [***]
+**** TODO infer S [****]
+* Org Export Configuration
+
+** emacs-lisp setup latex export:
+
+run this before exporting:
+#+begin_src emacs-lisp
+  ;; change org's latex call to include the -shell-escape flag
+  ;; this is necessary to use minted, which uses pygments.
+
+  ;; the multiple calls to pdflatex are needed to make sure the
+  ;; in-document links all work correctly.
+  (setq org-latex-pdf-process
+        '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "bibtex %b"
+          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+
+  ;; set up and configure minted for source block export
+  (setq org-export-latex-listings 'minted)
+  (setq org-latex-listings 'minted)
+  (add-to-list 'org-latex-packages-alist '("" "minted"))
+
+  (setq org-latex-minted-options '(("breaklines" "true")
+                                   ("breakanywhere" "true")
+                                   ("frame" "single")
+                                   ("samepage" "")))
+#+end_src
+
+** TODO Results export 
+
+How to change every source block to export "both", instead of
+"code". This is not a latex option, but an org option. Adding
+~:results both~ to every source block will work, but there's probably
+a way to make the change globally.
+
