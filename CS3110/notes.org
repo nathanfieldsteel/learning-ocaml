@@ -873,7 +873,7 @@ Small test
 - : int = 720
 #+end_src
 
-**** DONE concat [**]
+**** DONE concat $[\star\star]$
 
 Write a function that concatenates all the strings in a list. The
 concatenation of all the strings in an empty list is the empty string
@@ -903,7 +903,7 @@ Small test
 - : string = "Hello, world!"
 #+end_src
 
-**** DONE product test [**]
+**** DONE product test $[\star\star]$
 
 I had trouble following the instructions in the CS3110 book. Following
 section 3.3.1, In a new directory, I created a file ~sum.ml~
@@ -1037,7 +1037,7 @@ this. But it's close enough to the process outlined in section 3.3.1
 in the book that I think I'll stick with this for now. I'd still like
 to learn how to use ~dune~ properly, but I'll postpone that until later.
 
-**** DONE Patterns [***]
+**** DONE Patterns $[\star\star\star]$
 
 Using pattern matching, write three functions, one for each of the following properties. Your functions should return true if the input list has the property and false otherwise.
 
@@ -1119,7 +1119,7 @@ A few tests:
 - : bool list = [false; true; true; true; false]
 #+end_src
   
-**** DONE Library [***]
+**** DONE Library $[\star\star\star]$
 
 Consult the List standard library to solve these exercises:
 
@@ -1181,7 +1181,7 @@ val descending_sort : 'a list -> 'a list = <fun>
  "jupiter"; "earth"]
 #+end_src
 
-**** DONE Library Test [***]
+**** DONE Library Test $[\star\star\star]$
 
 Write a couple OUnit unit tests for each of the functions you wrote in
 the previous exercise
@@ -1247,7 +1247,7 @@ Ran: 10 tests in: 0.11 seconds.
 OK
 #+end_example
 
-**** DONE Library Puzzle [***]
+**** DONE Library Puzzle $[\star\star\star]$
 
 + Write a function that returns the last element of a list. Your
   function may assume that the list is non-empty. Hint: Use two
@@ -1298,7 +1298,7 @@ A few tests
 - : bool list = [false; false; false; true; true]
 #+end_src
 
-**** DONE Take Drop [***]
+**** DONE Take Drop $[\star\star\star]$
 
 + Write a function ~take : int -> 'a list -> 'a list~ such that ~take
   n lst~ returns the first ~n~ elements of ~lst~. If ~lst~ has fewer
@@ -1363,7 +1363,7 @@ Small tests:
   - : int list list = [[4; 5; 6; 7; 8]; []; []; [1; 2; 3]]
   #+end_src
  
-**** DONE Take Drop Tail [****]
+**** DONE Take Drop Tail $[\star\star\star\star]$
 
 Revise your solutions for take and drop to be tail recursive, if they
 aren’t already. Test them on long lists with large values of n to see
@@ -1457,7 +1457,7 @@ being called on its own with modified arguments. The alternative is
 just to test the kind of input that would probably overflow for a
 non-tail-recursive function, though that seems iffy.
 
-**** DONE Unimodal [***]
+**** DONE Unimodal $[\star\star\star]$
 
 Write a function is_unimodal : int list -> bool that takes an integer
 list and returns whether that list is unimodal. A unimodal list is a
@@ -1510,7 +1510,7 @@ Some tests, with comments on the expected ~false~ outputs. Note the polymorphism
 [true; true; true; false; true; true; true; true; false; true; false]
 #+end_src
 
-**** DONE Power set [***]
+**** DONE Power set $[\star\star\star]$
 
 Write a function ~powerset : int list -> int list list~ that takes a
 set ~S~ represented as a list and returns the set of all subsets of
@@ -1555,7 +1555,7 @@ A slightly larger, though less precise test
 - : int = 128
 #+end_src
 
-**** DONE Print int list rec [**]
+**** DONE Print int list rec $[\star\star]$
 
 Write a function ~print_int_list : int list -> unit~ that prints its
 input list, one number per line. For example, ~print_int_list [1; 2;
@@ -1592,7 +1592,7 @@ As expected:
 - : unit = ()
 #+end_src
 
-**** DONE Print int list iter [**]
+**** DONE Print int list iter $[\star\star]$
 
 Write a function ~print_int_list' : int list -> unit~ whose
 specification is the same as ~print_int_list~. Do not use the keyword
@@ -1623,7 +1623,7 @@ Once again, as expected:
 - : unit = ()
 #+end_src
 
-**** DONE Student [**]
+**** DONE Student $[\star\star]$
 
 Assume the following type definition:
 
@@ -1677,7 +1677,7 @@ val name_of_student : student -> string * string = <fun>
 val student : string -> string -> float -> student = <fun>
 #+end_src
 
-**** DONE Pokerecord [**]
+**** DONE Pokerecord $[\star\star]$
 
 Here is a variant that represents a few Pokémon types:
 
@@ -1729,7 +1729,7 @@ val charizard : pokemon = {name = "charizard"; hp = 78; ptype = Fire}
 val squirtle : pokemon = {name = "squirtle"; hp = 44; ptype = Water}
 #+end_src
   
-**** DONE Safe hd and tl [**]
+**** DONE Safe hd and tl $[\star\star]$
 
 Write a function ~safe_hd : 'a list -> 'a option~ that returns ~Some
 x~ if the head of the input list is ~x~, and ~None~ if the input list
@@ -1791,7 +1791,7 @@ And a few tests:
 - : int list option list = [Some [2; 3]; Some []; None]
 #+end_src
 
-**** DONE Pokefun [***]
+**** DONE Pokefun $[\star\star\star]$
 
 Write a function ~max_hp : pokemon list -> pokemon option~ that, given
 a list of ~pokemon~, finds the Pokémon with the highest HP.
@@ -1826,7 +1826,7 @@ val max_hp : pokemon list -> pokemon option = <fun>
  Some {name = "squirtle"; hp = 44; ptype = Water}; None]
 #+end_src
 
-**** DONE Date before [**]
+**** DONE Date before $[\star\star]$
 
 Define a date-like triple to be a value of type ~int * int *
 int~. Examples of date-like triples include ~(2013, 2, 1)~ and ~(0, 0,
@@ -1892,7 +1892,7 @@ A trivial test:
 - : bool list = [false; true]
 #+end_src
 
-**** DONE Earliest date [***]
+**** DONE Earliest date $[\star\star\star]$
 
 Write a function ~earliest : (int*int*int) list -> (int * int * int)
 option~. It evaluates to ~None~ if the input list is empty, and to
@@ -1930,7 +1930,7 @@ Small test using the two values defined in the previous problem:
 - : date_like_triple option = Some {year = 1986; month = 7; day = 14}
 #+end_src
 
-**** DONE Assoc list [*]
+**** DONE Assoc list $[\star]$
 
 Use the functions ~insert~ and ~lookup~ from the section on
 association lists to construct an association list that maps the
@@ -1989,7 +1989,7 @@ But when we look up ~4~, we find ~None~:
 - : string option = None
 #+end_src
 
-**** DONE Cards [**]
+**** DONE Cards $[\star\star]$
 
 + Define a variant type suit that represents the four suits, (hearts,
   clubs, diamonds and spades), in a standard 52-card deck. All the
@@ -2049,7 +2049,7 @@ type suit = Hearts | Clubs | Diamonds | Spades
                          suit = Spades};;
 #+end_src
 
-**** DONE Matching [*]
+**** DONE Matching $[\star]$
 
 For each pattern in the list below, give a value of type ~int option
 list~ that does not match the pattern and is not the empty list, or
@@ -2079,7 +2079,7 @@ does not match it.
 This pattern matches every list except the empty list, so we can't
 match it with a nonempty list.
 
-**** DONE Quadrant [**]
+**** DONE Quadrant $[\star\star]$
 
 Complete the ~quadrant~ function. Points that lie on an axis do not
 belong to any quandrant. Hints: (a) define a helper function for the
@@ -2123,7 +2123,7 @@ A trivial test
 - : quad option = Some IV
 #+end_src
 
-**** DONE Quadrant when [**]
+**** DONE Quadrant when $[\star\star]$
 
 Rewrite the quadrant function to use the when syntax. You won’t need
 your helper function from before.
@@ -2151,7 +2151,7 @@ val quadrant_when : int * int -> quad option = <fun>
 - : quad option = Some IV
 #+end_src
 
-**** DONE Depth [**]
+**** DONE Depth $[\star\star]$
 
 Write a function ~depth : 'a tree -> int~ that returns the number of
 nodes in any longest path from the root to a leaf. For example, the
@@ -2223,7 +2223,7 @@ And a few tests:
 - : int list = [0; 2; 3]
 #+end_src
 
-**** DONE Shape [***]
+**** DONE Shape $[\star\star\star]$
 
 Write a function ~same_shape : 'a tree -> 'b tree -> bool~ that
 determines whether two trees have the same shape, regardless of
@@ -2255,7 +2255,7 @@ different roots:
 - : bool = true
 #+end_src
 
-**** DONE List max exn [**]
+**** DONE List max exn $[\star\star]$
 
 Write a function ~list_max : int list -> int~ that returns the maximum integer in a list, or raises ~Failure "list_max"~ if the list is empty.
 
@@ -2309,7 +2309,7 @@ I also got a weird warning when I matched with ~exception (Failure
 ~exception (_)~, though this seems like a less accurate expression to
 match against.
 
-**** DONE List max exn string [**]
+**** DONE List max exn string $[\star\star]$
 
 Write a function ~list_max_string : int list -> string~ that returns a
 string containing the maximum integer in a list, or the string
@@ -2347,8 +2347,8 @@ The usual tests:
 - : string list = ["345435"; "99999"; "empty"]
 #+end_src
 
-**** TODO List max exn ounit [*]
-**** TODO is_bst [****]
+**** TODO List max exn ounit $[\star]$
+**** TODO is_bst $[\star\star\star\star]$
 
 Write a function ~is_bst : ('a*'b) tree -> bool~ that returns true if
 and only if the given tree satisfies the binary search tree
@@ -2369,7 +2369,7 @@ ordering. But why a tree of pairs of two types?
 
 Maybe just do it for ~int tree~ for now?
 
-**** DONE Quadrant poly  [**]
+**** DONE Quadrant poly $[\star\star]$
 
 Modify your definition of ~quadrant~ to use polymorphic variants. The
 types of your functions should become these:
@@ -2411,7 +2411,7 @@ val quadrant : int * int -> [> `I | `II | `III | `IV ] option = <fun>
 #+end_src
 
 *** 4.9 Higher-Order Programming - Exercises [14/18]
-**** DONE Twice, no arguments [*]
+**** DONE Twice, no arguments $[\star]$
 
 Consider the following definitions. Use the toplevel to determine what the types of quad and fourth are. Explain how it can be that quad is not syntactically written as a function that takes an argument, and yet its type shows that it is in fact a function.
 
@@ -2484,7 +2484,7 @@ The same description of ~twice double~ applies to ~twice square~ as
 well, since ~double~ and ~square~ have the same type. So this function
 will also have type ~int -> int~, and for the same reason(s).
 
-**** DONE Mystery Operator 1 [**]
+**** DONE Mystery Operator 1 $[\star\star]$
 
 What does the following operator do?
 
@@ -2512,7 +2512,7 @@ we see below
 - : int list = [7; 8]
 #+end_src
 
-**** DONE Mystery Operator 2 [**]
+**** DONE Mystery Operator 2 $[\star\star]$
 
 What does the following operator do?
 
@@ -2537,7 +2537,7 @@ Note that this does *not* have the same kind of notationally-favorable
 binding as the preceeding operator. It would be nice if we didn't need
 the parentheses in the above example.
 
-**** DONE Repeat [**]
+**** DONE Repeat $[\star\star]$
 
 Generalize ~twice~ to a function ~repeat~, such that ~repeat f n x~ applies ~f~ to ~x~ a total of ~n~ times.
 
@@ -2563,7 +2563,7 @@ If we ~double~ ~1~ eleven times, we should get ~2048~
 - : int = 2048
 #+end_src
 
-**** DONE Product [*]
+**** DONE Product $[\star]$
 
 Use ~fold_left~ to write a function ~product_left~ that computes the product of a list of floats. The product of the empty list is ~1.0~. Hint: recall how we implemented sum in just one line of code in lecture.
 
@@ -2625,7 +2625,7 @@ val product_right : float list -> float = <fun>
 - : float = 120.
 #+end_src
 
-**** DONE Terse Product [**]
+**** DONE Terse Product $[\star\star]$
 
 How terse can you make your solutions to the ~product~ exercise?
 Hints: you need only one line of code for each, and you do not need
@@ -2668,7 +2668,7 @@ omitting this label only causes a warning and not a true error
 (I should figure out exactly the syntax and conventions for labelled
 argument, since I don't feel like I did this exactly the right way.)
 
-**** DONE sum cube odd [**]
+**** DONE sum cube odd $[\star\star]$
 
 Write a function ~sum_cube_odd n~ that computes the sum of the cubes
 of all the odd numbers between ~0~ and ~n~ inclusive. Do not write any
@@ -2714,7 +2714,7 @@ val sum_cube_odd : int -> int = <fun>
 - : int = 1225
 #+end_src
 
-**** DONE sum cube odd pipeline [**]
+**** DONE sum cube odd pipeline $[\star\star]$
 
 Rewrite the previous function with the pipeline ~|>~ operator.
 
@@ -2745,7 +2745,7 @@ val sum_cube_odd_pipeline : int -> int = <fun>
 - : int = 1225
 #+end_src
 
-**** DONE exists [**]
+**** DONE exists $[\star\star]$
 
 Consider writing a function ~exists: ('a -> bool) -> 'a list -> bool~, such that ~exists p [a1; ...; an]~ returns whether at least one element of the list satisfies the predicate ~p~. That is, it evaluates the same as ~(p a1) || (p a2) || ... || (p an)~. When applied to an empty list, it evaluates to false.
 
@@ -2830,7 +2830,7 @@ I feel like I've done this in a sort of lazy way.
 - : bool = true
 #+end_src
 
-**** DONE account balance [***]
+**** DONE account balance $[\star\star\star]$
 
 Write a function which, given a list of numbers representing debits,
 deducts them from an account balance, and finally returns the
@@ -2888,7 +2888,7 @@ some tests:
 - : int list = [110; 110; 110]
 #+end_src
 
-**** DONE library uncurried [**]
+**** DONE library uncurried $[\star\star]$
 
 Here is an uncurried version of ~List.nth~:
 
@@ -2969,7 +2969,7 @@ val uncurried_max : 'a * 'a -> 'a = <fun>
 - : int = 16
 #+end_src
 
-**** DONE map composition [***]
+**** DONE map composition $[\star\star\star]$
 
 Show how to replace any expression of the form ~List.map f (List.map g
 lst)~ with an equivalent expression that calls ~List.map~ only once.
@@ -2996,7 +2996,7 @@ Could instead be written as follows
 
 (Is this what they were expecting?)
 
-**** DONE more list fun [***]
+**** DONE more list fun $[\star\star\star]$
 
 Write functions that perform the following computations. Each function
 that you write should use one of ~List.fold~, ~List.map~ or
@@ -3081,7 +3081,7 @@ val delimit_strings : string list -> string -> string = <fun>
 - : string list = ["0, 1, 2, 3, 4, 5, 6, 7"; "a:b"; ""]
 #+end_src
 
-**** DONE association list keys [***]
+**** DONE association list keys $[\star\star\star]$
 
 Recall that an association list is an implementation of a dictionary
 in terms of a list of pairs, in which we treat the first component of
@@ -3128,7 +3128,7 @@ val keys : ('a * 'b) list -> 'a list = <fun>
 It's also not clear to me that this is the "one line" solution they're
 hinting at. My guess is no. Should revisit.
 
-**** TODO valid matrix [***]
+**** TODO valid matrix $[\star\star\star]$
 
 A mathematical matrix can be represented with lists. In row-major
 representation, this matrix
@@ -3182,7 +3182,7 @@ Some ordinary tests:
 (I still need to do the unit test part of this problem, so I'm not
 marking it as done just yet)
   
-**** TODO row vector add [***]
+**** TODO row vector add $[\star\star\star]$
 
 Implement a function ~add_row_vectors: int list -> int list -> int list~
 for the element-wise addition of two row vectors. For example, the
@@ -3213,7 +3213,7 @@ Quick test:
 - : int list = [7; 9; 13]
 #+end_src
 
-**** TODO matrix add [***]
+**** TODO matrix add $[\star\star\star]$
 
 Implement a function ~add_matrices: int list list -> int list list ->
 int list list~ for matrix addition. If the two input matrices are not
@@ -3245,7 +3245,7 @@ Quick test:
 
 Still need to do the unit test part of this problem
 
-**** TODO matrix multiply [****]
+**** TODO matrix multiply $[\star\star\star\star]$
 
 Implement a function ~multiply_matrices: int list list -> int list list
 -> int list list~ for matrix multiplication. If the two input matrices
