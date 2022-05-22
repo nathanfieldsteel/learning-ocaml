@@ -113,7 +113,7 @@ single source block. Probably should try to incorporate this into
 emacs configuration, but in a safe way.
 
 ** CS3110 - Notes
-** CS3110 Exercises [65/204] [31%]
+** CS3110 Exercises [74/204] [36%]
   :PROPERTIES:
   :COOKIE_DATA: todo recursive
   :END:
@@ -804,7 +804,7 @@ looks like this:
   Hello world!- : unit = ()
 #+end_example
 
-*** 3.14 Data and Types - Exercises [21/32]
+*** 3.14 Data and Types - Exercises [30/32]
 **** DONE List Expressions $[\star]$
 
 + Construct a list that has the integers 1 through 5 in it. Use the
@@ -1646,10 +1646,10 @@ Give OCaml expressions that have the following types:
            gpa = 3.9}
 #+end_src
 
-  #+RESULTS:
-  #+begin_src ocaml :exports code
-  val s : student = {first_name = "John"; last_name = "Smith"; gpa = 3.9}
-  #+end_src
+#+RESULTS:
+#+begin_src ocaml :exports code
+val s : student = {first_name = "John"; last_name = "Smith"; gpa = 3.9}
+#+end_src
 
 + ~student -> string * string~ (a function that extracts the student’s
   name)
@@ -1989,14 +1989,14 @@ But when we look up ~4~, we find ~None~:
 - : string option = None
 #+end_src
 
-**** TODO Cards [**]
+**** DONE Cards [**]
 
 + Define a variant type suit that represents the four suits, (hearts,
   clubs, diamonds and spades), in a standard 52-card deck. All the
   constructors of your type should be constant.
 
 #+begin_src ocaml
-    type suit =
+  type suit =
     | Hearts
     | Clubs
     | Diamonds
@@ -2049,12 +2049,7 @@ type suit = Hearts | Clubs | Diamonds | Spades
                          suit = Spades};;
 #+end_src
 
-#+RESULTS:
-#+begin_src ocaml :exports code
-val seven_of_spades : card = {rank = Number 7; suit = Spades}
-#+end_src
-
-**** TODO Matching [*]
+**** DONE Matching [*]
 
 For each pattern in the list below, give a value of type ~int option
 list~ that does not match the pattern and is not the empty list, or
@@ -2062,34 +2057,33 @@ explain why that’s impossible.
 
 1. ~Some x :: tl~
 
-   ~[None]~ does not match, since the head does not match
+~[None]~ does not match, since the head does not match
    
 2. ~[Some 3110; None]~
 
-   ~[None]~ does not match, since the head does not match. Also, ~[Some
-   3110; Some 3110]~ will not match, since the second element is not
-   ~None~.
-   
-3. ~[Some x; _]~
+~[None]~ does not match, since the head does not match. Also, ~[Some
+3110; Some 3110]~ will not match, since the second element is not
+~None~.
 
-   Again, ~[Some x; None; None]~ does not match. It's too long.
+3. ~[Some x; _]~
    
+Again, ~[Some x; None; None]~ does not match. It's too long.
+
 4. ~h1 :: h2 :: tl~
 
-   Any list of length ~2~ or greater will match this pattern. But
-   ~[None]~ does not match it.
+Any list of length ~2~ or greater will match this pattern. But ~[None]~
+does not match it.
    
 5. ~h :: tl~
 
-   This pattern matches every list except the empty list, so we can't
-   match it with a nonempty list.
-**** TODO Quadrant [**]
+This pattern matches every list except the empty list, so we can't
+match it with a nonempty list.
 
-Complete the ~quadrant~ function below, which should return the quadrant
-of the given ~x, y~ point according to the diagram on the right
-(borrowed from Wikipedia). Points that lie on an axis do not belong to
-any quandrant. Hints: (a) define a helper function for the sign of an
-integer, (b) match against a pair.
+**** DONE Quadrant [**]
+
+Complete the ~quadrant~ function. Points that lie on an axis do not
+belong to any quandrant. Hints: (a) define a helper function for the
+sign of an integer, (b) match against a pair.
 
 #+begin_src ocaml
   type quad = I | II | III | IV
@@ -2108,14 +2102,28 @@ integer, (b) match against a pair.
       | (Neg, Neg) -> Some III
       | (Pos, Neg) -> Some IV
       | _ -> None;;
+#+end_src
 
+#+RESULTS:
+#+begin_src ocaml :exports code
+type quad = I | II | III | IV
+type sign = Neg | Zero | Pos
+val sign : int -> sign = <fun>
+val quadrant : int * int -> quad option = <fun>
+#+end_src
+
+A trivial test
+
+#+begin_src ocaml
   quadrant (13,-58);;
 #+end_src
 
 #+RESULTS:
-: Some IV
+#+begin_src ocaml :exports code
+- : quad option = Some IV
+#+end_src
 
-**** TODO Quadrant when [**]
+**** DONE Quadrant when [**]
 
 Rewrite the quadrant function to use the when syntax. You won’t need
 your helper function from before.
@@ -2127,20 +2135,31 @@ your helper function from before.
       | (x,y) when x < 0 && y < 0 -> Some III
       | (x,y) when x > 0 && y < 0 -> Some IV
       | _ -> None;;
+#+end_src
 
+#+RESULTS:
+#+begin_src ocaml :exports code
+val quadrant_when : int * int -> quad option = <fun>
+#+end_src
+
+#+begin_src ocaml
   quadrant_when (13,-58)
 #+end_src
 
 #+RESULTS:
-: Some IV
+#+begin_src ocaml :exports code
+- : quad option = Some IV
+#+end_src
 
-**** TODO Depth [**]
+**** DONE Depth [**]
 
 Write a function ~depth : 'a tree -> int~ that returns the number of
 nodes in any longest path from the root to a leaf. For example, the
 depth of an empty tree (simply ~Leaf~) is ~0~, and the depth of tree
 ~t~ above is ~3~. Hint: there is a library function ~max : 'a -> 'a ->
 'a~ that returns the maximum of any two values of the same type.
+
+Here's the inductive definition of a tree:
 
 #+begin_src ocaml
   type 'a tree =
@@ -2149,11 +2168,13 @@ depth of an empty tree (simply ~Leaf~) is ~0~, and the depth of tree
 #+end_src
 
 #+RESULTS:
-: type 'a tree = Leaf | Node of 'a * 'a tree * 'a tree
+#+begin_src ocaml :exports code
+type 'a tree = Leaf | Node of 'a * 'a tree * 'a tree
+#+end_src
 
-Here's the tree from 3.11.1:
+Here's the tree from section 3.11.1:
 
-#+begin_src ocaml
+#+begin_src ocaml :exports code
 (* the code below constructs this tree:
          4
        /   \
@@ -2174,26 +2195,35 @@ let t =
   )
 #+end_src
 
-#+RESULTS:
-: Node (4, Node (2, Node (1, Leaf, Leaf), Node (3, Leaf, Leaf)),
-:    Node (5, Node (6, Leaf, Leaf), Node (7, Leaf, Leaf)))
+Finally, the depth function
 
 #+begin_src ocaml
-    let depth t =
-      let rec depth_tr d t = match t with
-      | Leaf -> d
-      | Node (x, left, right) -> max (depth_tr (d+1) left) (depth_tr (d+1) right) in
+  let depth t =
+    let rec depth_tr d t = match t with
+    | Leaf -> d
+    | Node (x, left, right) -> max (depth_tr (d+1) left) (depth_tr (d+1) right) in
     depth_tr 0 t;;
-
-    depth Leaf;;
-    depth (Node(1, Leaf, Node(1, Leaf, Leaf)));;
-    depth t
 #+end_src
 
 #+RESULTS:
-: 3
+#+begin_src ocaml :exports code
+val depth : 'a tree -> int = <fun>
+#+end_src
 
-**** TODO Shape [***]
+And a few tests:
+
+#+begin_src ocaml
+  [depth Leaf;
+   depth (Node(1, Leaf, Node(1, Leaf, Leaf)));
+   depth t]
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : int list = [0; 2; 3]
+#+end_src
+
+**** DONE Shape [***]
 
 Write a function ~same_shape : 'a tree -> 'b tree -> bool~ that
 determines whether two trees have the same shape, regardless of
@@ -2205,36 +2235,68 @@ is a pair of trees.
     let rec same_shape t1 t2 = match (t1, t2) with
       | (Leaf, Leaf) -> true
       | (Node(_, left1, right1), Node(_, left2, right2)) -> ((same_shape left1 left2) && (same_shape right1 right2))
-
       | _ -> false;;
-
-    same_shape (Node(4,t,t)) (Node(1, t, t));;
 #+end_src
 
 #+RESULTS:
-: true
+#+begin_src ocaml :exports code
+val same_shape : 'a tree -> 'b tree -> bool = <fun>
+#+end_src
 
-**** TODO List max exn [**]
+Test using trees built out of the previous given tree ~t~, but with
+different roots:
+
+#+begin_src ocaml
+  same_shape (Node(4,t,t)) (Node(1, t, t));;
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : bool = true
+#+end_src
+
+**** DONE List max exn [**]
 
 Write a function ~list_max : int list -> int~ that returns the maximum integer in a list, or raises ~Failure "list_max"~ if the list is empty.
 
 #+begin_src ocaml
-      let rec list_max_exn lst =
-        let rec list_max_exn_acc m lst = match lst with
-          | x :: xs -> if (x > m)
-                       then (list_max_exn_acc x xs)
-                       else (list_max_exn_acc m xs)
-          | [] -> m in
-      match List.hd lst with
-      | exception (_) -> failwith "list_max"
-      | m -> list_max_exn_acc m (List.tl lst);;
-
-    list_max_exn [1;2;3;4;56;6;7;6;5;4;5;0;0;0;11;12;13];;
-    list_max_exn []
+  let rec list_max_exn lst =
+    let rec list_max_exn_acc m lst = match lst with
+      | x :: xs -> if (x > m)
+                   then (list_max_exn_acc x xs)
+                   else (list_max_exn_acc m xs)
+      | [] -> m in
+    match List.hd lst with
+    | exception (_) -> failwith "list_max"
+    | m -> list_max_exn_acc m (List.tl lst);;
 #+end_src
 
 #+RESULTS:
-: Exception: Failure "list_max".
+#+begin_src ocaml :exports code
+val list_max_exn : 'a list -> 'a = <fun>
+#+end_src
+
+It works as expected for a nonempty list:
+
+#+begin_src ocaml
+  list_max_exn [1;2;3;4;56;6;7;6;5;4;5;0;0;0;11;12;13];;
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : int = 56
+#+end_src
+
+But for an empty list, we get the exception we expected:
+
+#+begin_src ocaml
+  list_max_exn []
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+Exception: Failure "list_max".
+#+end_src
 
 There is something going on here that I don't understand. I thought
 that if you had a match expression, every possible match needs to
@@ -2244,49 +2306,70 @@ the second has type ~int~ or maybe ~'a~.
 
 I also got a weird warning when I matched with ~exception (Failure
 "hd")~ ("fragile-literal-pattern) that went away when I changed to to
-~exception (_)~, though this seems less accurate.
+~exception (_)~, though this seems like a less accurate expression to
+match against.
 
-**** TODO List max exn string [**]
+**** DONE List max exn string [**]
 
 Write a function ~list_max_string : int list -> string~ that returns a
 string containing the maximum integer in a list, or the string
 ~"empty"~ (note, not the exception ~Failure "empty"~ but just the
-string ~"empty"~) if the list is empty. Hint: ~string_of_int~ in the
+string ~"empty"~ if the list is empty.) Hint: ~string_of_int~ in the
 standard library will do what its name suggests.
 
 #+begin_src ocaml
-        let list_max_string lst =
-          let rec list_max_string_acc m lst = match lst with
-            | [] -> m
-            | x :: xs -> if (x > m)
-                         then (list_max_string_acc x xs)
-                         else(list_max_string_acc m xs) in
-          match lst with
-          | [] -> "empty"
-          | x :: xs -> list_max_string_acc x xs |> string_of_int;;
-
-        list_max_string [123;252435;12312;345435;123];;
-        list_max_string [99999;99998];;
-        list_max_string []
+  let list_max_string lst =
+    let rec list_max_string_acc m lst = match lst with
+      | [] -> m
+      | x :: xs -> if (x > m)
+                   then (list_max_string_acc x xs)
+                   else(list_max_string_acc m xs) in
+    match lst with
+    | [] -> "empty"
+    | x :: xs -> list_max_string_acc x xs |> string_of_int;;
 #+end_src
 
 #+RESULTS:
-: empty
+#+begin_src ocaml :exports code
+val list_max_string : int list -> string = <fun>
+#+end_src
+
+The usual tests:
+
+#+begin_src ocaml
+  [list_max_string [123;252435;12312;345435;123];
+   list_max_string [99999;99998];
+   list_max_string []]
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : string list = ["345435"; "99999"; "empty"]
+#+end_src
 
 **** TODO List max exn ounit [*]
 **** TODO is_bst [****]
 
-Write a function ~is_bst : ('a*'b) tree -> bool~ that returns true if and only if the given tree satisfies the binary search tree invariant. An efficient version of this function that visits each node at most once is somewhat tricky to write. Hint: write a recursive helper function that takes a tree and either gives you (i) the minimum and maximum value in the tree, or (ii) tells you that the tree is empty, or (iii) tells you that the tree does not satisfy the invariant. Your ~is_bst~ function will not be recursive, but will call your helper function and pattern match on the result. You will need to define a new variant type for the return type of your helper function.
+Write a function ~is_bst : ('a*'b) tree -> bool~ that returns true if
+and only if the given tree satisfies the binary search tree
+invariant. An efficient version of this function that visits each node
+at most once is somewhat tricky to write. Hint: write a recursive
+helper function that takes a tree and either gives you (i) the minimum
+and maximum value in the tree, or (ii) tells you that the tree is
+empty, or (iii) tells you that the tree does not satisfy the
+invariant. Your ~is_bst~ function will not be recursive, but will call
+your helper function and pattern match on the result. You will need to
+define a new variant type for the return type of your helper function.
 
 I don't really understand the signature of the specified function. Why
 do we need to be working with a tree of ordered pairs of type
 ~('a*'b)~ ? It would make sense to write a polymorphic ~is_bst~ for
-any ~'a tree~ where ~'a~ is a type that that admits a total order. But
-why a tree of pairs of two types?
+any ~'a tree~ where ~'a~ is a type that that admits a total
+ordering. But why a tree of pairs of two types?
 
 Maybe just do it for ~int tree~ for now?
 
-**** TODO Quadrant poly  [**]
+**** DONE Quadrant poly  [**]
 
 Modify your definition of ~quadrant~ to use polymorphic variants. The
 types of your functions should become these:
@@ -2296,6 +2379,9 @@ types of your functions should become these:
   val quadrant : int * int -> [> `I | `II | `III | `IV ] option
 #+end_src
 
+Here's the sign with polymorphic variants. We can see that it has the
+right signature:
+
 #+begin_src ocaml :results verbatim
     let sign = function
       | p when p > 0 -> `Pos
@@ -2304,19 +2390,25 @@ types of your functions should become these:
 #+end_src
 
 #+RESULTS:
-: val sign : int -> [> `Neg | `Pos | `Zero ] = <fun>
+#+begin_src ocaml :exports code
+val sign : int -> [> `Neg | `Pos | `Zero ] = <fun>
+#+end_src
+
+And quadrant with polymorphic variants. Again, right signature.
 
 #+begin_src ocaml :results verbatim
-      let quadrant (x,y) = match (sign x, sign y) with
-        | (`Pos, `Pos) -> Some `I
-        | (`Neg, `Pos) -> Some `II
-        | (`Neg, `Neg) -> Some `III
-        | (`Pos, `Neg) -> Some `IV
-        | _ -> None
+  let quadrant (x,y) = match (sign x, sign y) with
+    | (`Pos, `Pos) -> Some `I
+    | (`Neg, `Pos) -> Some `II
+    | (`Neg, `Neg) -> Some `III
+    | (`Pos, `Neg) -> Some `IV
+    | _ -> None
 #+end_src
 
 #+RESULTS:
-: val quadrant : int * int -> [> `I | `II | `III | `IV ] option = <fun>
+#+begin_src ocaml :exports code
+val quadrant : int * int -> [> `I | `II | `III | `IV ] option = <fun>
+#+end_src
 
 *** 4.9 Higher-Order Programming - Exercises [13/18]
 **** DONE Twice, no arguments [*]
