@@ -1,33 +1,54 @@
 #+STARTUP: content
 #+OPTIONS: ^:nil
+
 #+LATEX_HEADER: \usepackage[margin=0.75in]{geometry}
+
+:PROPERTIES:
+:header-args: ocaml
+:results: verbatim
+:wrap: "src ocaml :exports code"
+
+#+begin_src emacs-lisp
+  (setq org-confirm-babel-evaluate nil)
+#+end_src
+
+(#+PROPERTY: header-args:ocaml :exports both :results verbatim :wrap "src ocaml :exports code")
 
 * Learning OCaml - Notes
 
 My notes file for learning OCaml and for working through the CS3110 book.
-
 
 ** Goals
 + Learning OCaml
 + Literate programming in org-mode
 ** Remarks on OCaml in org-mode
 
-These variables control something about the way code gets
+You can use ~C-c C-,~ to open the export block dialog, select ~s~ for
+source and type ocaml. lets you type ocaml code with syntax
+highlighting and indentation from ~merlin~ in the org buffer. In a
+source block, ~C-c C-c~ runs the code and puts the results of
+evaluation underneath the source block.
+
+In the event these source blocks aren't adequate, ~M-x
+tuareg-run-ocaml~ opens the actual ocaml toplevel that emacs is
+running in the background.
+
+The following variables control something about the way code gets
 passed to and retrieved from the ocaml toplevel that emacs runs in the
-background. The toplevel can look a little cluttered with this
-expression repeated all over the place, but it's probably not worth changing.
+background. If you end up actually opening and using the toplevel
+directly in order to check or debug code, it can end up looking a
+little cluttered with this expression repeated all over the place, so
+it might be worth it to change it to a smaller or simpler expression
+in that case. I haven't dound this to be necessary.
 
 #+begin_example emacs-lisp
-  ;; (setq org-babel-ocaml-eoe-output "org-babel-ocaml-eoe")
-  ;; (setq org-babel-ocaml-eoe-indicator "\"org-babel-ocaml-eoe\";;")
-
   (setq org-babel-ocaml-eoe-output "org-babel-ocaml-eoe")
   (setq org-babel-ocaml-eoe-indicator "\"org-babel-ocaml-eoe\";;")
 #+end_example
 
 The default behavior of source blocks may not be adequate for printing
 results. For example the following source block shows its result, but
-does not show the type of the result:
+does not show that the result has type ~int~
 
 #+begin_src ocaml
     let x = 42;;
@@ -37,7 +58,8 @@ does not show the type of the result:
 #+RESULTS:
 : 42
 
-But with the verbatim tag, the type is displayed as well.
+But if we pass the header argument to insist that the result is
+displayed verbatim, then we see the type as well.
 
 #+begin_src ocaml :results verbatim
     let x = 42;;
@@ -47,31 +69,51 @@ But with the verbatim tag, the type is displayed as well.
 #+RESULTS:
 : - : int = 42
 
-And in this source block, when a string printing function is called,
-the printed string doesn't manage to make it to the results
-line. Again, the verbatim tag seems fixes this
+This can also be an issue with multi-line output. The default seems to
+be that only the last line of toplevel output makes it back to the org
+buffer, so this source block would juss show ~unit = ()~. Again, the
+verbatim tag fixes this. ~:results output~ is another option, similar
+to ~verbatim~.
 
-#+begin_src ocaml :results verbatim
-print_string "hello\n"
+#+begin_src ocaml :export code
+  print_string "hello\n"
 #+end_src
 
-#+RESULTS:
-: hello
-: - : unit = ()
+For the purpose of exporting the entire org file to pdf by way of
+latex, we need to do a bit of extra work. We want to wrap source
+blocks in the ~minted~ latex environment so they can be colored and
+syntax-highlighted by ~pygments~. For visual clarity in the final pdf,
+we also want the output to be ocaml source blocks. But these output
+blocks should not be evaluated.
 
-There is also the ~:results output~ tag. This is similar to ~:results
-verbatim~ but it deosn't seem to handle multi-line input:
+So we want source blocks with ~export~ set to ~both~, with ~results~
+set to ~verbatim~ and ~wrapped~ in an ocaml source block, and where
+the results blocks have their ~export~ set to just ~code~. The best
+way I've found to do this is by setting
 
-#+begin_src ocaml :results output
-print_string "hello\n"
-#+end_src
+#+begin_example
+:PROPERTIES:
+:header-args: ocaml
+:results: verbatim
+:wrap: "src ocaml :exports code"
+#+end_example
 
-#+RESULTS:
-: hello
+at the top of the org file. Additionally, since so many ocaml
+functions have underscores in their names, we want to set ~#+OPTIONS:
+^:nil~ at the top of the file. Otherwise tex will interpret these as
+subscripts.
 
-In the event that source blocks aren't sufficient, you can open the
-actual running toplevel with ~M-x tuareg-run-ocaml~ and interact with
-it directly.
+*** TODO org latex export
+
+These is still something strange going on with org's export. If I
+export from notes.org in an empty directory, source blocks don't make
+it to the final pdf document, though they look right in the latex
+source. Then if I run ~pdflatex -shell-escape notes.tex~ on my own,
+a pdf is produced that does show the source (and output) blocks
+correctly. After that, org export will start working as expected. I
+don't know why this is happening but for now it's not worth the
+headache to fix it. Exporting the pdf shouldn't happen often enough
+for it to be a real problem
 
 ** CS3110 - Notes
 ** TODO CS3110 Exercises [75/212] [35%]
@@ -350,7 +392,7 @@ subproblems repeatedly. For example, computing fib 5 requires
 computing both fib 3 and fib 4, and if those are computed separately,
 a lot of work (an exponential amount, in fact) is being redone.
 
-#+begin_src ocaml results: verbatim
+#+begin_src ocaml :export code 
   let fibtimer n = 
     let t1 = Sys.time() in
     let fn = fib n in
@@ -363,14 +405,9 @@ a lot of work (an exponential amount, in fact) is being redone.
                  ^ (string_of_float (t2 -. t1))
                  ^ " seconds." in
     print_endline output;;
-
-  fibtimer 50;;
 #+end_src
 
-#+RESULTS:
-: ()
-
-Prints ~found fib 50 = 12586269025 in 257.446328 seconds~. Slow.
+Running ~fibtimer 50;;~ will print ~found fib 50 = 12586269025 in 257.446328 seconds~. It's Slow.
 
 #+begin_src ocaml
   let fib_fast n =
@@ -537,39 +574,40 @@ Prints the string with no newline. Has type unit. Output looks like:
 #+end_export
 
 *** TODO 3.14 Data and Types - Exercises [30/32]
-**** DONE List Expressions [*]
+**** DONE List Expressions $[\star]$
+
 + Construct a list that has the integers 1 through 5 in it. Use the
   square bracket notation for lists.
   
-  #+begin_src ocaml
-    let l1 = [1;2;3;4;5];;
-  #+end_src
+#+begin_src ocaml
+  let l1 = [1;2;3;4;5];;
+#+end_src
 
-  #+RESULTS:
-  | 1 | 2 | 3 | 4 | 5 |
+#+RESULTS:
+| 1 | 2 | 3 | 4 | 5 |
   
 + Construct the same list, but do not use the square bracket
   notation. Instead use ~::~ and ~[]~.
 
-  #+begin_src ocaml
-    let l2 = 1::2::3::4::5::[];;
-  #+end_src
+#+begin_src ocaml
+  let l2 = 1::2::3::4::5::[];;
+#+end_src
 
-  #+RESULTS:
-  | 1 | 2 | 3 | 4 | 5 |
+#+RESULTS:
+| 1 | 2 | 3 | 4 | 5 |
 
 + Construct the same list again. This time, the following expression
   must appear in your answer: ~[2; 3; 4]~. Use the @ operator, and do
   not use ~::~
 
-  #+begin_src ocaml
-    let l3 = [1] @ [2;3;4] @ [5];;
-  #+end_src
+#+begin_src ocaml
+  let l3 = [1] @ [2;3;4] @ [5];;
+#+end_src
 
-  #+RESULTS:
-  | 1 | 2 | 3 | 4 | 5 |
+#+RESULTS:
+| 1 | 2 | 3 | 4 | 5 |
 
-**** DONE Product [**]
+**** DONE Product $[\star\star]$
 
 Write a function that returns the product of all the elements in a
 list. The product of all the elements of an empty list is ~1~.
@@ -580,12 +618,17 @@ list. The product of all the elements of an empty list is ~1~.
       | [] -> p
       | x :: xs -> list_product_acc (p*x) xs in
     list_product_acc 1 l;;
-
-  list_product (l1 @ l2 @ l3)
 #+end_src
 
 #+RESULTS:
-: 1728000
+: <fun>
+
+#+begin_src ocaml
+  list_product [1;2;3;4;5;6]
+#+end_src
+
+#+RESULTS:
+: 720
 
 **** DONE concat [**]
 
@@ -594,7 +637,6 @@ concatenation of all the strings in an empty list is the empty string
 "".
 
 #+begin_src ocaml
-
     let list_concat l =
       let rec list_concat_acc s l = match l with
         | [] -> s
@@ -2466,14 +2508,13 @@ end
       let result = f x in
       let t2 = Sys.time() in
       (result, t2 -. t1);;
-
-    timing fill_listqueue 50000;;
 #+end_src
 
 #+RESULTS:
 : - : int ListQueue.t * float = (<abstr>, 37.58237)
 
-~10000~ took about 1 second, ~50000~ took about 30.
+Now we can do ~timing fill_listqueue n;;~ to time it ~n = 10000~ took
+about 1 second, ~n = 50000~ took about 30 seconds.
 
 **** TODO Big batched queue [**]
 **** TODO Queue efficiency [***]
@@ -2717,7 +2758,9 @@ check your answers.
 #+end_src
 
 #+RESULTS:
-: {contents = true}
+#+begin_src ocaml
+val br : bool ref = {contents = true}
+#+end_src
 
 + ~int list ref~
 
@@ -2996,22 +3039,26 @@ Modify your implementation of ~norm~ to use a loop.
 Modify your implementation of ~normalize~ to use a loop.
 
 #+begin_src ocaml :results verbatim
-  let normalize vect =
-    let n = Array.length vect in
-    let n = norm vect in
-    let i = ref 0 in
-    while !i < len
-    do (vect.(!i) <- vect.(!i) /. n;
-        i := !i + 1)
-    done;;
+      let normalize vect =
+        let len = Array.length vect in
+        let n = norm vect in
+        let i = ref 0 in
+        while !i < len
+        do (vect.(!i) <- vect.(!i) /. n;
+            i := !i + 1)
+        done;;
 
-  let v = [| 3.0; 4.0 |];;
+      let v = [| 3.0; 4.0 |];;
 
-  norm v;;
-  normalize v;;
-  v;;
-  norm v;;
+      print_endline (string_of_float (norm v));
+      normalize v;
+      print_endline (string_of_float (norm v));;
 #+end_src
+
+#+RESULTS:
+: 5.
+: 1.
+: - : unit = ()
 
 **** DONE init matrix [***]
 
@@ -3127,38 +3174,3 @@ representation of matrices as arrays.
 **** TODO infer apply [***]
 **** TODO infer double [***]
 **** TODO infer S [****]
-* Org Export Configuration
-
-** emacs-lisp setup latex export:
-
-run this before exporting:
-#+begin_src emacs-lisp
-  ;; change org's latex call to include the -shell-escape flag
-  ;; this is necessary to use minted, which uses pygments.
-
-  ;; the multiple calls to pdflatex are needed to make sure the
-  ;; in-document links all work correctly.
-  (setq org-latex-pdf-process
-        '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "bibtex %b"
-          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-
-  ;; set up and configure minted for source block export
-  (setq org-export-latex-listings 'minted)
-  (setq org-latex-listings 'minted)
-  (add-to-list 'org-latex-packages-alist '("" "minted"))
-
-  (setq org-latex-minted-options '(("breaklines" "true")
-                                   ("breakanywhere" "true")
-                                   ("frame" "single")
-                                   ("samepage" "")))
-#+end_src
-
-** TODO Results export 
-
-How to change every source block to export "both", instead of
-"code". This is not a latex option, but an org option. Adding
-~:results both~ to every source block will work, but there's probably
-a way to make the change globally.
-
