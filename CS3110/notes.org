@@ -3717,31 +3717,58 @@ This concludes the proof.
 **** TODO list spec [***]
 **** TODO bag spec [****]
 *** 7.5 Mutability - Exercises [10/11]
-**** DONE mutable fields [*]
+**** DONE mutable fields $[\star]$
 
 Define an OCaml record type to represent student names and GPAs. It
 should be possible to mutate the value of a student’s GPA. Write an
 expression defining a student with name ~"Alice"~ and GPA ~3.7~. Then
 write an expression to mutate Alice’s GPA to ~4.0~
 
+Here's a record type with a mutable ~gpa~ field:
+
 #+begin_src ocaml
-  (* defining a record type with a mutable gpa field: *)
   type student = {name : string; mutable gpa: float};;
+#+end_src
 
-  (* create the specified instance *)
+#+RESULTS:
+#+begin_src ocaml :exports code
+type student = { name : string; mutable gpa : float; }
+#+end_src
+
+Create the specified instance:
+
+#+begin_src ocaml
   let student_rec = {name = "Alice"; gpa = 3.7};;
+#+end_src
 
-  (* change the gpa as specified *)
+#+RESULTS:
+#+begin_src ocaml :exports code
+val student_rec : student = {name = "Alice"; gpa = 3.7}
+#+end_src
+
+Change the mutable field, as specified:
+
+#+begin_src ocaml
   student_rec.gpa <- 4.0;;
+#+end_src
 
-  (* inspect to confirm *)
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : unit = ()
+#+end_src
+
+Inspect to confirm:
+
+#+begin_src ocaml
   student_rec
 #+end_src
 
 #+RESULTS:
-: {name = "Alice"; gpa = 4.}
+#+begin_src ocaml :exports code
+- : student = {name = "Alice"; gpa = 4.}
+#+end_src
 
-**** DONE refs [*]
+**** DONE refs $[\star]$
 
 Give OCaml expressions that have the following types. Use utop to
 check your answers.
@@ -3753,7 +3780,7 @@ check your answers.
 #+end_src
 
 #+RESULTS:
-#+begin_src ocaml
+#+begin_src ocaml :exports code
 val br : bool ref = {contents = true}
 #+end_src
 
@@ -3764,7 +3791,9 @@ val br : bool ref = {contents = true}
 #+end_src
 
 #+RESULTS:
-: val ilr : int list ref = {contents = [1; 2; 3]}
+#+begin_src ocaml :exports code
+val ilr : int list ref = {contents = [1; 2; 3]}
+#+end_src
 
 + ~int ref list~
 
@@ -3773,9 +3802,11 @@ val br : bool ref = {contents = true}
 #+end_src
 
 #+RESULTS:
-: - : int ref list = [{contents = 1}; {contents = 2}]
+#+begin_src ocaml :exports code
+- : int ref list = [{contents = 1}; {contents = 2}]
+#+end_src
 
-**** DONE inc fun [*]
+**** DONE inc fun $[\star]$
 
 Define a reference to a function as follows:
 
@@ -3784,42 +3815,61 @@ Define a reference to a function as follows:
 #+end_src
 
 #+RESULTS:
-: {contents = <fun>}
+#+begin_src ocaml :exports code
+val inc : (int -> int) ref = {contents = <fun>}
+#+end_src
 
 Write code that uses ~inc~ to produce the value ~3110~.
 
-(This is disgusting)
+This is pretty gross, but it feels like cheating to just do something
+like ~!inc 3109~. So, start with three ~int ref~ counters, all
+initially containing ~0~. The increment each of them until they're
+equal to ~2~, ~5~, and ~311~ (prime factorization of ~3110~. Then
+multiply them together).
+
 #+begin_src ocaml
     let p = ref 0 in
     let q = ref 0 in
     let r = ref 0 in
     while ((!p) < 2)
-    do (p := !p + 1)
+    do (p := !inc !p)
     done;
     while ((!q) < 5)
-    do (q := !q + 1)
+    do (q := !inc !q)
     done;
     while ((!r) < 311)
-    do (r := !r + 1)
+    do (r := !inc !r)
     done;
     (!p) * (!q) * (!r);
 #+end_src
 
 #+RESULTS:
-: 3110
+#+begin_src ocaml :exports code
+- : int = 3110
+#+end_src
 
-**** DONE addition assignment [**]
+**** DONE addition assignment $[\star\star]$
 
 The ~C~ language and many languages derived from it, such as Java, has
 an addition assignment operator written ~a += b~ and meaning ~a = a +
 b~. Implement such an operator in OCaml; its type should be ~int ref
 -> int -> unit~.
 
-(uncomfortably close to line noise here, this function is like 60% punctuation)
+Uncomfortably close to unreadable line noise here. This function
+definition is like 60% punctuation:
 
 #+begin_src ocaml
   let ( +:= ) x y = x := !x + y;;
+#+end_src
 
+#+RESULTS:
+#+begin_src ocaml :exports code
+val ( +:= ) : int ref -> int -> unit = <fun>
+#+end_src
+
+A quick test:
+
+#+begin_src ocaml
   let x = ref 0;;
 
   x +:= 12;;
@@ -3830,9 +3880,11 @@ b~. Implement such an operator in OCaml; its type should be ~int ref
 #+end_src
 
 #+RESULTS:
-: 37
+#+begin_src ocaml :exports code
+- : int = 37
+#+end_src
 
-**** DONE physical equality [**]
+**** DONE physical equality $[\star\star]$
 
 Define ~x~, ~y~, and ~z~ as follows:
 
@@ -3843,7 +3895,11 @@ Define ~x~, ~y~, and ~z~ as follows:
 #+end_src
 
 #+RESULTS:
-: {contents = 0}
+#+begin_src ocaml :exports code
+val x : int ref = {contents = 0}
+val y : int ref = {contents = 0}
+val z : int ref = {contents = 0}
+#+end_src
 
 Predict the value of the following series of expressions:
 
@@ -3864,7 +3920,9 @@ Predict the value of the following series of expressions:
 #+end_src
 
 #+RESULTS:
-: true
+#+begin_src ocaml :exports code
+- : bool = true
+#+end_src
 
 + ~# x == z;;~
 
@@ -3876,7 +3934,9 @@ same content are not the same box. They should not be equal
 #+end_src
 
 #+RESULTS:
-: false
+#+begin_src ocaml :exports code
+- : bool = false
+#+end_src
 
 + ~# x = y;;~
 
@@ -3889,7 +3949,9 @@ I'm guessing this is true:
 #+end_src
 
 #+RESULTS:
-: true
+#+begin_src ocaml :exports code
+- : bool = true
+#+end_src
 
 + ~# x = z;;~
 
@@ -3901,7 +3963,9 @@ so I expect them to be "equal" despite not being the same reference.
 #+end_src
 
 #+RESULTS:
-: true
+#+begin_src ocaml :exports code
+- : bool = true
+#+end_src
 
 + ~# x := 1;;~
 
@@ -3925,7 +3989,9 @@ memory. When we changed ~x~, we also changed ~y~. They are still
 #+end_src
 
 #+RESULTS:
-: true
+#+begin_src ocaml :exports code
+- : bool = true
+#+end_src
 
 + ~# x = z;;~
 
@@ -3938,38 +4004,56 @@ equal.
 #+end_src
 
 #+RESULTS:
-: false
+#+begin_src ocaml :exports code
+- : bool = true
+#+end_src
 
-**** DONE norm [**]
+**** DONE norm $[\star\star]$
 
 The Euclidean norm of an $n$-dimensional vector $x = (x_1, \ldots,
 x_n)$ is written $|x|$ and is defined to be $$\sqrt{x_1^2 + \cdots +
 x_n^2}.$$ Write a function ~norm: vector -> float~ that computes the
 Euclidean norm of a vector, where ~vector~ is defined as follows:
 
-#+begin_src ocaml
-  (* AF: the float array [| x1; ...; xn |] represents the
-   ,*     vector (x1, ..., xn)
-   ,* RI: the array is non-empty *)
+#+begin_src ocaml :exports code
   type vector = float array
 #+end_src
 
 #+begin_src ocaml
-  let norm vect = 
-    vect
+  let norm (v: vector) =
+    v
     |> Array.map (function x -> x *. x)
     |> Array.fold_left (+.) 0.
     |> Float.sqrt;;
-
-  norm [|5.0; 12.0|];;
-
-  norm [|0.0;12.0;34.0;56.0;78.0|]
 #+end_src
 
 #+RESULTS:
-: 102.56705123966468
+#+begin_src ocaml :exports code
+val norm : vector -> float = <fun>
+#+end_src
 
-**** DONE normalize [**]
+It would probably be fine to leave the type declaration (~v:
+vector~)out of the function definition, which would result in an
+"identical" function with type signature ~float array -> float~
+instead of ~vector -> float~. Since ~vector~ is just a type synonym
+this isn't a meaningful change. But it's nice to know how to make the
+change. Note that the parentheses are necessary; without them, OCaml
+thinks that ~vector~ is the type of the function's output, and it
+throws a typeerror.
+
+Some tests:
+
+#+begin_src ocaml
+  [norm [|5.0; 12.0|];
+   norm [|0.0;12.0;34.0;56.0;78.0|]]
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : float list = [13.; 102.567051239664679]
+#+end_src
+
+**** DONE normalize $[\star\star]$
 
 Every vector $x$ can be normalized by dividing each component by
 $|x|$. This yields a vector with norm $1$.
@@ -3977,7 +4061,7 @@ $|x|$. This yields a vector with norm $1$.
 Write a function ~normalize : vector -> unit~ that normalizes a vector
 “in place” by mutating the input array. Here’s a sample usage:
 
-#+begin_src ocaml
+#+begin_src ocaml :exports code
   # let a = [|1.; 1.|];;
   val a : float array = [|1.; 1.|]
 
@@ -3988,30 +4072,41 @@ Write a function ~normalize : vector -> unit~ that normalizes a vector
   - : float array = [|0.7071...; 0.7071...|]
 #+end_src
 
-This works and doesn't use a loop, but it's not clear to me that it's
-the "right" way to do this. Seems like an abuse of ~mapi~, and my
-suspicion is there's something better suited to this purpose.
+The following works and doesn't use a loop, but it's not clear to me
+that it's the "right" way to do this. Seems like an abuse of ~mapi~,
+and my suspicion is there's something in the standard library that's
+better suited to this purpose.
 
 #+begin_src ocaml :results verbatim
   let normalize vect =
     let n = norm vect in
     let replace_at i e = vect.(i) <- e /. n in
     ignore (vect |> Array.mapi replace_at);;
-
-  let v = [|3.0; 4.0|];;
-  norm v;;
-  normalize v;;
-  v;;
-  norm v;;
 #+end_src
 
 #+RESULTS:
-: - : float = 1.
+#+begin_src ocaml :exports code
+val normalize : vector -> unit = <fun>
+#+end_src
 
-**** DONE norm loop [**]
+Quick check:
+
+#+begin_src ocaml
+  let v = [|3.0; 4.0|] in
+  normalize v;
+  norm v
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : float = 1.
+#+end_src
+
+**** DONE norm loop $[\star\star]$
 
 Modify your implementation of ~norm~ to use a loop.
 
+Here it is with a loop:
 #+begin_src ocaml
   let norm vect =
     let len = Array.length vect in
@@ -4022,40 +4117,59 @@ Modify your implementation of ~norm~ to use a loop.
         i := !i + 1)
     done;
     Float.sqrt(!sum_of_squares);;
+#+end_src
 
+#+RESULTS:
+#+begin_src ocaml :exports code
+val norm : float array -> float = <fun>
+#+end_src
+
+Quick check:
+
+#+begin_src ocaml
   norm [|5.0; 12.0|]
 #+end_src
 
 #+RESULTS:
-: 13
+#+begin_src ocaml :exports code
+- : float = 13.
+#+end_src
 
-**** DONE normalize loop [**]
+**** DONE normalize loop $[\star\star]$
 
 Modify your implementation of ~normalize~ to use a loop.
 
 #+begin_src ocaml :results verbatim
-      let normalize vect =
-        let len = Array.length vect in
-        let n = norm vect in
-        let i = ref 0 in
-        while !i < len
-        do (vect.(!i) <- vect.(!i) /. n;
-            i := !i + 1)
-        done;;
-
-      let v = [| 3.0; 4.0 |];;
-
-      print_endline (string_of_float (norm v));
-      normalize v;
-      print_endline (string_of_float (norm v));;
+  let normalize vect =
+    let len = Array.length vect in
+    let n = norm vect in
+    let i = ref 0 in
+    while !i < len
+    do (vect.(!i) <- vect.(!i) /. n;
+        i := !i + 1)
+    done;;
 #+end_src
 
 #+RESULTS:
-: 5.
-: 1.
-: - : unit = ()
+#+begin_src ocaml :exports code
+val normalize : float array -> unit = <fun>
+#+end_src
 
-**** DONE init matrix [***]
+#+begin_src ocaml
+  let v = [| 3.0; 4.0 |] in
+  print_endline (string_of_float (norm v));
+  normalize v;
+  print_endline (string_of_float (norm v));;
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+5.
+1.
+- : unit = ()
+#+end_src
+
+**** DONE init matrix $[\star\star\star]$
 
 The ~Array~ module contains two functions for creating an array:
 ~make~ and ~init~. ~make~ creates an array and fills it with a default
@@ -4072,24 +4186,32 @@ bounds.
 See the documentation for ~make_matrix~ for more information on the
 representation of matrices as arrays.
 
-(I refuse to use "n x o" matrix. All matrices are m x n. C'mon now.)
+(I refuse to use "$n \times o$ matrix". $o$ is not an index
+variable. All matrices are $m \times n$. C'mon now.)
 
 #+begin_src ocaml
   let init_matrix m n f = 
     Array.init m (fun i -> Array.init n (fun j -> f i j));;
 #+end_src
 
+#+RESULTS:
+#+begin_src ocaml :exports code
+val init_matrix : int -> int -> (int -> int -> 'a) -> 'a array array = <fun>
+#+end_src
+
+Quick check:
+
 #+begin_src ocaml
   init_matrix 4 4 (fun i j -> i + 2*j)
 #+end_src
 
 #+RESULTS:
-| 0 | 2 | 4 | 6 |
-| 1 | 3 | 5 | 7 |
-| 2 | 4 | 6 | 8 |
-| 3 | 5 | 7 | 9 |
+#+begin_src ocaml :exports code
+- : int array array =
+[|[|0; 2; 4; 6|]; [|1; 3; 5; 7|]; [|2; 4; 6; 8|]; [|3; 5; 7; 9|]|]
+#+end_src
 
-**** TODO doubly linked list [****]
+**** TODO doubly linked list $[\star\star\star\star]$
 
 *** 8.9 Data Structures - Exercises [0/44]
 **** TODO hash insert [**]
