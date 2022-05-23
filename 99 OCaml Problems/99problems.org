@@ -1,243 +1,213 @@
-** 99 OCaml Problems
+#+STARTUP: content
+#+OPTIONS: ^:nil
+#+LATEX_HEADER: \usepackage[margin=0.75in]{geometry}
+#+PROPERTY: header-args:ocaml :exports both :results verbatim :wrap "src ocaml :exports code"
 
-Working through [[https://ocaml.org/problems#1][this list]] of problems
+Working through the list of problems [[https://ocaml.org/problems][here]]. It's not actually 99
+problems, just 85. So I guess it's good that they changed the name.
 
-*** Checklist
-| Nummber | Description            | Status |
-|---------+------------------------+--------|
-|         | Miscellaneous          |        |
-|---------+------------------------+--------|
-|       1 | tail of a list         | done   |
-|       2 | last two elements      | done   |
-|       3 | nth_element            | done   |
-|       4 | list length            | done   |
-|       5 | reverse                | done   |
-|       6 | palindrome             | done   |
-|       7 | flatten                | done   |
-|       8 | delete duplicates      | done   |
-|       9 | pack                   | done   |
-|      10 | run-length             | done   |
-|      11 | run-length mod         | done   |
-|      12 | run-length decode      | done   |
-|      13 | run-length direct      | done   |
-|      14 | duplicate elts         | done   |
-|      15 | replicate elts         | done   |
-|      16 | drop every nth         | done   |
-|      17 | split list             | done   |
-|      18 | list slice             | done   |
-|      19 | rotate n left          | done   |
-|      20 | remove kth             | done   |
-|      21 | insert                 | done   |
-|      22 | range                  | done   |
-|      23 | extract random         | done   |
-|      24 | lotto                  | done   |
-|      25 | random permutation     | done   |
-|      26 | k choose n             | done   |
-|      27 | partitions             |        |
-|      28 | sort by length         | done   |
-|---------+------------------------+--------|
-|         | Arithmetic             |        |
-|---------+------------------------+--------|
-|      29 | prime                  | done*  |
-|      30 | gcd                    | done   |
-|      31 | coprime                | done   |
-|      32 | euler phi              | done   |
-|      33 | prime factors          |        |
-|      34 | prime factors 2        |        |
-|      35 | euler phi 2            |        |
-|      36 | compare euler phis     |        |
-|      37 | prime list             | done   |
-|      38 | goldbach               |        |
-|      39 | goldbach list          |        |
-|---------+------------------------+--------|
-|         | Logic and Codes        |        |
-|---------+------------------------+--------|
-|      40 | truth tables 1         |        |
-|      41 | truth tables 2         |        |
-|      42 | gray code              | done   |
-|      43 | huffman code           |        |
-|---------+------------------------+--------|
-|         | Trees                  |        |
-|---------+------------------------+--------|
-|      44 | balanced binary tree   | done   |
-|      45 | symmetric binary tree  | done   |
-|      46 | binary search tree     |        |
-|      47 | generate and test      |        |
-|      48 | height balanced tree   |        |
-|      49 | height balanced tree 2 |        |
-|      50 | collect leaves in list | done   |
-|      51 | count leaves           | done   |
-|      52 | collect nodes at level | done   |
-|      53 | collect internal nodes | done   |
-|      54 | complete binary tree   |        |
-|      55 | layout binary tree     |        |
-|      56 | layout binary tree 2   |        |
-|      57 | layout binary tree 3   |        |
-|      58 | string rep tree        |        |
-|      59 | seqeuences of trees    |        |
-|      60 | dotstring of tree      |        |
-|---------+------------------------+--------|
-|         | Multiway trees         |        |
-|---------+------------------------+--------|
-|      61 | nodes of multiway tree |        |
-|      62 | tree from node string  |        |
-|      63 | internal path length   |        |
-|      64 | bottom up order        |        |
-|      65 | lisp-like tree rep     |        |
-|---------+------------------------+--------|
-|         | Graphs                 |        |
-|---------+------------------------+--------|
-|      66 | conversions            |        |
-|      67 | paths                  |        |
-|      68 | cycles                 |        |
-|      69 | all spanning           |        |
-|      70 | min spanning           |        |
-|      71 | graph isomorphism      |        |
-|      72 | node degree + color    |        |
-|      73 | depth first traverse   |        |
-|      74 | connected components   |        |
-|      75 | bipartite              |        |
-|      76 | k regular n node       |        |
-|---------+------------------------+--------|
-|         | Miscellaneous          |        |
-|---------+------------------------+--------|
-|      77 | eight queens           |        |
-|      78 | knights tour           |        |
-|      79 | von koch               |        |
-|      80 | arithmetic puzzle      |        |
-|      81 | number words           |        |
-|      82 | syntax checker         |        |
-|      83 | sudoku                 |        |
-|      84 | nonograms              |        |
-|      85 | crossword              |        |
-|---------+------------------------+--------|
-
-*** Lists
+** 99 OCaml Problems [42/85] [49%]
+:PROPERTIES:
+:COOKIE_DATA: todo recursive
+:END:
+*** Lists [27/28]
+:PROPERTIES:
+:COOKIE_DATA: todo recursive
+:END:
 **** DONE 1 Tail of a list
 Write a function ~last : 'a list -> 'a option~ that returns the last
 element of a list.
 
 #+begin_src ocaml
-
     let rec last lst = match lst with
       | [] -> None
       | x :: [] -> Some x
       | x :: xs -> last xs;;
-
-    last [1;2;3];;
-    last [1];;
-    last []
 #+end_src
 
 #+RESULTS:
-: None
+#+begin_src ocaml :exports code
+val last : 'a list -> 'a option = <fun>
+#+end_src
+
+Quick test:
+
+#+begin_src ocaml
+  [last [1;2;3];
+   last [1];
+   last []]
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : int option list = [Some 3; Some 1; None]
+#+end_src
 **** DONE 2 Last two elements of a list
 
 Find the last but one (last and penultimate) elements of a list.
 
-#+begin_src ocaml
+This is very strangely phrased, but at least the title seems
+clear. Inferring the signature from their example, I'm writing this as
+a function ~last_two: 'a list -> ('a * 'a) option~.
 
+#+begin_src ocaml
     let rec last_two lst = match lst with
       | [] -> None
       | x :: [] -> None
       | x :: y :: [] -> Some (x, y)
       | x :: xs -> last_two xs;;
-
-    last_two [1;3;2;4;3;2;3];;
-    last_two [1;3];;
-    last_two [1];;
-    last_two []
 #+end_src
 
 #+RESULTS:
-: None
+#+begin_src ocaml :exports code
+val last_two : 'a list -> ('a * 'a) option = <fun>
+#+end_src
+
+Quick tests:
+
+#+begin_src ocaml
+  [last_two [1;3;2;4;3;2;3];
+   last_two [1;3];
+   last_two [1];
+   last_two []]
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : (int * int) option list = [Some (2, 3); Some (1, 3); None; None]
+#+end_src
 
 **** DONE 3 Nth element of a list
 
 Find the K^{th} element of a list.
 
-This one requires the parentehses around the inner ~match~
-expressions. Otherwise, it thinks ~m~ is of type ~'a list~.
+This one seems to need the parentehses around the inner ~match~
+expression. Otherwise, it thinks ~m~ is of type ~'a list~.
 
 #+begin_src ocaml
   let rec at n lst = match n with
-    | 0 -> None
-    | 1 -> (match lst with
+    | 0 -> (match lst with
             | [] -> None
             | x :: xs -> Some x)
     | m -> (match lst with
             | [] -> None
             | x :: xs -> at (m - 1) xs);;
-
-  at 3 [1;2;3;4;5]
 #+end_src
 
 #+RESULTS:
-: Some 3
+#+begin_src ocaml :exports code
+val at : int -> 'a list -> 'a option = <fun>
+#+end_src
+
+Tests:
+
+#+begin_src ocaml
+  [at 0 [1;2;3;4;5];
+   at 1 [1;2;3;4;5];
+   at 2 [1;2;3;4;5];
+   at 3 [1;2;3;4;5];
+   at 4 [1;2;3;4;5];
+   at 9 [1;2;3;4;5]]
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : int option list = [Some 1; Some 2; Some 3; Some 4; Some 5; None]
+#+end_src
 
 **** DONE 4 length of a list
+
 Find the number of elements of a list
 
 #+begin_src ocaml
-
-    let length lst =
-      let rec length_acc i lst = match lst with
-        | [] -> i
-        | x :: xs -> length_acc (i + 1) xs in
-      length_acc 0 lst;;
-
-    length [1;2;3;4;5];;
-    length [];;
+  let length lst =
+    let rec length_acc i lst = match lst with
+      | [] -> i
+      | x :: xs -> length_acc (i + 1) xs in
+    length_acc 0 lst;;
 #+end_src
 
 #+RESULTS:
-: 0
+#+begin_src ocaml :exports code
+val length : 'a list -> int = <fun>
+#+end_src
+
+#+begin_src ocaml
+  [length [1;2;3;4;5];
+   length [[1;2;3];[4;5]];
+   length []]
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : int list = [5; 2; 0]
+#+end_src
 
 **** DONE 5 Reverse a list
 
 Reverse a list
 
-#+begin_src ocaml
+(This isn't tail recursive. Can it be?)
 
+#+begin_src ocaml
     let rec rev lst = match lst with
       | [] -> []
       | x :: xs -> (rev xs) @ (x::[]);;
-
-    rev [1;2;5;4;3]
 #+end_src
 
 #+RESULTS:
-| 3 | 4 | 5 | 2 | 1 |
+#+begin_src ocaml :exports code
+val rev : 'a list -> 'a list = <fun>
+#+end_src
+
+#+begin_src ocaml
+  rev [1;2;5;4;3]
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : int list = [3; 4; 5; 2; 1]
+#+end_src
 
 **** DONE 6 Palindrome
+
 Find out whether a list is a palindrom
 
 #+begin_src ocaml
-
-   let rec is_palindrome lst =
-     let revlst = rev lst in
-     let rec list_equals l1 l2 = match l1 with
-       | [] -> (match l2 with
-                | [] -> true
-                | y :: ys -> false)
-       | x :: xs -> (match l2 with
-                     | [] -> false
-                     | y :: ys -> (match y with
-                                   | y when y = x -> list_equals xs ys
-                                   | _ -> false)) in
-   list_equals lst revlst;;
-
-   [is_palindrome [1;2;2;1];
-    is_palindrome [1];
-    is_palindrome [];
-    is_palindrome [1;2;3;4;5;4;3;2;1];
-    is_palindrome [1;2;3;4;3];
-    is_palindrome [1;2;3]]
-
+  let rec is_palindrome lst =
+    let revlst = rev lst in
+    let rec list_equals l1 l2 = match l1 with
+      | [] -> (match l2 with
+               | [] -> true
+               | y :: ys -> false)
+      | x :: xs -> (match l2 with
+                    | [] -> false
+                    | y :: ys -> (match y with
+                                  | y when y = x -> list_equals xs ys
+                                  | _ -> false)) in
+    list_equals lst revlst;;
 #+end_src
 
 #+RESULTS:
-| true | true | true | true | false | false |
+#+begin_src ocaml :exports code
+val is_palindrome : 'a list -> bool = <fun>
+#+end_src
+
+Tests:
+
+#+begin_src ocaml
+  [is_palindrome [1;2;2;1];
+   is_palindrome [1];
+   is_palindrome [];
+   is_palindrome [1;2;3;4;5;4;3;2;1];
+   is_palindrome [1;2;3;4;3]; (* false*)
+   is_palindrome [1;2;3]] (* false *)
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : bool list = [true; true; true; true; false; false]
+#+end_src
 
 **** DONE 7 Flatten a list
 
@@ -265,25 +235,35 @@ Flatten a nested list structure
 Eliminate consecutive duplicates of list elements.
 
 #+begin_src ocaml
-
-    let rec compress l = match l with
-      | [] -> []
-      | x :: [] -> x :: []
-      | x :: y :: xs when x = y -> compress (y :: xs)
-      | x :: y :: xs when x <> y -> x :: compress (y :: xs);;
-
-    compress [1;1;1;1;2;2;2;2;3;3;4;4;5;5;6;5;4]
+  let rec compress l = match l with
+    | [] -> []
+    | x :: [] -> x :: []
+    | x :: y :: xs -> if (x = y)
+                      then compress (y :: xs)
+                      else x :: compress (y ::xs)
 #+end_src
 
 #+RESULTS:
-| 1 | 2 | 3 | 4 | 5 | 6 | 5 | 4 |
+#+begin_src ocaml :exports code
+val compress : 'a list -> 'a list = <fun>
+#+end_src
+
+Test it:
+
+#+begin_src ocaml
+  compress [1;1;1;1;2;2;2;2;3;3;4;4;5;5;6;5;4]
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : int list = [1; 2; 3; 4; 5; 6; 5; 4]
+#+end_src
 
 **** DONE 9 Pack consecutive duplicates
 
 Pack consecutive duplicates of list elements into sublists
 
 #+begin_src ocaml
-
   let pack l =
     let rec pack_help h l = match h with
       | [] -> (match l with
@@ -292,37 +272,54 @@ Pack consecutive duplicates of list elements into sublists
       | y :: ys -> (match l with
                     | [] -> [h]
                     | x :: xs -> match x with
-                                      | x when x = y -> pack_help (x :: h) xs 
-                                      | _ -> h :: (pack_help [x] xs)) in
+                                 | x when x = y -> pack_help (x :: h) xs 
+                                 | _ -> h :: (pack_help [x] xs)) in
     pack_help [] l;;
+#+end_src
 
+#+RESULTS:
+#+begin_src ocaml :exports code
+val pack : 'a list -> 'a list list = <fun>
+#+end_src
+
+Test
+
+#+begin_src ocaml
   pack [1;1;1;2;2;3;3;3;3;3;4;5;6;4]
 #+end_src
 
 #+RESULTS:
-| 1 | 1 | 1 |   |   |
-| 2 | 2 |   |   |   |
-| 3 | 3 | 3 | 3 | 3 |
-| 4 |   |   |   |   |
-| 5 |   |   |   |   |
-| 6 |   |   |   |   |
-| 4 |   |   |   |   |
+#+begin_src ocaml :exports code
+- : int list list = [[1; 1; 1]; [2; 2]; [3; 3; 3; 3; 3]; [4]; [5]; [6]; [4]]
+#+end_src
 
 **** DONE 10 Run length encoding
 
 Run-length encoding of a list
 
-#+begin_src ocaml :results verbatim
+Using the previous problem's ~pack~ function:
 
+#+begin_src ocaml :results verbatim
   let encode l =
     let rle x = (List.length x, List.hd x) in
     l |> pack |> List.map rle;;
+#+end_src
 
+#+RESULTS:
+#+begin_src ocaml :exports code
+val encode : 'a list -> (int * 'a) list = <fun>
+#+end_src
+
+Test:
+
+#+begin_src ocaml
   encode [1;1;1;1;2;3;4;4;4;4;4;4;4;4;3;3;2]
 #+end_src
 
 #+RESULTS:
-: - : (int * int) list = [(4, 1); (1, 2); (1, 3); (8, 4); (2, 3); (1, 2)]
+#+begin_src ocaml :exports code
+- : (int * int) list = [(4, 1); (1, 2); (1, 3); (8, 4); (2, 3); (1, 2)]
+#+end_src
 
 **** DONE 11 Modified Run-length encoding
 
@@ -340,43 +337,74 @@ type 'a rle =
 #+end_src
 
 #+RESULTS:
-: type 'a rle = One of 'a | Many of int * 'a
+#+begin_src ocaml :exports code
+type 'a rle = One of 'a | Many of int * 'a
+#+end_src
+
+(Adding the error to suppress the "incomplete match" warning, but that
+case should be impossible to reach.)
 
 #+begin_src ocaml :results verbatim
   let encode lst =
     let rle_of_packed l = match l with
       | x :: [] -> One x
-      | x :: xs -> Many (List.length l, x) in
+      | x :: xs -> Many (List.length l, x)
+      | [] -> failwith "Error: empty list in packed list" in
     lst |> pack |> List.map rle_of_packed;;
-
-  encode [1;1;2;2;3;3;3;4;5;5;5;5;5];;
 #+end_src
 
 #+RESULTS:
-: - : int rle list =
-: [Many (2, 1); Many (2, 2); Many (3, 3); One 4; Many (5, 5)]
+#+begin_src ocaml :exports code
+val encode : 'a list -> 'a rle list = <fun>
+#+end_src
+
+Test it:
+
+#+begin_src ocaml
+  encode [1;1;2;2;3;3;3;4;5;5;5;5;5;5;5];;
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : int rle list =
+[Many (2, 1); Many (2, 2); Many (3, 3); One 4; Many (7, 5)]
+#+end_src
 
 **** DONE 12 Decode a run-length encoded list
 
 Given a run-length code list generated as specified in the previous
 problem, construct its uncompressed version.
 
+Note that the base case of the inner match expression is ~2~ instead
+of ~1~, because ~Many (n, x)~ can (by construction) only have a value
+of ~n~ that's greater than or equal to ~2~.
+
 #+begin_src ocaml :results verbatim
     let decode lst =
       let rec unpack e = match e with
         | One x -> [x]
         | Many (n,x) -> (match n with
-                          | 2 -> x :: x :: []
-                          | _ -> x :: unpack (Many (n-1,x))) in
+                         | 2 -> x :: x :: []
+                         | _ -> x :: unpack (Many (n-1,x))) in
       lst |> List.map unpack |> List.fold_left (@) [];;
-
-  decode [Many (2, 1); Many (2, 2); Many (3, 3); One 4; Many (5, 5)]
 #+end_src
 
 #+RESULTS:
-: - : int list = [1; 1; 2; 2; 3; 3; 3; 4; 5; 5; 5; 5; 5]
+#+begin_src ocaml :exports code
+val decode : 'a rle list -> 'a list = <fun>
+#+end_src
 
-can this be done without the fold?
+#+begin_src ocaml
+  decode [Many (2, 1); Many (2, 2); Many (3, 3); One 4; Many (7, 5)]
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : int list = [1; 1; 2; 2; 3; 3; 3; 4; 5; 5; 5; 5; 5; 5; 5]
+#+end_src
+
+can this be done without the ~fold~? Seems like it might be
+inefficient (though quick to code).
 
 **** DONE 13 Run-length encoding of a list (direct solution)
 
@@ -388,30 +416,41 @@ run-length encoding", simplify the result list by replacing the
 singleton lists (1 X) by X.
 
 #+begin_src ocaml :results verbatim
-    let encode lst =
-      let rec encode_acc ct e lst = match lst with
-        | [] -> (match ct with
-                | 1 -> [One e]
-                | n -> [Many (n,e)])
-        | x :: [] when x = e -> [Many (ct + 1, e)]
-        | x :: [] -> (match ct with
-                     | 1 -> [One e; One x]
-                     | n -> [Many (ct, e); One x])
-        | x :: xs when x = e -> encode_acc (ct + 1) e xs 
-        | x :: xs -> (match ct with
-                     | 1 -> (One e) :: encode_acc 1 x xs
-                     | n -> (Many (n,e)) :: encode_acc 1 x xs) in
-      match lst with
-      | [] -> []
-      | x :: xs -> encode_acc 1 x xs;;
-
-    encode [1;1;1;1;2;2;3;3;3;3;4;5;6;5;4;4;4;4;5;5;5;5;5;5;5;5;5;0];;
+  let encode lst =
+    let rec encode_acc ct e lst = match lst with
+      | [] -> (match ct with
+              | 1 -> [One e]
+              | n -> [Many (n,e)])
+      | x :: [] when x = e -> [Many (ct + 1, e)]
+      | x :: [] -> (match ct with
+                   | 1 -> [One e; One x]
+                   | n -> [Many (ct, e); One x])
+      | x :: xs when x = e -> encode_acc (ct + 1) e xs 
+      | x :: xs -> (match ct with
+                   | 1 -> (One e) :: encode_acc 1 x xs
+                   | n -> (Many (n,e)) :: encode_acc 1 x xs) in
+    match lst with
+    | [] -> []
+    | x :: xs -> encode_acc 1 x xs;;
 #+end_src
 
 #+RESULTS:
-: - : int rle list =
-: [Many (4, 1); Many (2, 2); Many (4, 3); One 4; One 5; One 6; One 5;
-:  Many (4, 4); Many (9, 5); One 0]
+#+begin_src ocaml :exports code
+val encode : 'a list -> 'a rle list = <fun>
+#+end_src
+
+Test it:
+
+#+begin_src ocaml
+  encode [1;1;1;1;2;2;3;3;3;3;4;5;6;5;4;4;4;4;5;5;5;5;5;5;5;5;5;0];;
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : int rle list =
+[Many (4, 1); Many (2, 2); Many (4, 3); One 4; One 5; One 6; One 5;
+ Many (4, 4); Many (9, 5); One 0]
+#+end_src
 
 **** DONE 14 Duplicate the elements of a list
 
@@ -421,12 +460,21 @@ Duplicate the elements of a list
     let rec duplicate lst = match lst with
       | [] -> []
       | x :: xs -> x :: x :: duplicate xs;;
-
-    duplicate ["a";"b";"c";"c";"d"]
 #+end_src
 
 #+RESULTS:
-: - : string list = ["a"; "a"; "b"; "b"; "c"; "c"; "c"; "c"; "d"; "d"]
+#+begin_src ocaml :exports code
+val duplicate : 'a list -> 'a list = <fun>
+#+end_src
+
+#+begin_src ocaml
+  duplicate ["a";"b";"c";"c";"d"]
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : string list = ["a"; "a"; "b"; "b"; "c"; "c"; "c"; "c"; "d"; "d"]
+#+end_src
 
 **** DONE 15 Replicate the elements of a list a given number of times
 
@@ -438,12 +486,21 @@ Replicate the elements of a list a given number of times
         | 0 -> []
         | n -> e :: repeated (n-1) e in
       lst |> List.map (repeated n) |> List.fold_left (@) [];;
-
-    replicate [1;2;3;3;4] 4
 #+end_src
 
 #+RESULTS:
-: - : int list = [1; 1; 1; 1; 2; 2; 2; 2; 3; 3; 3; 3; 3; 3; 3; 3; 4; 4; 4; 4]
+#+begin_src ocaml :exports code
+val replicate : 'a list -> int -> 'a list = <fun>
+#+end_src
+
+#+begin_src ocaml
+  replicate [1;2;3;3;4] 4
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : int list = [1; 1; 1; 1; 2; 2; 2; 2; 3; 3; 3; 3; 3; 3; 3; 3; 4; 4; 4; 4]
+#+end_src
 
 **** DONE 16 Drop every N'th element from a list
 
@@ -459,12 +516,23 @@ Drop every N'th element from a list
               | [] -> []
               | x :: xs -> x :: (drop_help xs n (m-1))) in
     drop_help lst n n;;
+#+end_src
 
+#+RESULTS:
+#+begin_src ocaml :exports code
+val drop : 'a list -> int -> 'a list = <fun>
+#+end_src
+
+Test:
+
+#+begin_src ocaml
   drop [1;2;3;4;5;6;7;8;9;10] 3
 #+end_src
 
 #+RESULTS:
-: - : int list = [1; 2; 4; 5; 7; 8; 10]
+#+begin_src ocaml :exports code
+- : int list = [1; 2; 4; 5; 7; 8; 10]
+#+end_src
 
 **** DONE 17 Split a list into two parts; the length of the first part is given
 
@@ -481,13 +549,28 @@ the first part is the list and the second part is empty.
                 | [] -> [List.rev partial;lst]
                 | x :: xs -> split_help xs (x :: partial) (n-1)) in
       split_help lst [] n;;
-
-    split [1;2;3;4;5;6;7] 4;;
-
 #+end_src
 
 #+RESULTS:
-: - : int list list = [[1; 2; 3; 4]; [5; 6; 7]]
+#+begin_src ocaml :exports code
+val split : 'a list -> int -> 'a list list = <fun>
+#+end_src
+
+Tests:
+
+#+begin_src ocaml
+  [split [1;2;3;4;5;6;7] 0;
+   split [1;2;3;4;5;6;7] 1;
+   split [1;2;3;4;5;6;7] 4;
+   split [1;2;3;4;5;6;7] 12]
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : int list list list =
+[[[]; [1; 2; 3; 4; 5; 6; 7]]; [[1]; [2; 3; 4; 5; 6; 7]];
+ [[1; 2; 3; 4]; [5; 6; 7]]; [[1; 2; 3; 4; 5; 6; 7]; []]]
+#+end_src
 
 **** DONE 18 Extract a slice from a list
 
@@ -509,16 +592,30 @@ the way the List module numbers elements).
     | i -> (match lst with
             | [] -> []
             | x :: xs -> slice xs (i-1) (j-1));;
+#+end_src
 
+#+RESULTS:
+#+begin_src ocaml :exports code
+val slice : 'a list -> int -> int -> 'a list = <fun>
+#+end_src
+
+Test:
+
+#+begin_src ocaml
   slice [1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17] 5 7
 #+end_src
 
 #+RESULTS:
-: - : int list = [6; 7; 8]
+#+begin_src ocaml :exports code
+- : int list = [6; 7; 8]
+#+end_src
 
 **** DONE 19 Rotate a list N places to the left
 
 Rotate a list N places to the left
+
+Can be a little clever here with modular arithmetic to avoid wasting a
+bunch of time:
 
 #+begin_src ocaml :results verbatim
     let rotate lst n =
@@ -530,16 +627,25 @@ Rotate a list N places to the left
                 | [] -> part
                 | x :: xs -> rotate_help xs (part @ [x]) (n-1)) in
       rotate_help lst [] m;;
-
-    rotate [1;2;3;4;5;6;7] (-8);;
-    rotate [1;2;3;4;5;6;7] (1000);;
-    rotate [1] (100000);;
-    rotate [1;2;3;4;5;6;7] (-12367)
-
 #+end_src
 
 #+RESULTS:
-: - : int list = [3; 4; 5; 6; 7; 1; 2]
+#+begin_src ocaml :exports code
+val rotate : 'a list -> int -> 'a list = <fun>
+#+end_src
+
+#+begin_src ocaml
+  [rotate [1;2;3;4;5;6;7] (-8);
+   rotate [1;2;3;4;5;6;7] (1000);
+   rotate [1] (100000);
+   rotate [1;2;3;4;5;6;7] (-12367)]
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : int list list =
+[[7; 1; 2; 3; 4; 5; 6]; [7; 1; 2; 3; 4; 5; 6]; [1]; [3; 4; 5; 6; 7; 1; 2]]
+#+end_src
 
 **** DONE 20 Remove the K'th element from a list
 Remove the K'th element from a list
@@ -556,12 +662,23 @@ The first element of the list is numbered 0, the second 1,...
                | [] -> partial
                | x :: xs -> remove_at_help (k-1) xs (partial @ [x]))  in
       remove_at_help k lst [];;
-
-    remove_at 3 [1;2;3;4;5;6;7];;
 #+end_src
 
 #+RESULTS:
-: - : int list = [1; 2; 3; 5; 6; 7]
+#+begin_src ocaml :exports code
+val remove_at : int -> 'a list -> 'a list = <fun>
+#+end_src
+
+Test
+
+#+begin_src ocaml
+  remove_at 3 [1;2;3;4;5;6;7];;
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : int list = [1; 2; 3; 5; 6; 7]
+#+end_src
 
 **** DONE 21 Insert element into a list at a given position 
 
@@ -570,47 +687,68 @@ equal to the length of the list, insert the element at the end. (The
 behavior is unspecified if the position is negative.)
 
 #+begin_src ocaml :results verbatim
-    let rec insert_at e i lst =
-      match i with
-      | j when j <= 0 -> e :: lst
-      | i -> (match lst with
-             | [] -> [e]
-             | x :: xs -> x :: (insert_at e (i-1) xs));;
-
-    insert_at 2 4 [1;1;1;1;1;1;1;1;1]
+  let rec insert_at e i lst =
+    match i with
+    | j when j <= 0 -> e :: lst
+    | i -> (match lst with
+            | [] -> [e]
+            | x :: xs -> x :: (insert_at e (i-1) xs));;
 #+end_src
 
 #+RESULTS:
-: - : int list = [1; 1; 1; 1; 2; 1; 1; 1; 1; 1]
+#+begin_src ocaml :exports code
+val insert_at : 'a -> int -> 'a list -> 'a list = <fun>
+#+end_src
+
+#+begin_src ocaml
+  insert_at 2 4 [1;1;1;1;1;1;1;1;1]
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : int list = [1; 1; 1; 1; 2; 1; 1; 1; 1; 1]
+#+end_src
 
 (not tail recursive. can be re-written to be so, but I can only see a
 way that might overuse the ~@~ operator)
+
 **** DONE 22 Create a list containing all integers within a given range
 
-If first argument is greater than second, produce a list in decreasing
-order
+Create a list containing all integers within a given range. If first
+argument is greater than second, produce a list in decreasing order
 
 #+begin_src ocaml :results verbatim
-    let rec range i j =
-      let k = j - i in
-      match k with
-      | k when k < 0 -> i :: (range (i-1) j)
-      | k when k = 0 -> [i]
-      | k -> i :: range (i+1) j;;
-
-    range (-10) (-2);;
-    range 1 42;;
-    range 4 4;;
-    range 10 0
+  let rec range i j =
+    let k = j - i in
+    match k with
+    | k when k < 0 -> i :: (range (i-1) j)
+    | k when k = 0 -> [i]
+    | k -> i :: range (i+1) j;;
 #+end_src
 
 #+RESULTS:
-: - : int list = [10; 9; 8; 7; 6; 5; 4; 3; 2; 1; 0]
+#+begin_src ocaml :exports code
+val range : int -> int -> int list = <fun>
+#+end_src
+
+#+begin_src ocaml
+  [range (-10) (-2);
+   range 1 11;
+   range 4 4;
+   range 10 0]
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : int list list =
+[[-10; -9; -8; -7; -6; -5; -4; -3; -2]; [1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11];
+ [4]; [10; 9; 8; 7; 6; 5; 4; 3; 2; 1; 0]]
+#+end_src
 
 **** DONE 23 Extract a given number of randomly selected elements from a list
 
 The selected items shall be returned in a list. We use the Random
-module but do not initialize it with Random.self_init for
+module but do not initialize it with ~Random.self_init~ for
 reproducibility.
 
 (I'm assuming this means the elements should be distinct? as in, a
@@ -618,9 +756,9 @@ random subset of the specified size?)
 
 If the list has length ~n~ and you're picking ~k~ elements, then there are ~n~
 choose ~k~ subsets. And ~n-1~ choose ~k-1~ of them will contain the
-first element. So with probability \(\frac{k}{n}\), pick the first
+first element. So with probability $\frac{k}{n}$, pick the first
 element, and recursively choose ~k-1~ elements in the tail of the
-list. But with probability \(1- \frac{k}{n}\), don't pick the first
+list. But with probability $1- \frac{k}{n}$, don't pick the first
 element, and instead pick ~k~ elements from the tail of the list.
 
 #+begin_src ocaml :results verbatim
@@ -635,57 +773,91 @@ element, and instead pick ~k~ elements from the tail of the list.
            | x :: xs -> if i + 1 <= k
                         then (x :: rand_select xs (k-1))
                         else (rand_select xs k);;
-
-  rand_select [1;2;3;4;5;6;7] 3
 #+end_src
 
 #+RESULTS:
-: - : int list = [2; 4; 5]
+#+begin_src ocaml :exports code
+val rand_select : 'a list -> int -> 'a list = <fun>
+#+end_src
 
-seems pretty random. Should probably do actual statistics to be sure,
-but I trust my math.
+#+begin_src ocaml
+  [rand_select [1;2;3;4;5;6;7] 3;
+   rand_select [1;2;3;4;5;6;7] 3;
+   rand_select [1;2;3;4;5;6;7] 3;
+   rand_select [1;2;3;4;5;6;7] 2;
+   rand_select [1;2;3;4;5;6;7] 2;
+   rand_select [1;2;3;4;5;6;7] 2;
+   rand_select [1;2;3;4;5;6;7] 2]
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : int list list =
+[[4; 5; 7]; [2; 4; 5]; [2; 3; 7]; [2; 6]; [1; 6]; [3; 7]; [2; 5]]
+#+end_src
+
+Looks pretty random to me. Should probably do actual statistics to be
+sure, but I trust the math.
 
 **** DONE 24 Lotto: Draw N different random numbers from the set 1..M
 
-Draw N different random numbers from the set 1 ... M
+Draw $N$ different random numbers from the set $\{1 ... M\}$. The selected numbers shall be returned in a list.
 
-The selected numbers shall be returned in a list.
+There's really not much to it if you use the previous problem.
 
 #+begin_src ocaml
     let lotto_select n m = rand_select (range 1 m) n;;
-
-    lotto_select 5 50
 #+end_src
 
 #+RESULTS:
-| 11 | 14 | 29 | 39 | 49 |
+#+begin_src ocaml :exports code
+val lotto_select : int -> int -> int list = <fun>
+#+end_src
+
+#+begin_src ocaml
+  lotto_select 5 50
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : int list = [3; 4; 5; 23; 35]
+#+end_src
 
 **** DONE 25 Generate a random permutation of the elements of a list
 
 Generate a random permutation of the elements of a list
 
-(this can probably be done more efficiently. Using ~remove_at~ from
+(this can probably be done more efficiently. Using my ~remove_at~ from
 earlier might be bad)
 
 #+begin_src ocaml :results verbatim
-  let permutation lst = match lst with
+  let rec permutation lst = match lst with
     | [] -> []
     | _ -> let n = List.length lst in
            let i = Random.int n in
            let h = List.nth lst i in
            h :: permutation (remove_at i lst);;
+#+end_src
 
+#+RESULTS:
+#+begin_src ocaml :exports code
+val permutation : 'a list -> 'a list = <fun>
+#+end_src
 
+#+begin_src ocaml
   permutation (range 1 100)
 #+end_src
 
 #+RESULTS:
-: - : int list =
-: [51; 96; 40; 69; 10; 99; 70; 19; 77; 100; 16; 57; 84; 38; 63; 11; 62; 4; 87;
-:  65; 94; 29; 7; 53; 74; 50; 12; 9; 46; 73; 48; 33; 20; 54; 88; 3; 14; 67; 44;
-:  89; 8; 1; 35; 95; 6; 78; 42; 2; 32; 13; 71; 68; 25; 90; 52; 97; 91; 60; 31;
-:  76; 82; 80; 36; 28; 34; 30; 56; 83; 37; 23; 41; 24; 5; 15; 22; 66; 55; 17;
-:  26; 61; 75; 58; 86; 79; 59; 43; 45; 85; 93; 98; 72; 92; 39; 21; 18]
+#+begin_src ocaml :exports code
+- : int list =
+[82; 37; 80; 62; 60; 15; 87; 36; 11; 43; 40; 100; 41; 6; 59; 13; 89; 28; 98;
+ 14; 26; 95; 88; 79; 25; 10; 46; 7; 21; 51; 55; 85; 72; 94; 32; 66; 61; 54;
+ 73; 99; 65; 23; 31; 49; 92; 75; 8; 91; 19; 90; 12; 9; 76; 29; 45; 30; 39; 2;
+ 16; 17; 58; 83; 52; 77; 18; 96; 69; 63; 57; 47; 93; 78; 4; 74; 5; 84; 67;
+ 33; 42; 97; 22; 56; 24; 1; 70; 20; 86; 27; 35; 38; 34; 68; 71; 3; 53; 50;
+ 81; 44; 48; 64]
+#+end_src
 
 **** DONE 26 Generate the combinations of K distinct objects chosen from the N elements of a list
 
@@ -697,27 +869,83 @@ possibilities. For pure mathematicians, this result may be great. But
 we want to really generate all the possibilities in a list.
 
 #+begin_src ocaml :results verbatim
-      let rec extract k lst = match k with
-        | k when k < 0 -> []
-        | 0 -> [[]]
-        | k -> (let n = List.length lst in
-                match n with
-                | n when n < k -> []
-                | n when n = k -> [lst]
-                | n -> (match lst with
-                        | [] -> []
-                        | x :: xs ->
-                           (List.map (fun s -> x :: s) (extract (k-1) xs))
-                           @ (extract k xs)));;
-
-    extract 0 [1;2;3;4;5;6];;
-    extract 1 [1;2;3;4;5;6];;
-    extract 2 [1;2;3;4;5;6];;
-    extract 6 [1;2;3;4;5;6];;
+  let rec extract k lst = match k with
+    | k when k < 0 -> []
+    | 0 -> [[]]
+    | k -> (let n = List.length lst in
+            match n with
+            | n when n < k -> []
+            | n when n = k -> [lst]
+            | n -> (match lst with
+                    | [] -> []
+                    | x :: xs ->
+                       (List.map (fun s -> x :: s) (extract (k-1) xs))
+                       @ (extract k xs)));;
 #+end_src
 
 #+RESULTS:
-: - : int list list = [[1; 2; 3; 4; 5; 6]]
+#+begin_src ocaml :exports code
+val extract : int -> 'a list -> 'a list list = <fun>
+#+end_src
+
+Tests in separate blocks here, for readability
+
+There are no subsets with size $-1$.
+
+#+begin_src ocaml
+  extract (-1) [1;2;3;4;5;6]
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : int list list = []
+#+end_src
+
+But there's exactly one subset with size $0$ (the empty set).
+
+#+begin_src ocaml
+  extract 0 [1;2;3;4;5;6]
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : int list list = [[]]
+#+end_src
+
+There are six subsets of size $1$.
+
+#+begin_src ocaml
+  extract 1 [1;2;3;4;5;6]
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : int list list = [[1]; [2]; [3]; [4]; [5]; [6]]
+#+end_src
+
+And $\binom{6}{2} = 15$ subsets of size $2$.
+
+#+begin_src ocaml
+  extract 2 [1;2;3;4;5;6]
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : int list list =
+[[1; 2]; [1; 3]; [1; 4]; [1; 5]; [1; 6]; [2; 3]; [2; 4]; [2; 5]; [2; 6];
+ [3; 4]; [3; 5]; [3; 6]; [4; 5]; [4; 6]; [5; 6]]
+#+end_src
+
+There's only one subset of size $6$.
+
+#+begin_src ocaml
+  extract 6 [1;2;3;4;5;6]
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : int list list = [[1; 2; 3; 4; 5; 6]]
+#+end_src
 
 **** TODO 27 - Group the elements of a list into disjoint subsets 
 
@@ -745,21 +973,35 @@ Sorting a list of lists according to length of sublists.
   placed first, others with a more frequent length come later.
 
 #+begin_src ocaml :results verbatim
-    let length_sort lst =
-      let ( <<< ) l1 l2 = List.length l1 < List.length l2 in
-      let rec qs lst comparison = match lst with
-        | [] -> []
-        | x :: xs -> (let in_left l = l <<< x in
-                     let (left, right) = List.partition in_left xs in
-                     (qs left (<<<)) @ [x] @ (qs right (<<<))) in
-      qs lst (<<<);;
-
-    length_sort [[1;2;3];[4];[5;6];[7;7];[]]
+  let length_sort lst =
+    let ( <<< ) l1 l2 = List.length l1 < List.length l2 in
+    let rec qs lst comparison = match lst with
+      | [] -> []
+      | x :: xs -> (let in_left l = l <<< x in
+                   let (left, right) = List.partition in_left xs in
+                   (qs left (<<<)) @ [x] @ (qs right (<<<))) in
+    qs lst (<<<);;
 #+end_src
 
 #+RESULTS:
-: - : int list list = [[]; [4]; [5; 6]; [7; 7]; [1; 2; 3]]
-*** Arithmetic
+#+begin_src ocaml :exports code
+val length_sort : 'a list list -> 'a list list = <fun>
+#+end_src
+
+#+begin_src ocaml
+  length_sort [[1;2;3];[4];[5;6];[7;7];[]]
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : int list list = [[]; [4]; [5; 6]; [7; 7]; [1; 2; 3]]
+#+end_src
+
+*** Arithmetic [5/11]
+:PROPERTIES:
+:COOKIE_DATA: todo recursive
+:END:
+
 **** TODO 29 Primality test
 
 Determine whether a given integer is prime
@@ -901,12 +1143,11 @@ Two numbers are coprime if their greatest common divisor equals 1.
 
 **** DONE 32 - Calculate Euler's totient function \(\phi(m)\)
 
-Euler's so-called totient function φ(m) is defined as the number of
-positive integers r (1 ≤ r < m) that are coprime to m. We let φ(1)
-= 1.
+Euler's so-called totient function $\varphi(m)$ is defined as the number of
+positive integers $1 \leqslant r \leqslant m$ that are coprime to
+m. We let $\varphi(1) =1$
 
-
-Find out what the value of φ(m) is if m is a prime number. Euler's
+Find out what the value of $\varphi(m)$ is if m is a prime number. Euler's
 totient function plays an important role in one of the most widely
 used public key cryptography methods (RSA). In this exercise you
 should use the most primitive method to calculate this function (there
@@ -1045,7 +1286,10 @@ list of all prime numbers in that range.
 
 **** TODO 38 Goldbach's conjecture
 **** TODO 39 A list of Goldbach compositions
-*** Logic and Codes
+*** Logic and Codes [1/4]
+:PROPERTIES:
+:COOKIE_DATA: todo recursive
+:END:
 **** TODO 40 Truth tables for logical expressions (2 variables)
 **** TODO 41 Truth tables for logical expressions
 **** DONE 42 Gray code
@@ -1074,7 +1318,10 @@ So vague...
 #+RESULTS:
 : - : string list = ["000"; "001"; "011"; "010"; "110"; "111"; "101"; "100"]
 **** TODO 43 Huffman code
-*** Trees
+*** Trees [9/17]
+:PROPERTIES:
+:COOKIE_DATA: todo recursive
+:END:
 **** DONE 44 Completely balanced binary trees
 
 A binary tree is either empty or it is composed of a root element and two successors, which are binary trees themselves.
@@ -1589,13 +1836,19 @@ successors. Write a function
 **** TODO 58
 **** TODO 59
 **** TODO 60
-*** Multiway trees
+*** Multiway trees [0/5]
+:PROPERTIES:
+:COOKIE_DATA: todo recursive
+:END:
 **** TODO 61
 **** TODO 62
 **** TODO 63
 **** TODO 64
 **** TODO 65
-*** Graphs
+*** Graphs [0/11]
+:PROPERTIES:
+:COOKIE_DATA: todo recursive
+:END:
 **** TODO 66
 **** TODO 67
 **** TODO 68
@@ -1606,8 +1859,12 @@ successors. Write a function
 **** TODO 73
 **** TODO 74
 **** TODO 75
-**** TODO 76
-*** Miscellaneous
+**** TODO 76 
+
+*** Miscellaneous [0/9]
+:PROPERTIES:
+:COOKIE_DATA: todo recursive
+:END:
 **** TODO 77
 **** TODO 78
 **** TODO 79
