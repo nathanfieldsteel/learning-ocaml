@@ -3,3 +3,12 @@
 \#*\#
 .\#*
 .DS_Store
+*.aux
+*.bbl
+*.log
+*.out
+*.tex
+*.toc
+*.blg
+_minted*
+_build*
