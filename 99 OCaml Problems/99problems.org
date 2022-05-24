@@ -997,12 +997,12 @@ val length_sort : 'a list list -> 'a list list = <fun>
 - : int list list = [[]; [4]; [5; 6]; [7; 7]; [1; 2; 3]]
 #+end_src
 
-*** Arithmetic [10/11]
+*** Arithmetic [11/11]
 :PROPERTIES:
 :COOKIE_DATA: todo recursive
 :END:
 
-**** TODO 29 Primality test
+**** DONE 29 Primality test
 
 Determine whether a given integer is prime
 
@@ -1013,24 +1013,25 @@ For starters, here's a naive seive:
     if n < 2
     then false
     else if n = 2 then true
-    else (let bound = n
-                      |> float_of_int
+    else (let rec range a b = if a = b
+                              then [a]
+                              else a :: range (a+1) b in
+          let bound = float_of_int n
                       |> Float.sqrt
-                      |> Float.floor
-                      |> (+.) 1.
+                      |> Float.ceil
                       |> int_of_float in
-          let rec range a b =
-            let s = b - a in
-            match s with
-            | s when s < 0 -> []
-            | 0 -> [a]
-            | s -> a :: range (a+1) b in
           let candidates = range 2 bound in
-          let rec seive lst m = match lst with
+          let rec seive lst m =
+            let rec filter p ns = match ns with
+              | [] -> []
+              | m :: ms -> if m mod p = 0
+                           then filter p ms
+                           else m :: filter p ms in
+            match lst with
             | [] -> (false)
-            | p :: qs -> (if m mod p = 0
+            | p :: ms -> (if m mod p = 0
                           then true
-                          else seive qs m) in
+                          else seive (filter p ms) m) in
           not (seive candidates n));;
 #+end_src
 
@@ -1068,41 +1069,103 @@ Find list of all primes up to 1000. Check for correctness with Mathematica.
  919; 929; 937; 941; 947; 953; 967; 971; 977; 983; 991; 997]
 #+end_src
 
-TODO: Do it right with Miller-Rabin, then update the following problems to
-use the faster function instead of the seive.
+Similarly, can count the primes up to a fixed bound, and check whether
+it agrees with Mathematica's `PrimePi` function, which it does.
 
-#+begin_src ocaml :results verbatim
-  let is_prime n = match n with
-    | n when n < 2 -> false
-    | 2 -> true
-    | n when n mod 2 = 0 -> false
-    | n -> (let witnesses = [2;3;5;7;11;13;17;19;23;29;31;37] in
-            let rec twos_exponent m =
-              match m with
-              | m when m mod 2 = 1 -> 0
-              | m -> 1 + twos_exponent (m / 2) in
-            let rec power a b = match b with
-              | 0 -> 1
-              | b -> a * pow a (b-1) in
-            let rec powermod a b n = match b with
-              | 0 -> 1
-              | b -> (a * powermod a (b-1) n) mod n in
-            let fermat_test a d n =
-              powermod a d n = 1 in
-            let rec root_test a r s n = () in
-            let s = twos_exponent (n-1) in
-            let d = (n-1) / (pow 2 s) in
-            (
-            (* miller-rabin goes here*)
-            )
-           );;
-  is_prime 1001
+#+begin_src ocaml
+  range 1 100000
+  |> List.filter is_prime_seive
+  |> List.length
 #+end_src
 
 #+RESULTS:
-: 3
-: 125
-: - : bool = true
+#+begin_src ocaml :exports code
+- : int = 9592
+#+end_src
+
+And we can check its output on large prime (and composite) numbers for
+which we already know the answers. Around the 10 digit range, things
+start to get noticably slower.
+
+#+begin_src ocaml
+  [is_prime_seive 1000000001;
+   is_prime_seive 1000000003;
+   is_prime_seive 1000000005;
+   is_prime_seive 1000000007;
+   is_prime_seive 1000000009;
+   is_prime_seive 30000000001;]
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : bool list = [false; false; false; true; true; true]
+#+end_src
+
+***** Miller Rabin
+
+It could maybe be faster to implement a Miller-Rabin primality test,
+using a witness list long enough to guarantee determinism for 64-bit
+integers.
+
+This is a working (ish) Miller-Rabin implementation. However, it fails
+for large-ish inputs because (I think) of the power and powermod
+functions. It says `is_prime 1_000_000_009` is false, but this should
+be true. One of the intermediate computations in that call is
+`powermod 11 125_000_001 1_000_000_009`, which returns a giant
+negative number, and it should not. I think that sometimes the
+expressions `r*r` or `a*r*r` inside of powermod have integer
+overflow. Maybe re-write this using `Zarith` or some other
+multiprecision library?
+
+#+begin_src ocaml :results verbatim
+  let is_prime n =
+    let small_primes = [2;3;5;7;11;13;17;19;23;29;31;37] in
+    let admits_small_divisor n =
+      let rec trial_division plist n = match plist with
+        | [] -> false
+        | p :: ps -> (n mod p = 0 || trial_division ps n) in
+      trial_division small_primes n in
+    match n with
+    | n when n < 2 -> false
+    | 2 -> true
+    | n when n mod 2 = 0 -> false
+    | n when List.mem n small_primes -> true
+    | n -> if admits_small_divisor n
+           then false
+           else let rec range a b = match b-a with
+                  | 0 -> [a]
+                  | _ -> a :: range (a+1) b in
+                let (--) a b = range a b in
+                let rec power a b = match b with
+                  | 0 -> 1
+                  | 1 -> a
+                  | b -> let r = power a (b/2) in
+                         if b mod 2 = 0
+                         then r*r
+                         else a*r*r in
+                let rec powermod a b n = match b with
+                  | 0 -> 1
+                  | 1 -> a mod n
+                  | b -> let r = powermod a (b/2) n in
+                         if b mod 2 = 0
+                         then (r*r) mod n
+                         else (a*r*r) mod n in
+                let rec twos_power m =
+                  if m mod 2 = 1
+                  then 0
+                  else 1 + twos_power (m/2) in
+                let s = twos_power (n-1) in
+                let q = (n-1)/(power 2 s) in
+                let psuedoprime_to_base_a a =
+                  let powerlist = List.map (function i -> powermod a (q*power 2 i) n) (0 -- (s-1)) in
+                  (List.hd powerlist = 1 || List.mem (n-1) powerlist) in
+                not (List.mem false (List.map psuedoprime_to_base_a small_primes))
+#+end_src
+
+***** Elliptic Curve Primality ??
+
+Is [[https://en.wikipedia.org/wiki/Elliptic_curve_primality][this]] achievable using vanilla ocaml or reasonable libraries? Might
+be interesting to try.
 
 **** DONE 30 - Determine the greatest common divisor of two positive integer numbers
 
