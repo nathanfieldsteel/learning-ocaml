@@ -8,16 +8,6 @@
 My notes file for learning OCaml and for working through the CS3110
 book.
 
-A warning for readers of the pdf version of this document: Some
-code that runs fine in org-babel will suddenly produce errors when
-emacs re-runs the source blocks during the ~org-export-to-latex~
-run. I think this is because during export, each block is run
-independently. So if one block defines ~t~ and another block calls a
-function with ~t~ as an argument, the second block will complain that
-~t~ is undefined. These errors are not present in the notes.org
-document, they only appear in the pdf. At the moment it is not worth
-my time to troubleshoot this issue.
-
 ** Goals for this document
 + Learning OCaml
 + Working through the CS3110 book.
@@ -52,23 +42,26 @@ results. For example the following source block shows its result, but
 does not show that the result has type ~int~
 
 #+begin_src ocaml
-    let x = 42;;
-    x
+  1 + 2;;
 #+end_src
 
 #+RESULTS:
-: 42
+#+begin_src ocaml :exports code
+- : int = 3
+#+end_src
 
 But if we pass the header argument to insist that the result is
 displayed verbatim, then we see the type as well.
 
-#+begin_src ocaml :results verbatim
+#+begin_src ocaml
     let x = 42;;
     x
 #+end_src
 
 #+RESULTS:
-: - : int = 42
+#+begin_src ocaml :exports code
+- : int = 42
+#+end_src
 
 This can also be an issue with multi-line output. The default seems to
 be that only the last line of toplevel output makes it back to the org
@@ -76,8 +69,14 @@ buffer, so this source block would juss show ~unit = ()~. Again, the
 verbatim tag fixes this. ~:results output~ is another option, similar
 to ~verbatim~.
 
-#+begin_src ocaml :export code
+#+begin_src ocaml
   print_string "hello\n"
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+hello
+- : unit = ()
 #+end_src
 
 For the purpose of exporting the entire org file to pdf by way of
@@ -96,10 +95,12 @@ way I've found to do this is by setting
 #+PROPERTY: header-args:ocaml :exports both :results verbatim :wrap "src ocaml :exports code"
 #+end_example
 
-at the top of the org file. Additionally, since so many ocaml
-functions have underscores in their names, we want to set ~#+OPTIONS:
-^:nil~ at the top of the file. Otherwise tex will interpret these as
-subscripts.
+at the top of the org file. With this option set, ordinary ~ocaml~
+source blocks with no other header args will work the way I want them
+to, both for literate programming in org and for my export
+configuration. Additionally, since so many ocaml functions have
+underscores in their names, we want to set ~#+OPTIONS: ^:nil~ at the
+top of the file. Otherwise tex will interpret these as subscripts.
 
 *** TODO org latex export
 
@@ -123,8 +124,28 @@ before exporting in order to avoid needing to type "yes" for every
 single source block. Probably should try to incorporate this into
 emacs configuration, but in a safe way.
 
+The following line should also be run before exporting to tex. Without
+it, all the source blocks will be re-evaluated before export. But it
+seems as if they're each re-evaluated in a fresh toplevel
+session. This means if one source block defines ~t~ and another source
+block calls a function with ~t~ as an argument, the second source
+block will throw an error, since it doesn't know what ~t~ is. Setting
+this variable to ~nil~ means source blocks don't get re-evaluated:
+they are exported as-is. If there's a corresponding export block from
+running ~C-c C-c~ manually, it will be exported as-is.
+
+#+begin_src emacs-lisp
+  (setq org-export-use-babel nil)
+#+end_src
+
+What I would like is a way to re-run all the source blocks in order
+and have the results blocks written (or re-written) to the buffer. But
+I don't know how to do this while not running the results blocks
+themselves. The results blocks don't contain valid ocaml expressions,
+so they should not be run.
+
 ** CS3110 - Notes
-** CS3110 Exercises [79/204] [38%]
+** CS3110 Exercises [80/204] [39%]
   :PROPERTIES:
   :COOKIE_DATA: todo recursive
   :END:
@@ -138,8 +159,13 @@ What is the type and value of each of the following OCaml expressions:
 
 This is ~42~, an ~int~.
 
-#+begin_src ocaml :results verbatim :export both
+#+begin_src ocaml
   7 * (1 + 2 + 3)
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : int = 42
 #+end_src
 
 + ~"CS " ^ string_of_int 3110~
@@ -1117,12 +1143,17 @@ A few tests:
     | _ -> false;;
 #+end_src
 
+#+RESULTS:
+#+begin_src ocaml :exports code
+val first_two_equal : 'a list -> bool = <fun>
+#+end_src
+
 #+begin_src ocaml
-    [first_two_equal [1;2;3];
-    first_two_equal [[1];[1];[1;2]];
-    first_two_equal [[];[];[1;2]];
-    first_two_equal ([[]]::[[]]::[]);
-    first_two_equal ["a"]]
+  [first_two_equal [1;2;3];
+   first_two_equal [[1];[1];[1;2]];
+   first_two_equal [[];[];[1;2]];
+   first_two_equal ([[]]::[[]]::[]);
+   first_two_equal ["a"]]
 #+end_src
 
 #+RESULTS:
@@ -1292,6 +1323,11 @@ Small test:
 
 #+begin_src ocaml
   let any_zeroes l = List.exists ((=) 0) l;;
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+val any_zeroes : int list -> bool = <fun>
 #+end_src
 
 A few tests
@@ -1578,7 +1614,7 @@ input list, one number per line. For example, ~print_int_list [1; 2;
 3
 #+end_example
 
-#+begin_src ocaml :results verbatim
+#+begin_src ocaml
     let rec print_int_list = function
       | [] -> ()
       | x :: xs -> (x |> string_of_int |> print_endline) ; print_int_list xs;;
@@ -1610,7 +1646,7 @@ specification is the same as ~print_int_list~. Do not use the keyword
 ~rec~ in your solution, but instead to use the ~List~ module function
 ~List.iter~.
 
-#+begin_src ocaml :results verbatim
+#+begin_src ocaml
   let print_int_list lst = 
     List.iter (fun e -> e |> string_of_int |> print_endline) lst;;
 #+end_src
@@ -1679,7 +1715,7 @@ val name_of_student : student -> string * string = <fun>
 
 (using the syntactic sugar mentioned in the chapter)
   
-#+begin_src ocaml :results verbatim
+#+begin_src ocaml
   let student first_name last_name gpa = {first_name; last_name; gpa};;
 #+end_src
 
@@ -2025,7 +2061,7 @@ type suit = Hearts | Clubs | Diamonds | Spades
   make rank be a synonym of int, and to assume that Jack=11, Queen=12,
   King=13, and Ace=1 or 14. Another is to use variants.
 
-#+begin_src ocaml :exports code
+#+begin_src ocaml
   type face =
     | King
     | Queen
@@ -2036,11 +2072,22 @@ type suit = Hearts | Clubs | Diamonds | Spades
     | Face of face
 #+end_src
 
+#+RESULTS:
+#+begin_src ocaml :exports code
+type face = King | Queen | Jack
+type rank = Number of int | Face of face
+#+end_src
+
 + Define a type card that represents the suit and rank of a single
   card. Make it a record with two fields.
 
-#+begin_src ocaml :exports code
+#+begin_src ocaml
   type card = {rank : rank; suit : suit}
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+type card = { rank : rank; suit : suit; }
 #+end_src
 
 + Define a few values of type card: the Ace of Clubs, the Queen of
@@ -2058,6 +2105,11 @@ type suit = Hearts | Clubs | Diamonds | Spades
 
   let seven_of_spades = {rank = Number 7;
                          suit = Spades};;
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+val seven_of_spades : card = {rank = Number 7; suit = Spades}
 #+end_src
 
 **** DONE Matching $[\star]$
@@ -2185,14 +2237,17 @@ type 'a tree = Leaf | Node of 'a * 'a tree * 'a tree
 
 Here's the tree from section 3.11.1:
 
-#+begin_src ocaml :exports code
-(* the code below constructs this tree:
+#+begin_example
+the code below constructs this tree:
+
          4
        /   \
       2     5
      / \   / \
     1   3 6   7
-*)
+#+end_example
+
+#+begin_src ocaml :exports code
 let t =
   Node(4,
     Node(2,
@@ -2204,6 +2259,13 @@ let t =
       Node(7, Leaf, Leaf)
     )
   )
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+val t : int tree =
+  Node (4, Node (2, Node (1, Leaf, Leaf), Node (3, Leaf, Leaf)),
+   Node (5, Node (6, Leaf, Leaf), Node (7, Leaf, Leaf)))
 #+end_src
 
 Finally, the depth function
@@ -2243,10 +2305,10 @@ pattern match with three branches, where the expression being matched
 is a pair of trees.
 
 #+begin_src ocaml
-    let rec same_shape t1 t2 = match (t1, t2) with
-      | (Leaf, Leaf) -> true
-      | (Node(_, left1, right1), Node(_, left2, right2)) -> ((same_shape left1 left2) && (same_shape right1 right2))
-      | _ -> false;;
+  let rec same_shape t1 t2 = match (t1, t2) with
+    | (Leaf, Leaf) -> true
+    | (Node(_, left1, right1), Node(_, left2, right2)) -> ((same_shape left1 left2) && (same_shape right1 right2))
+    | _ -> false;;
 #+end_src
 
 #+RESULTS:
@@ -2527,7 +2589,7 @@ we see below
 
 What does the following operator do?
 
-#+begin_src ocaml
+#+begin_src ocaml :exports code
   let ( @@ ) f g x = x |> g |> f;;
 #+end_src
 
@@ -2545,8 +2607,8 @@ composition. See below for an example usage:
 #+end_src
 
 Note that this does *not* have the same kind of notationally-favorable
-binding as the preceeding operator. It would be nice if we didn't need
-the parentheses in the above example.
+binding precedence as the preceeding operator. It would be nice if we
+didn't need the parentheses in the above example.
 
 **** DONE Repeat $[\star\star]$
 
@@ -2822,7 +2884,8 @@ Some tests:
   other than ~fold_left~ or ~fold_right~, and does not use the ~rec~
   keyword.
 
-I feel like I've done this in a sort of lazy way.
+I feel like I've done this in a sort of lazy way. I also don't like
+the way this is indented, though I think it's "right".
 
 #+begin_src ocaml
   let exists_lib p lst =
@@ -3005,7 +3068,7 @@ Could instead be written as follows
   List.map (fun x -> f (g x)) lst
 #+end_src
 
-(Is this what they were expecting?)
+(Is this what they were expecting? Seems easy for a "three star" exercise.)
 
 **** DONE more list fun $[\star\star\star]$
 
@@ -3052,12 +3115,12 @@ val increment_floats : float list -> float list = <fun>
 Verify:
 
 #+begin_src ocaml
-  increment_floats [1.;2.;3.;7.];;
+  increment_floats [1.;2.;3.;7.5];;
 #+end_src
 
 #+RESULTS:
 #+begin_src ocaml :exports code
-- : float list = [2.; 3.; 4.; 8.]
+- : float list = [2.; 3.; 4.; 8.5]
 #+end_src
 
 + Given a list of strings strs and another string sep, produce the
@@ -3306,7 +3369,7 @@ its inverse:
 Still need to do the unit testing on all these matrix problems before
 I can mark them as done.
 
-*** 5.11 Modular Programming - Exercises [8/29]
+*** 5.11 Modular Programming - Exercises [9/29]
 **** DONE Complex synonym $[\star]$
 
 Here is a module type for complex numbers, which have a real and imaginary component:
@@ -3319,11 +3382,13 @@ Here is a module type for complex numbers, which have a real and imaginary compo
 #+end_src
 
 #+RESULTS:
-: module type ComplexSig =
-:   sig
-:     val zero : float * float
-:     val add : float * float -> float * float -> float * float
-:   end
+#+begin_src ocaml :exports code
+module type ComplexSig =
+  sig
+    val zero : float * float
+    val add : float * float -> float * float -> float * float
+  end
+#+end_src
 
 Improve that code by adding ~type t = float * float~. Show how the
 signature can be written more tersely because of the type synonym.
@@ -3337,8 +3402,10 @@ signature can be written more tersely because of the type synonym.
 #+end_src
 
 #+RESULTS:
-: module type ComplexSig =
-:   sig type t = float * float val zero : t val add : t -> t -> t end
+#+begin_src ocaml :exports code
+module type ComplexSig =
+  sig type t = float * float val zero : t val add : t -> t -> t end
+#+end_src
 
 **** DONE Complex encapsulation $[\star\star]$
 
@@ -3352,69 +3419,42 @@ Here is a module for the module type from the previous exercise:
     end
 #+end_src
 
+#+RESULTS:
+#+begin_src ocaml :exports code
+module Complex : ComplexSig
+#+end_src
+
 Investigate what happens if you make the following changes (each
 independently), and explain why any errors arise:
 
 + remove ~zero~ from the structure
 
-  #+begin_src ocaml
-    module Complex : ComplexSig = struct
-      type t = float * float
-      (*let zero = (0., 0.)*)
-      let add (r1, i1) (r2, i2) = r1 +. r2, i1 +. i2
-    end
-  #+end_src
-
-  #+RESULTS:
-  #+begin_example
-  Lines 1-5, characters 30-3:
-  1 | ..............................struct
-  2 |   type t = float * float
-  3 |   (*let zero = (0., 0.)*)
-  4 |   let add (r1, i1) (r2, i2) = r1 +. r2, i1 +. i2
-  5 | end..
-  Error: Signature mismatch:
-         Modules do not match:
-           sig
-             type t = float * float
-             val add : float * float -> float * float -> float * float
-           end
-         is not included in
-           ComplexSig
-         The value `zero' is required but not provided
-  #+end_example
-
-The ~ComplexSig~ type, defined in the previous problem, requires a
-~zero~ and an ~add~. When zero is missing, the structure defined here
-is not an instance of the ComplexSig type specified. 
-
-+ remove ~add~ from the signature
-#+begin_src ocaml
-    module Complex : ComplexSig = struct
-      type t = float * float
-      let zero = (0., 0.)
-      (*let add (r1, i1) (r2, i2) = r1 +. r2, i1 +. i2*)
-    end
+#+begin_src ocaml :exports code
+  module Complex : ComplexSig = struct
+    type t = float * float
+    (*let zero = (0., 0.)*)
+    let add (r1, i1) (r2, i2) = r1 +. r2, i1 +. i2
+  end
 #+end_src
 
-#+RESULTS:
-#+begin_example
-Lines 1-5, characters 30-3:
-1 | ..............................struct
-2 |   type t = float * float
-3 |   let zero = (0., 0.)
-4 |   (*let add (r1, i1) (r2, i2) = r1 +. r2, i1 +. i2*)
-5 | end..
-Error: Signature mismatch:
-       Modules do not match:
-         sig type t = float * float val zero : float * float end
-       is not included in
-         ComplexSig
-       The value `add' is required but not provided
-#+end_example
+You get an ~Error: Signature mismatch~ Specifically, it says ~The
+value `zero' is required but not provided~. The ~ComplexSig~ type,
+defined in the previous problem, requires a ~zero~ and an ~add~. When
+zero is missing, the structure defined here is not an instance of the
+ComplexSig type specified.
 
-Same problem as above: the type ~ComplexSig~ needs an ~add~
-function. If it's missing, you don't have an instance of that type
++ remove ~add~ from the signature
+
+#+begin_src ocaml
+  module Complex : ComplexSig = struct
+    type t = float * float
+    let zero = (0., 0.)
+    (*let add (r1, i1) (r2, i2) = r1 +. r2, i1 +. i2*)
+  end
+#+end_src
+
+Again you get an ~Error: Signature mismatch~. This time it says ~The
+value `add' is required but not provided~. Same issue as above.
 
 + change ~zero~ in the structure to ~let zero = 0, 0~
 
@@ -3426,27 +3466,13 @@ function. If it's missing, you don't have an instance of that type
     end
   #+end_src
 
-  #+RESULTS:
-  #+begin_example
-  Lines 1-5, characters 30-3:
-  1 | ..............................struct
-  2 |   type t = float * float
-  3 |   let zero = 0, 0
-  4 |   let add (r1, i1) (r2, i2) = r1 +. r2, i1 +. i2
-  5 | end..
-  Error: Signature mismatch:
-         ...
-         Values do not match:
-           val zero : int * int
-         is not included in
-           val zero : t
-  #+end_example
+This is a ~Signature mismatch~ as well, this time because ~zero~
+doesn't have the right type. The ~ComplexSig~ type needs ~zero~ to
+have type ~float * float~. Since the ~zero~ in this module has type
+~int * int~, it doesn't typecheck as being an instance of
+~ComplexSig~.
 
-The ~ComplexSig~ type needs ~zero~ to have type ~float * float~. Since
-the ~zero~ in this module has type ~int * int~, it doesn't typecheck
-as being an instance of ~ComplexSig~.
-
-**** TODO Big list queue $[\star\star]$
+**** DONE Big list queue $[\star\star]$
 
 Use the following code to create ~ListQueue~ of exponentially increasing length: 10, 100, 1000, etc. How big of a queue can you create before there is a noticeable delay? How big until there’s a delay of at least 10 seconds? (Note: you can abort utop computations with Ctrl-C.)
 
@@ -3469,7 +3495,7 @@ with the emacs / tuareg process in some way.
 #+end_src
 
 #+RESULTS:
-#+begin_example
+#+begin_src ocaml :exports code
 module type Queue =
   sig
     type 'a t
@@ -3482,7 +3508,7 @@ module type Queue =
     val size : 'a t -> int
     val to_list : 'a t -> 'a list
   end
-#+end_example
+#+end_src
 
 #+begin_src ocaml
 module ListQueue : Queue = struct
@@ -3499,7 +3525,9 @@ end
 #+end_src
 
 #+RESULTS:
-: module ListQueue : Queue
+#+begin_src ocaml :exports code
+module ListQueue : Queue
+#+end_src
 
 #+begin_src ocaml :results verbatim
     (** Creates a ListQueue filled with [n] elements. *)
@@ -3517,7 +3545,9 @@ end
 #+end_src
 
 #+RESULTS:
-: - : int ListQueue.t * float = (<abstr>, 37.58237)
+#+begin_src ocaml :exports code
+val timing : ('a -> 'b) -> 'a -> 'b * float = <fun>
+#+end_src
 
 Now we can do ~timing fill_listqueue n;;~ to time it ~n = 10000~ took
 about 1 second, ~n = 50000~ took about 30 seconds.
@@ -3543,7 +3573,7 @@ end
 #+end_src
 
 #+RESULTS:
-#+begin_example
+#+begin_src ocaml :exports code
 module type Fraction =
   sig
     type t
@@ -3555,7 +3585,7 @@ module type Fraction =
     val add : t -> t -> t
     val mul : t -> t -> t
   end
-#+end_example
+#+end_src
 
 #+begin_src ocaml
   module Frac : Fraction = struct
@@ -3574,7 +3604,9 @@ module type Fraction =
 #+end_src
 
 #+RESULTS:
-: module Frac : Fraction
+#+begin_src ocaml :exports code
+module Frac : Fraction
+#+end_src
 
 #+begin_src ocaml
   let q = Frac.make 1 2;;
@@ -3584,7 +3616,9 @@ module type Fraction =
 #+end_src
 
 #+RESULTS:
-: 11/14
+#+begin_src ocaml :exports code
+- : string = "11/14"
+#+end_src
 
 Didn't really think about how to handle / avoid the case where the
 denominator is zero.
@@ -3600,7 +3634,7 @@ hold of every value ~v~ of type ~t~ that is returned from ~make~, ~add~, and ~mu
 For the first invariant, you might find this implementation of
 Euclid’s algorithm to be helpful:
 
-#+begin_src ocaml
+#+begin_src ocaml :exports code
   (** [gcd x y] is the greatest common divisor of [x] and [y].
       Requires: [x] and [y] are positive. *)
   let rec gcd x y =
@@ -3608,9 +3642,6 @@ Euclid’s algorithm to be helpful:
     else if (x < y) then gcd (y - x) x
     else gcd y (x - y)
 #+end_src
-
-#+RESULTS:
-: <fun>
 
 #+begin_src ocaml
   module Frac : Fraction = struct
@@ -3636,17 +3667,35 @@ Euclid’s algorithm to be helpful:
     let mul (a,b) (c,d) = let d = gcd (a*c) (b*d) in
                           (a*c, b*d)
   end;;
+#+end_src
 
-  Frac.make 31991 101 |> Frac.to_string;;
-  Frac.make 72 324 |> Frac.to_string;;
+#+RESULTS:
+#+begin_src ocaml :exports code
+module Frac : Fraction
+#+end_src
 
+#+begin_src ocaml
+  Frac.make 31991 101 |> Frac.to_string |> print_endline;
+  Frac.make 72 324 |> Frac.to_string |> print_endline;;
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+31991/101
+2/9
+- : unit = ()
+#+end_src
+
+#+begin_src ocaml
   let q = Frac.make 72 324 in
     let r = Frac.make 31991 101 in
     Frac.mul q r |> Frac.to_string
 #+end_src
 
 #+RESULTS:
-: 63982/9
+#+begin_src ocaml :exports code
+- : string = "63982/9"
+#+end_src
 
 **** DONE Make char map $[\star]$
 
@@ -3729,7 +3778,8 @@ prefacing future code with the module name, so I can just call ~add~
 and ~remove~ instead of ~CharMap.add~ and ~CharMap.remove~ in future
 source blocks. But for some reason, this is not the case when
 org-export re-runs the source blocks. It will complain that ~add~ is a
-function ~int -> int -> int~.
+function ~int -> int -> int~. (This can be worked around by changing
+the settings, see the "org latex export" section above.)
 
 #+begin_src ocaml :exports code
   open CharMap
@@ -3739,7 +3789,7 @@ Here we create an empty map using ~empty~, noting that its type ia ~'a
 CharMap.t~:
 
 #+begin_src ocaml  
-  let emptymap = CharMap.empty
+  let emptymap = empty
 #+end_src
 
 #+RESULTS:
@@ -3750,7 +3800,7 @@ val emptymap : 'a CharMap.t = <abstr>
 But if we then add a key-value pair to it, the type is clarified:
 
 #+begin_src ocaml
-  let map_to_ints = CharMap.add 'x' 3 emptymap
+  let map_to_ints = add 'x' 3 emptymap
 #+end_src
 
 #+RESULTS:
@@ -3762,7 +3812,7 @@ But if we had instead added a key-value pair where the value was of
 type ~string~, the type of the result will change accordingly:
 
 #+begin_src ocaml
-  let map_to_strings = CharMap.add 'x' "target value" CharMap.empty
+  let map_to_strings = add 'x' "target value" empty
 #+end_src
 
 #+RESULTS:
@@ -3781,8 +3831,8 @@ adding a new pair to the empty map above) it can be inferred. But when
 for example, this works fine:
 
 #+begin_src ocaml
-  let map_to_strings = CharMap.add 'x' "aaa" CharMap.empty in
-      CharMap.add 'y' "bbb" map_to_strings
+  let map_to_strings = add 'x' "aaa" empty in
+      add 'y' "bbb" map_to_strings
 #+end_src
 
 #+RESULTS:
@@ -3795,8 +3845,8 @@ While this will fail (output suppressed) because: we can't add a
 pairs
 
 #+begin_src ocaml :exports code
-  let map_to_strings = CharMap.add 'x' "aaa" CharMap.empty in
-      CharMap.add 'y' 7 map_to_strings
+  let map_to_strings = add 'x' "aaa" empty in
+      add 'y' 7 map_to_strings
 #+end_src
 
 + ~val remove : key -> 'a t -> 'a t~
@@ -3805,11 +3855,11 @@ pairs
 and a map and removes the key-value pair from that map.
 
 #+begin_src ocaml
-  let map_to_strings = CharMap.add 'x' "aaa" CharMap.empty in
+  let map_to_strings = add 'x' "aaa" empty in
       map_to_strings
-      |> CharMap.add 'y' "bbb"
-      |> CharMap.remove 'x'
-      |> CharMap.remove 'y'
+      |> add 'y' "bbb"
+      |> remove 'x'
+      |> remove 'y'
 #+end_src
 
 #+RESULTS:
@@ -3865,7 +3915,7 @@ exercise above. The first creates the module, the second lets you
 avoid prefacing everything with ~CharMap.~, so you can just use ~add~
 instead of ~CharMap.add~, etc)
 
-#+begin_src ocaml :exports code
+#+begin_src ocaml :exports code :results none
   module CharMap = Map.Make(Char);;
   open CharMap
 #+end_src
@@ -3874,11 +3924,11 @@ Here's what they're asking for.
 
 #+begin_src ocaml
   let my_map =
-    CharMap.empty
-    |> CharMap.add 'A' "Alpha"
-    |> CharMap.add 'E' "Echo"
-    |> CharMap.add 'S' "Sierra"
-    |> CharMap.add 'V' "Victor"
+    empty
+    |> add 'A' "Alpha"
+    |> add 'E' "Echo"
+    |> add 'S' "Sierra"
+    |> add 'V' "Victor"
 #+end_src
 
 #+RESULTS:
@@ -3889,7 +3939,7 @@ val my_map : string CharMap.t = <abstr>
 Use ~CharMap.find~ to find the binding for ~'E'~.
 
 #+begin_src ocaml
-  CharMap.find 'E' my_map
+  find 'E' my_map
 #+end_src
 
 #+RESULTS:
@@ -3902,7 +3952,7 @@ Now remove the binding for ~'A'~. Use ~CharMap.mem~ to find whether
 the ~remove~ doesn't change anything, it just makes a new ~CharMap~.
 
 #+begin_src ocaml
-  let my_map = CharMap.remove 'A' my_map
+  let my_map = remove 'A' my_map
 #+end_src
 
 #+RESULTS:
@@ -3922,7 +3972,7 @@ val my_map : string CharMap.t = <abstr>
 Use the function ~CharMap.bindings~ to convert your map into an association list.
 
 #+begin_src ocaml
-  CharMap.bindings my_map
+  bindings my_map
 #+end_src
 
 #+RESULTS:
@@ -3950,20 +4000,20 @@ sorted by keys. So the same maps will give the same ~bindings~
 regardless of how the maps were created. Let's test:
 
 #+begin_src ocaml
-  [CharMap.(CharMap.empty
-            |> CharMap.add 'x' 0
-            |> CharMap.add 'y' 1
-            |> CharMap.bindings);
-   CharMap.(CharMap.empty
-            |> CharMap.add 'y' 1
-            |> CharMap.add 'x' 0
-            |> CharMap.bindings);
-   CharMap.(CharMap.empty
-            |> CharMap.add 'x' 2
-            |> CharMap.add 'y' 1
-            |> CharMap.remove 'x'
-            |> CharMap.add 'x' 0
-            |> CharMap.bindings)]
+  [CharMap.(empty
+            |> add 'x' 0
+            |> add 'y' 1
+            |> bindings);
+   CharMap.(empty
+            |> add 'y' 1
+            |> add 'x' 0
+            |> bindings);
+   CharMap.(empty
+            |> add 'x' 2
+            |> add 'y' 1
+            |> remove 'x'
+            |> add 'x' 0
+            |> bindings)]
 #+end_src
 
 #+RESULTS:
@@ -4119,7 +4169,7 @@ val br : bool ref = {contents = true}
 
 + ~int list ref~
 
-#+begin_src ocaml :results verbatim
+#+begin_src ocaml
   let ilr = ref [1;2;3]
 #+end_src
 
@@ -4130,7 +4180,7 @@ val ilr : int list ref = {contents = [1; 2; 3]}
 
 + ~int ref list~
 
-#+begin_src ocaml :results verbatim
+#+begin_src ocaml
   List.map (fun i -> ref i) [1;2]
 #+end_src
 
@@ -4309,7 +4359,9 @@ Switching the contents of reference ~x~ from ~0~ to ~1~.
 #+end_src
 
 #+RESULTS:
-: ()
+#+begin_src ocaml :exports code
+- : unit = ()
+#+end_src
 
 + ~# x = y;;~
 
@@ -4338,7 +4390,7 @@ equal.
 
 #+RESULTS:
 #+begin_src ocaml :exports code
-- : bool = true
+- : bool = false
 #+end_src
 
 **** DONE norm $[\star\star]$
@@ -4372,7 +4424,7 @@ instead of ~vector -> float~. Since ~vector~ is just a type synonym
 this isn't a meaningful change. But it's nice to know how to make the
 change. Note that the parentheses are necessary; without them, OCaml
 thinks that ~vector~ is the type of the function's output, and it
-throws a typeerror.
+throws a type error.
 
 Some tests:
 
@@ -4410,7 +4462,7 @@ that it's the "right" way to do this. Seems like an abuse of ~mapi~,
 and my suspicion is there's something in the standard library that's
 better suited to this purpose.
 
-#+begin_src ocaml :results verbatim
+#+begin_src ocaml
   let normalize vect =
     let n = norm vect in
     let replace_at i e = vect.(i) <- e /. n in
