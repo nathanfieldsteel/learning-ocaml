@@ -113,7 +113,7 @@ single source block. Probably should try to incorporate this into
 emacs configuration, but in a safe way.
 
 ** CS3110 - Notes
-** CS3110 Exercises [75/204] [36%]
+** CS3110 Exercises [79/204] [38%]
   :PROPERTIES:
   :COOKIE_DATA: todo recursive
   :END:
@@ -3295,7 +3295,7 @@ its inverse:
 Still need to do the unit testing on all these matrix problems before
 I can mark them as done.
 
-*** 5.11 Modular Programming - Exercises [4/29]
+*** 5.11 Modular Programming - Exercises [8/29]
 **** DONE Complex synonym [*]
 
 Here is a module type for complex numbers, which have a real and imaginary component:
@@ -3637,10 +3637,332 @@ Euclid’s algorithm to be helpful:
 #+RESULTS:
 : 63982/9
 
-**** TODO Make char map [*]
-**** TODO Char order [*]
-**** TODO Use char map [**]
-**** TODO Bindings [**]
+**** DONE Make char map [*]
+
+To create a standard library map, we first have to use the Map.Make
+functor to produce a module that is specialized for the type of keys
+we want. Type the following in utop: ~module CharMap =
+Map.Make(Char);;~ The output tells you that a new module named CharMap
+has been defined, and it gives you a signature for it. Find the values
+~empty~, ~add~, and ~remove~ in that signature. Explain their types in your
+own words.
+
+Here's what I get:
+
+#+begin_src ocaml
+  module CharMap = Map.Make(Char);;
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+module CharMap :
+  sig
+    type key = Char.t
+    type 'a t = 'a Map.Make(Char).t
+    val empty : 'a t
+    val is_empty : 'a t -> bool
+    val mem : key -> 'a t -> bool
+    val add : key -> 'a -> 'a t -> 'a t
+    val update : key -> ('a option -> 'a option) -> 'a t -> 'a t
+    val singleton : key -> 'a -> 'a t
+    val remove : key -> 'a t -> 'a t
+    val merge :
+      (key -> 'a option -> 'b option -> 'c option) -> 'a t -> 'b t -> 'c t
+    val union : (key -> 'a -> 'a -> 'a option) -> 'a t -> 'a t -> 'a t
+    val compare : ('a -> 'a -> int) -> 'a t -> 'a t -> int
+    val equal : ('a -> 'a -> bool) -> 'a t -> 'a t -> bool
+    val iter : (key -> 'a -> unit) -> 'a t -> unit
+    val fold : (key -> 'a -> 'b -> 'b) -> 'a t -> 'b -> 'b
+    val for_all : (key -> 'a -> bool) -> 'a t -> bool
+    val exists : (key -> 'a -> bool) -> 'a t -> bool
+    val filter : (key -> 'a -> bool) -> 'a t -> 'a t
+    val filter_map : (key -> 'a -> 'b option) -> 'a t -> 'b t
+    val partition : (key -> 'a -> bool) -> 'a t -> 'a t * 'a t
+    val cardinal : 'a t -> int
+    val bindings : 'a t -> (key * 'a) list
+    val min_binding : 'a t -> key * 'a
+    val min_binding_opt : 'a t -> (key * 'a) option
+    val max_binding : 'a t -> key * 'a
+    val max_binding_opt : 'a t -> (key * 'a) option
+    val choose : 'a t -> key * 'a
+    val choose_opt : 'a t -> (key * 'a) option
+    val split : key -> 'a t -> 'a t * 'a option * 'a t
+    val find : key -> 'a t -> 'a
+    val find_opt : key -> 'a t -> 'a option
+    val find_first : (key -> bool) -> 'a t -> key * 'a
+    val find_first_opt : (key -> bool) -> 'a t -> (key * 'a) option
+    val find_last : (key -> bool) -> 'a t -> key * 'a
+    val find_last_opt : (key -> bool) -> 'a t -> (key * 'a) option
+    val map : ('a -> 'b) -> 'a t -> 'b t
+    val mapi : (key -> 'a -> 'b) -> 'a t -> 'b t
+    val to_seq : 'a t -> (key * 'a) Seq.t
+    val to_rev_seq : 'a t -> (key * 'a) Seq.t
+    val to_seq_from : key -> 'a t -> (key * 'a) Seq.t
+    val add_seq : (key * 'a) Seq.t -> 'a t -> 'a t
+    val of_seq : (key * 'a) Seq.t -> 'a t
+  end
+#+end_src
+
+For the functions in question:
+
++ ~val empty : 'a t~
+
+~empty~ creates a new map with empty domain. It has type ~'a t~, where
+~'a~ is the (as of yet unknown) type of the codomain of the map. It's
+going to be a map from a set of things of type ~char~ to a set of
+things of type ~'a~. That type variable will be clarified for maps
+where the type of the elements in codomain is known.
+
+Note: in ~org-mode~ I can run this block, which lets me avoid
+prefacing future code with the module name, so I can just call ~add~
+and ~remove~ instead of ~CharMap.add~ and ~CharMap.remove~ in future
+source blocks. But for some reason, this is not the case when
+org-export re-runs the source blocks. It will complain that ~add~ is a
+function ~int -> int -> int~.
+
+#+begin_src ocaml :exports code
+  open CharMap
+#+end_src
+
+Here we create an empty map using ~empty~, noting that its type ia ~'a
+CharMap.t~:
+
+#+begin_src ocaml  
+  let emptymap = CharMap.empty
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+val emptymap : 'a CharMap.t = <abstr>
+#+end_src
+
+But if we then add a key-value pair to it, the type is clarified:
+
+#+begin_src ocaml
+  let map_to_ints = CharMap.add 'x' 3 emptymap
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+val map_to_ints : int CharMap.t = <abstr>
+#+end_src
+
+But if we had instead added a key-value pair where the value was of
+type ~string~, the type of the result will change accordingly:
+
+#+begin_src ocaml
+  let map_to_strings = CharMap.add 'x' "target value" CharMap.empty
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+val map_to_strings : string CharMap.t = <abstr>
+#+end_src
+
++ ~val add : key -> 'a -> 'a t -> 'a t~
+
+~add~ takes a value of type ~key~ (which in this case is a type
+synonym for ~char~, I think), a value of type ~'a~, and an existing
+map from type ~char~ to type ~'a~ and gives a new map, with the
+specified key-value pair added. If ~'a~ is not yet known (like when
+adding a new pair to the empty map above) it can be inferred. But when
+~'a~ is known, the types need to match or an error will be thrown. So
+for example, this works fine:
+
+#+begin_src ocaml
+  let map_to_strings = CharMap.add 'x' "aaa" CharMap.empty in
+      CharMap.add 'y' "bbb" map_to_strings
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : string CharMap.t = <abstr>
+#+end_src
+
+While this will fail (output suppressed) because: we can't add a
+~char*int~ key-value pair to a map full of of ~char*string~ key-value
+pairs
+
+#+begin_src ocaml :exports code
+  let map_to_strings = CharMap.add 'x' "aaa" CharMap.empty in
+      CharMap.add 'y' 7 map_to_strings
+#+end_src
+
++ ~val remove : key -> 'a t -> 'a t~
+
+~remove~ takes something of type ~key~ (again, ~char~ in this case)
+and a map and removes the key-value pair from that map.
+
+#+begin_src ocaml
+  let map_to_strings = CharMap.add 'x' "aaa" CharMap.empty in
+      map_to_strings
+      |> CharMap.add 'y' "bbb"
+      |> CharMap.remove 'x'
+      |> CharMap.remove 'y'
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : string CharMap.t = <abstr>
+#+end_src
+
+It's worth noting that once the type of the codomain is known, it is
+never forgotten. The result of the above expression is an empty map,
+but it still knows that it's a ~string CharMap.t~. Even though it
+contains no keys, you would get an error if you added the line ~|> add
+'x' 2~ at the bottom of that expression, since ~2~ is not a ~string~
+
+**** DONE Char order [*]
+
+The ~Map.Make~ functor requires its input module to match the ~Map.OrderedType~ signature. Look at that signature as well as the signature for the Char module. Explain in your own words why we are allowed to pass ~Char~ as an argument to ~Map.Make~.
+
+The ~Map.OrderedType~ signature has two entries (what's the right noun
+for these? It's not "entries")
+
++ ~type t~
++ ~val compare : t -> t -> int~
+
+A type needs to implement both in order to be accepted as an input to
+the ~Map.Make~ functor. (This seems like an abuse of category theory,
+though maybe I'm thinking of it incorrectly)
+
+Meanwhile, the siguanture for the ~Char~ module contains (among other
+things)
+
++ ~type t = char~
++ ~val compare : t -> t -> int~
+
+This means ~Char~ implements the comparison necessary to be passed as
+an input type to the ~Map.Make~ functor.
+
+Maybe another way to say this is that the domain of ~Map.Make~ is the
+category of ordered types, and and ~Char~ is an object in that
+category.
+
+**** DONE Use char map [**]
+
+Using the ~CharMap~ you just made, create a map that contains the
+following bindings:
+
++ ~'A'~ maps to ~"Alpha"~
++ ~'E'~ maps to ~"Echo"~
++ ~'S'~ maps to ~"Sierra"~
++ ~'V'~ maps to ~"Victor"~
+
+(This relies on the following two lines from the "Make char map"
+exercise above. The first creates the module, the second lets you
+avoid prefacing everything with ~CharMap.~, so you can just use ~add~
+instead of ~CharMap.add~, etc)
+
+#+begin_src ocaml :exports code
+  module CharMap = Map.Make(Char);;
+  open CharMap
+#+end_src
+
+Here's what they're asking for.
+
+#+begin_src ocaml
+  let my_map =
+    CharMap.empty
+    |> CharMap.add 'A' "Alpha"
+    |> CharMap.add 'E' "Echo"
+    |> CharMap.add 'S' "Sierra"
+    |> CharMap.add 'V' "Victor"
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+val my_map : string CharMap.t = <abstr>
+#+end_src
+
+Use ~CharMap.find~ to find the binding for ~'E'~.
+
+#+begin_src ocaml
+  CharMap.find 'E' my_map
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : string = "Echo"
+#+end_src
+
+Now remove the binding for ~'A'~. Use ~CharMap.mem~ to find whether
+~'A'~ is still bound. (of course, need to use a ~let~ expression since
+the ~remove~ doesn't change anything, it just makes a new ~CharMap~.
+
+#+begin_src ocaml
+  let my_map = CharMap.remove 'A' my_map
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+val my_map : string CharMap.t = <abstr>
+#+end_src
+
+#+begin_src ocaml
+  mem 'A' my_map
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : bool = false
+#+end_src
+
+Use the function ~CharMap.bindings~ to convert your map into an association list.
+
+#+begin_src ocaml
+  CharMap.bindings my_map
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : (CharMap.key * string) list =
+[('E', "Echo"); ('S', "Sierra"); ('V', "Victor")]
+#+end_src
+
+**** DONE Bindings [**]
+
+Investigate the documentation of the ~Map.S~ signature to find the specification of ~bindings~. Which of these expressions will return the same association list?
+
+
++ ~CharMap.(empty |> add 'x' 0 |> add 'y' 1 |> bindings)~
++ ~CharMap.(empty |> add 'y' 1 |> add 'x' 0 |> bindings)~
++ ~CharMap.(empty |> add 'x' 2 |> add 'y' 1 |> remove 'x' |> add 'x'
+  0 |> bindings)~
+
+My guess is that they'll all return the same association list, because
+all three of these result in a map sending ~'x'~ to ~0~ and ~'y'~ to
+~'1'~. The order in which the keys are added (or added then removed
+then added again) to the maps are different in each case. But
+~bindings~ specifies that the association list it returns will be
+sorted by keys. So the same maps will give the same ~bindings~
+regardless of how the maps were created. Let's test:
+
+#+begin_src ocaml
+  [CharMap.(CharMap.empty
+            |> CharMap.add 'x' 0
+            |> CharMap.add 'y' 1
+            |> CharMap.bindings);
+   CharMap.(CharMap.empty
+            |> CharMap.add 'y' 1
+            |> CharMap.add 'x' 0
+            |> CharMap.bindings);
+   CharMap.(CharMap.empty
+            |> CharMap.add 'x' 2
+            |> CharMap.add 'y' 1
+            |> CharMap.remove 'x'
+            |> CharMap.add 'x' 0
+            |> CharMap.bindings)]
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+- : (CharMap.key * int) list list =
+[[('x', 0); ('y', 1)]; [('x', 0); ('y', 1)]; [('x', 0); ('y', 1)]]
+#+end_src
+
+They are indeed all the same association list.
+
 **** TODO Date order [**]
 **** TODO Calendar [**]
 **** TODO Print calendar [**]
