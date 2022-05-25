@@ -5,7 +5,18 @@
 
 * Learning OCaml - Notes
 
-My notes file for learning OCaml and for working through the CS3110 book.
+My notes file for learning OCaml and for working through the CS3110
+book.
+
+A warning for readers of the pdf version of this document: Some
+code that runs fine in org-babel will suddenly produce errors when
+emacs re-runs the source blocks during the ~org-export-to-latex~
+run. I think this is because during export, each block is run
+independently. So if one block defines ~t~ and another block calls a
+function with ~t~ as an argument, the second block will complain that
+~t~ is undefined. These errors are not present in the notes.org
+document, they only appear in the pdf. At the moment it is not worth
+my time to troubleshoot this issue.
 
 ** Goals for this document
 + Learning OCaml
@@ -3296,7 +3307,7 @@ Still need to do the unit testing on all these matrix problems before
 I can mark them as done.
 
 *** 5.11 Modular Programming - Exercises [8/29]
-**** DONE Complex synonym [*]
+**** DONE Complex synonym $[\star]$
 
 Here is a module type for complex numbers, which have a real and imaginary component:
 
@@ -3329,7 +3340,7 @@ signature can be written more tersely because of the type synonym.
 : module type ComplexSig =
 :   sig type t = float * float val zero : t val add : t -> t -> t end
 
-**** DONE Complex encapsulation [**]
+**** DONE Complex encapsulation $[\star\star]$
 
 Here is a module for the module type from the previous exercise:
 
@@ -3435,7 +3446,7 @@ The ~ComplexSig~ type needs ~zero~ to have type ~float * float~. Since
 the ~zero~ in this module has type ~int * int~, it doesn't typecheck
 as being an instance of ~ComplexSig~.
 
-**** TODO Big list queue [**]
+**** TODO Big list queue $[\star\star]$
 
 Use the following code to create ~ListQueue~ of exponentially increasing length: 10, 100, 1000, etc. How big of a queue can you create before there is a noticeable delay? How big until there’s a delay of at least 10 seconds? (Note: you can abort utop computations with Ctrl-C.)
 
@@ -3511,10 +3522,10 @@ end
 Now we can do ~timing fill_listqueue n;;~ to time it ~n = 10000~ took
 about 1 second, ~n = 50000~ took about 30 seconds.
 
-**** TODO Big batched queue [**]
-**** TODO Queue efficiency [***]
-**** TODO Binary search tree map [****]
-**** DONE Fration [***]
+**** TODO Big batched queue $[\star\star]$
+**** TODO Queue efficiency $[\star\star\star]$
+**** TODO Binary search tree map $[\star\star\star\star]$
+**** DONE Fration $[\star\star\star]$
 
 Write a module that implements the Fraction module type below:
 
@@ -3578,7 +3589,7 @@ module type Fraction =
 Didn't really think about how to handle / avoid the case where the
 denominator is zero.
 
-**** DONE Fraction reduced [***]
+**** DONE Fraction reduced $[\star\star\star]$
 
 Modify your implementation of ~Fraction~ to ensure these invariants
 hold of every value ~v~ of type ~t~ that is returned from ~make~, ~add~, and ~mul~:
@@ -3637,7 +3648,7 @@ Euclid’s algorithm to be helpful:
 #+RESULTS:
 : 63982/9
 
-**** DONE Make char map [*]
+**** DONE Make char map $[\star]$
 
 To create a standard library map, we first have to use the Map.Make
 functor to produce a module that is specialized for the type of keys
@@ -3812,7 +3823,7 @@ but it still knows that it's a ~string CharMap.t~. Even though it
 contains no keys, you would get an error if you added the line ~|> add
 'x' 2~ at the bottom of that expression, since ~2~ is not a ~string~
 
-**** DONE Char order [*]
+**** DONE Char order $[\star]$
 
 The ~Map.Make~ functor requires its input module to match the ~Map.OrderedType~ signature. Look at that signature as well as the signature for the Char module. Explain in your own words why we are allowed to pass ~Char~ as an argument to ~Map.Make~.
 
@@ -3839,7 +3850,7 @@ Maybe another way to say this is that the domain of ~Map.Make~ is the
 category of ordered types, and and ~Char~ is an object in that
 category.
 
-**** DONE Use char map [**]
+**** DONE Use char map $[\star\star]$
 
 Using the ~CharMap~ you just made, create a map that contains the
 following bindings:
@@ -3920,7 +3931,7 @@ Use the function ~CharMap.bindings~ to convert your map into an association list
 [('E', "Echo"); ('S', "Sierra"); ('V', "Victor")]
 #+end_src
 
-**** DONE Bindings [**]
+**** DONE Bindings $[\star\star]$
 
 Investigate the documentation of the ~Map.S~ signature to find the specification of ~bindings~. Which of these expressions will return the same association list?
 
@@ -3963,23 +3974,23 @@ regardless of how the maps were created. Let's test:
 
 They are indeed all the same association list.
 
-**** TODO Date order [**]
-**** TODO Calendar [**]
-**** TODO Print calendar [**]
-**** TODO Is for [***]
-**** TODO First after [***]
-**** TODO Sets [***]
-**** TODO ToString [**]
-**** TODO Print [**]
-**** TODO Print int [**]
-**** TODO Print string [**]
-**** TODO Print reuse [*]
-**** TODO Print string reuse revisited [**]
-**** TODO Implementation without interface [*]
-**** TODO Implementation with interface [*]
-**** TODO Implementation with abstracted interface [*]
-**** TODO Preinter for date [***]
-**** TODO Refactor arith [****]
+**** TODO Date order $[\star\star]$
+**** TODO Calendar $[\star\star]$
+**** TODO Print calendar $[\star\star]$
+**** TODO Is for $[\star\star\star]$
+**** TODO First after $[\star\star\star]$
+**** TODO Sets $[\star\star\star]$
+**** TODO ToString $[\star\star]$
+**** TODO Print $[\star\star]$
+**** TODO Print int $[\star\star]$
+**** TODO Print string $[\star\star]$
+**** TODO Print reuse $[\star]$
+**** TODO Print string reuse revisited $[\star\star]$
+**** TODO Implementation without interface $[\star]$
+**** TODO Implementation with interface $[\star]$
+**** TODO Implementation with abstracted interface $[\star]$
+**** TODO Preinter for date $[\star\star\star]$
+**** TODO Refactor arith $[\star\star\star\star]$
 *** 6.11 Correctness - Exercises [1/22]
 **** TODO spec game [***]
 **** TODO poly spec [***]
