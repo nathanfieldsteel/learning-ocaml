@@ -4025,6 +4025,45 @@ regardless of how the maps were created. Let's test:
 They are indeed all the same association list.
 
 **** TODO Date order $[\star\star]$
+
+Here is a type for dates:
+
+#+begin_src ocaml :exports code
+  type date = {month : int; day : int}
+#+end_src
+
+For example, March 31st would be represented as ~{month = 3; day =
+31}~. Our goal in the next few exercises is to implement a map whose
+keys have type date.
+
+Obviously it’s possible to represent invalid dates with type ~date~ —
+for example, ~{ month=6; day=50 }~ would be June 50th, which is not a
+real date. The behavior of your code in the exercises below is
+unspecified for invalid dates.
+
+To create a map over dates, we need a module that we can pass as input
+to ~Map.Make~. That module will need to match the ~Map.OrderedType~
+signature. Create such a module.
+
+You could probably do this in such a way that ~compare d1 d2~ returns
+the number of days between the two dates. But I chose to recycle
+existing compare functions instead and do it lexicographically:
+compare months, then compare days.
+
+#+begin_src ocaml
+  module Date = struct
+    type t = date
+    let compare d1 d2 = if d1.month <> d2.month
+                        then compare d1.month d2.month
+                        else compare d1.day d2.day
+  end
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+module Date : sig type t = date val compare : date -> date -> int end
+#+end_src
+
 **** TODO Calendar $[\star\star]$
 **** TODO Print calendar $[\star\star]$
 **** TODO Is for $[\star\star\star]$
