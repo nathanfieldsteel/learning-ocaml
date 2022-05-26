@@ -145,7 +145,7 @@ themselves. The results blocks don't contain valid ocaml expressions,
 so they should not be run.
 
 ** CS3110 - Notes
-** CS3110 Exercises [80/204] [39%]
+** CS3110 Exercises [82/204] [40%]
   :PROPERTIES:
   :COOKIE_DATA: todo recursive
   :END:
@@ -3369,7 +3369,7 @@ its inverse:
 Still need to do the unit testing on all these matrix problems before
 I can mark them as done.
 
-*** 5.11 Modular Programming - Exercises [9/29]
+*** 5.11 Modular Programming - Exercises [11/29]
 **** DONE Complex synonym $[\star]$
 
 Here is a module type for complex numbers, which have a real and imaginary component:
@@ -4024,7 +4024,7 @@ regardless of how the maps were created. Let's test:
 
 They are indeed all the same association list.
 
-**** TODO Date order $[\star\star]$
+**** DONE Date order $[\star\star]$
 
 Here is a type for dates:
 
@@ -4064,7 +4064,51 @@ compare months, then compare days.
 module Date : sig type t = date val compare : date -> date -> int end
 #+end_src
 
-**** TODO Calendar $[\star\star]$
+**** DONE Calendar $[\star\star]$
+
+Use the ~Map.Make~ functor with your ~Date~ module to create a
+~DateMap module~. Then define a ~calendar~ type as follows:
+
+#+begin_src ocaml :exports code
+  type calendar = string DateMap.t
+#+end_src
+
+Using the functions in the DateMap module, create a calendar with a few entries in it, such as birthdays or anniversaries.
+
+Is it really this easy?
+
+#+begin_src ocaml
+  open Date;;
+
+  module DateMap = Map.Make(Date);;
+
+  type calendar = string DateMap.t;;
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+type calendar = string DateMap.t
+#+end_src
+
+#+begin_src ocaml
+  let (mycal:calendar) =
+    DateMap.empty
+    |> DateMap.add {month=6; day=22} "My bday"
+    |> DateMap.add {month=2; day=8} "Mom's bday"
+#+end_src
+
+#+RESULTS:
+#+begin_src ocaml :exports code
+val mycal : calendar = <abstr>
+#+end_src
+
+This is something I've noticed in previous problems, but just because
+something has type ~string DateMap.t~ doesn't mean OCaml will
+automatically use the correct type synonym for you (after all, there
+could be several such synonyms). You need to include the type
+annotation ~(mycal:calendar)~ if you want it to express the type you
+intended instead of defaulting to the most general type.
+
 **** TODO Print calendar $[\star\star]$
 **** TODO Is for $[\star\star\star]$
 **** TODO First after $[\star\star\star]$
