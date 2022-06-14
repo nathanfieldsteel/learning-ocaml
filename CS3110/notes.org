@@ -149,7 +149,22 @@ so they should not be run.
   :PROPERTIES:
   :COOKIE_DATA: todo recursive
   :END:
-  
+*** 2.1 - The OCaml Toplevel
++ types and type-checking
++ values and variables
++ defining functions
++ loading code in the toplevel
+  + directives, especially the ~#use~ directive
++ toplevel workflow (note, should try this workflow. My emacs / org /
+  tuareg workflow is definitely non-standard.)
+*** 2.2
+*** 2.3
+*** 2.4
+*** 2.5
+*** 2.6
+*** 2.7
+*** 2.8
+*** 2.9
 *** 2.9 Basics - Exercises [16/16]
 **** DONE Values $[\star]$
 
