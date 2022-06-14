@@ -170,7 +170,19 @@ so they should not be run.
     + dune builde name.exe
     + dune exec ./name.exe
     + dune clean
-*** 2.3
+*** 2.3 - Expressions
++ Primitive types, like
+  + ~int~
+  + ~float~
+  + ~bool~
+  + ~char~
+  + ~string~
++ Assertions
++ ~if~ expressions
++ ~let~ expressions
+  + nested ~let~ expressions
+  + scope in nested ~let~ expressions
++ type annotations, usually not needed
 *** 2.4
 *** 2.5
 *** 2.6
