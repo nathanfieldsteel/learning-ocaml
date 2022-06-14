@@ -145,10 +145,6 @@ themselves. The results blocks don't contain valid ocaml expressions,
 so they should not be run.
 
 ** CS3110 - Notes
-** CS3110 Exercises [82/204] [40%]
-  :PROPERTIES:
-  :COOKIE_DATA: todo recursive
-  :END:
 *** 2.1 - The OCaml Toplevel
 + Types and type-checking.
 + Values and variables.
@@ -201,6 +197,10 @@ so they should not be run.
 *** 2.6 - Printing
 *** 2.7 - Debugging
 *** 2.8 - Summary
+** CS3110 Exercises [82/204] [40%]
+  :PROPERTIES:
+  :COOKIE_DATA: todo recursive
+  :END:
 *** 2.9 Basics - Exercises [16/16]
 **** DONE Values $[\star]$
 
