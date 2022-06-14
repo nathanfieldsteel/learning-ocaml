@@ -157,7 +157,19 @@ so they should not be run.
   + directives, especially the ~#use~ directive
 + toplevel workflow (note, should try this workflow. My emacs / org /
   tuareg workflow is definitely non-standard.)
-*** 2.2
+*** 2.2 - Compiling OCaml Programs
++ Storing code in files
++ Usually no need for ~;;~ in files
++ Using the ~ocamlc~ compiler
++ The last definition in a file is the "main" function, though it
+  doesn't get a special name.
++ Use the Dune build system for bigger projects.
+  + lisp-like s-expressions in the dune files
+  + Always need the .exe
+  + Workflow:
+    + dune builde name.exe
+    + dune exec ./name.exe
+    + dune clean
 *** 2.3
 *** 2.4
 *** 2.5
