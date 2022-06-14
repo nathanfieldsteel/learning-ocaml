@@ -150,12 +150,12 @@ so they should not be run.
   :COOKIE_DATA: todo recursive
   :END:
 *** 2.1 - The OCaml Toplevel
-+ types and type-checking
-+ values and variables
-+ defining functions
-+ loading code in the toplevel
-  + directives, especially the ~#use~ directive
-+ toplevel workflow (note, should try this workflow. My emacs / org /
++ Types and type-checking
++ Values and variables
++ Defining functions
++ Loading code in the toplevel
+  + Directives, especially the ~#use~ directive
++ Toplevel workflow (note, should try this workflow. My emacs / org /
   tuareg workflow is definitely non-standard.)
 *** 2.2 - Compiling OCaml Programs
 + Storing code in files
@@ -164,7 +164,7 @@ so they should not be run.
 + The last definition in a file is the "main" function, though it
   doesn't get a special name.
 + Use the Dune build system for bigger projects.
-  + lisp-like s-expressions in the dune files
+  + Lisp-like s-expressions in the dune files
   + Always need the .exe
   + Workflow:
     + dune builde name.exe
@@ -182,8 +182,21 @@ so they should not be run.
 + ~let~ expressions
   + nested ~let~ expressions
   + scope in nested ~let~ expressions
-+ type annotations, usually not needed
-*** 2.4
++ Type annotations, usually not needed
+*** 2.4 - Functions
++ Recursive functions need to be marked as such
++ Mutually recursive functions need the ~and~ keyword as well
++ Anonymous functions with the ~fun~ keyword
++ Functions as values
++ Function application
++ the pipeline operator ~|>~
++ Polymorphic functions and type variables in function signatures
++ Forming type-specific versions of polymorphic functions
++ Labeled and optional arguments
++ Partial application and currying
++ Associativity
++ Binary operators as functions, defining new infix operators
++ Tail recursive functions
 *** 2.5
 *** 2.6
 *** 2.7
