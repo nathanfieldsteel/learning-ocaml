@@ -150,58 +150,57 @@ so they should not be run.
   :COOKIE_DATA: todo recursive
   :END:
 *** 2.1 - The OCaml Toplevel
-+ Types and type-checking
-+ Values and variables
-+ Defining functions
-+ Loading code in the toplevel
-  + Directives, especially the ~#use~ directive
++ Types and type-checking.
++ Values and variables.
++ Defining functions.
++ Loading code in the toplevel.
+  + Directives, especially the ~#use~ directive.
 + Toplevel workflow (note, should try this workflow. My emacs / org /
-  tuareg workflow is definitely non-standard.)
+  tuareg workflow is definitely non-standard).
 *** 2.2 - Compiling OCaml Programs
-+ Storing code in files
-+ Usually no need for ~;;~ in files
-+ Using the ~ocamlc~ compiler
++ Storing code in files.
++ Usually no need for ~;;~ in files.
++ Using the ~ocamlc~ compiler.
 + The last definition in a file is the "main" function, though it
   doesn't get a special name.
 + Use the Dune build system for bigger projects.
-  + Lisp-like s-expressions in the dune files
-  + Always need the .exe
+  + Lisp-like s-expressions in the dune files.
+  + Always need the ~.exe~ at the end/
   + Workflow:
     + dune builde name.exe
     + dune exec ./name.exe
     + dune clean
 *** 2.3 - Expressions
-+ Primitive types, like
++ Primitive types, like:
   + ~int~
   + ~float~
   + ~bool~
   + ~char~
   + ~string~
-+ Assertions
-+ ~if~ expressions
-+ ~let~ expressions
-  + nested ~let~ expressions
-  + scope in nested ~let~ expressions
-+ Type annotations, usually not needed
++ Assertions.
++ ~if~ expressions.
++ ~let~ expressions.
+  + nested ~let~ expressions.
+  + scope in nested ~let~ expressions.
++ Type annotations, usually not needed.
 *** 2.4 - Functions
-+ Recursive functions need to be marked as such
-+ Mutually recursive functions need the ~and~ keyword as well
-+ Anonymous functions with the ~fun~ keyword
-+ Functions as values
-+ Function application
-+ the pipeline operator ~|>~
-+ Polymorphic functions and type variables in function signatures
-+ Forming type-specific versions of polymorphic functions
-+ Labeled and optional arguments
-+ Partial application and currying
-+ Associativity
-+ Binary operators as functions, defining new infix operators
-+ Tail recursive functions
-*** 2.5
-*** 2.6
-*** 2.7
-*** 2.8
-*** 2.9
++ Recursive functions need to be marked as such.
++ Mutually recursive functions need the ~and~ keyword as well.
++ Anonymous functions with the ~fun~ keyword.
++ Functions as values.
++ Function application.
++ the pipeline operator ~|>~.
++ Polymorphic functions and type variables in function signatures.
++ Forming type-specific versions of polymorphic functions.
++ Labeled and optional arguments.
++ Partial application and currying.
++ Associativity.
++ Binary operators as functions, defining new infix operators.
++ Tail recursive functions.
+*** 2.5 - Documentation
+*** 2.6 - Printing
+*** 2.7 - Debugging
+*** 2.8 - Summary
 *** 2.9 Basics - Exercises [16/16]
 **** DONE Values $[\star]$
 
